@@ -57,6 +57,6 @@
 
 ỦNG HỘ: Nếu thấy hay, bạn hãy ủng hộ tôi một ly cafe =))) 
 
-<img width="768" height="1024" alt="zlp-1790936616589" src="https://github.com/user-attachments/assets/05c9f53d-25c6-4aa7-a31b-16b45ef04a6e" />
+<img width="480" height="640" alt="zlp-1790936616589" src="https://github.com/user-attachments/assets/05c9f53d-25c6-4aa7-a31b-16b45ef04a6e" />
 
 
