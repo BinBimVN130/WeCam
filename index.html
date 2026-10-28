@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23111111'/%3E%3Cstop offset='100%25' stop-color='%23777777'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M480-240q100 0 170-70t70-170q0-87-55.5-153T524-716q-18-2-31 10t-13 30v196L342-342q-13 13-12 31t15 29q29 23 64 32.5t71 9.5Zm0 160q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23ffffff'/%3E%3Cstop offset='100%25' stop-color='%238b8b8b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M480-240q100 0 170-70t70-170q0-87-55.5-153T524-716q-18-2-31 10t-13 30v196L342-342q-13 13-12 31t15 29q29 23 64 32.5t71 9.5Zm0 160q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z'/%3E%3C/svg%3E">
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js" integrity="sha384-hStSInNIZ8ljtOVrmrgf7zdHMapaLBWoSnPTtF0nzsybp4+LuhDz6sHuEVpWIX8o" crossorigin="anonymous"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
@@ -376,6 +376,18 @@
     #timer-menu .timer-opt{text-align:left;padding:9px 12px}
     #timer-menu .panel-head{margin:0 2px 4px}
 
+    /* Cụm EV / bão hòa / nhiệt độ thu gọn mặc định */
+    #adj-toggle{font-size:19px;font-weight:600;transition:transform .2s ease,background-color .15s ease;}
+    #adj-toggle svg{width:18px;height:18px;transition:transform .22s ease;}
+    #adj-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
+    #adj-buttons{
+      display:flex;flex-direction:column;align-items:center;gap:10px;
+      max-height:0;opacity:0;overflow:hidden;pointer-events:none;
+      transform:translateY(-6px);margin-top:0;
+      transition:max-height .24s ease,opacity .18s ease,transform .24s ease,margin-top .24s ease;
+    }
+    #adj-buttons.expanded{max-height:170px;opacity:1;pointer-events:auto;transform:translateY(0);margin-top:2px;}
+
     /* EV / Sat / Temp popup */
     .adj-popup{
       display:flex;position:fixed;z-index:60;
@@ -445,6 +457,7 @@
     body.mode-qr #ev-btn,
     body.mode-qr #sat-btn,
     body.mode-qr #temp-btn,
+    body.mode-qr #adj-toggle,
     body.mode-qr #reset-btn,
     body.mode-qr #filter-panel,
     body.mode-qr #timer-menu,
@@ -794,7 +807,7 @@
     .ld-actions button.ld-process-btn:disabled{opacity:.45;cursor:wait}
     #photo-process-modal{
       display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;
-      padding:20px;background:rgba(0,0,0,.58);backdrop-filter:blur(4px);
+      padding:20px;background:rgba(0,0,0,.78);
     }
     #photo-process-modal.show{display:flex;animation:photoProcessFade .18s ease-out}
     @keyframes photoProcessFade{from{opacity:0}to{opacity:1}}
@@ -1197,6 +1210,10 @@
 
     <div class="left-divider"></div>
 
+    <button class="ctrl-btn" id="adj-toggle" title="Hiện điều chỉnh ảnh" aria-label="Hiện điều chỉnh ảnh" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div id="adj-buttons" aria-hidden="true">
     <button class="ctrl-btn" id="ev-btn" title="EV">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
@@ -1214,6 +1231,7 @@
         <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
       </svg>
     </button>
+    </div>
 
     <button class="ctrl-btn" id="reset-btn" title="Reset" style="display:none">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1417,9 +1435,6 @@
         </button>
         <button type="button" id="ld-info" title="Thông tin" data-tip="Thông tin">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-        </button>
-        <button type="button" class="ld-process-btn" id="ld-enhance" title="Tối ưu ảnh" data-tip="Tối ưu ảnh">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg><span>Tối ưu ảnh</span>
         </button>
         <button type="button" id="ld-download" title="Tải xuống" data-tip="Tải xuống">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
@@ -1792,6 +1807,15 @@ const aspectBtn=document.getElementById('aspect-btn');
 const evBtn=document.getElementById('ev-btn');
 const satBtn=document.getElementById('sat-btn');
 const tempBtn=document.getElementById('temp-btn');
+const adjToggle=document.getElementById('adj-toggle');
+const adjButtons=document.getElementById('adj-buttons');
+adjToggle.addEventListener('click',()=>{
+  const expanded=adjButtons.classList.toggle('expanded');
+  adjToggle.setAttribute('aria-expanded',String(expanded));
+  adjToggle.setAttribute('aria-label',expanded?'Ẩn điều chỉnh ảnh':'Hiện điều chỉnh ảnh');
+  adjButtons.setAttribute('aria-hidden',String(!expanded));
+  adjToggle.title=expanded?'Thu gọn điều chỉnh ảnh':'Hiện điều chỉnh ảnh';
+});
 const evPopup=document.getElementById('ev-popup');
 const satPopup=document.getElementById('sat-popup');
 const tempPopup=document.getElementById('temp-popup');
@@ -3841,7 +3865,7 @@ async function openLibrary(){
   void ov.offsetWidth;
   ov.classList.add('show');
   const det = document.getElementById('library-detail');
-  if(det) det.classList.remove('show');
+  if(det){ det.classList.remove('show'); det.style.display='none'; det.style.pointerEvents='none'; }
   function setLibTab(filter){
     libFilter = filter;
     document.querySelectorAll('.lib-tab').forEach(t=>t.classList.remove('active'));
@@ -3867,18 +3891,30 @@ async function openLibrary(){
 }
 function closeLibrary(){
   stopLibMediaElements();
-  exitLibSelectMode();
+  try{ exitLibSelectMode(); }catch(e){}
   const ov = document.getElementById('library-overlay');
   const det = document.getElementById('library-detail');
-  det.classList.remove('show');
-  if(!ov){ document.body.classList.remove('library-open'); return; }
-  ov.classList.add('closing');
-  setTimeout(()=>{
-    ov.classList.remove('show','closing');
-    ov.style.display = '';
-    document.body.classList.remove('library-open');
-    resumeCamFromLibrary();
-  }, 240);
+  // Hide the detail view explicitly: renderLibDetail() sets inline display:flex,
+  // which otherwise survives removal of .show and can intercept clicks invisibly.
+  if(det){
+    det.classList.remove('show');
+    det.style.opacity='0';
+    det.style.transform='scale(.98)';
+    det.style.pointerEvents='none';
+    det.style.display='none';
+  }
+  document.body.classList.remove('library-open','lib-selecting');
+  if(!ov){ resumeCamFromLibrary(); return; }
+  ov.classList.remove('show','closing');
+  ov.style.opacity='0';
+  ov.style.transform='translateY(100%)';
+  ov.style.pointerEvents='none';
+  ov.style.display='none';
+  // Remove stale inline states so the camera UI is immediately interactive.
+  document.querySelectorAll('#app button, #app input, #app select, #app [role="button"]').forEach(el=>{
+    if(el.style.pointerEvents==='none') el.style.pointerEvents='';
+  });
+  resumeCamFromLibrary();
 }
 let libSelecting = false;
 const libSelected = new Set();
@@ -3987,6 +4023,9 @@ function openLibDetail(idx){
   libDetailIdx = idx;
   const det = document.getElementById('library-detail');
   det.style.display = 'flex';
+  det.style.pointerEvents = 'auto';
+  det.style.opacity = '';
+  det.style.transform = '';
   void det.offsetWidth;
   det.classList.add('show');
   renderLibDetail();
@@ -4080,54 +4119,60 @@ async function processCurrentPhoto(mode){
   if(title) title.textContent='Đang tối ưu ảnh…';
   modal.classList.add('show');
   setPhotoProcessProgress(2,'Đang đọc ảnh');
-  let bitmap=null, canvas=null;
+  let bitmap=null, canvas=null, sampleCanvas=null;
   try{
     await yieldToBrowser();
     if('createImageBitmap' in window) bitmap=await createImageBitmap(item.blob);
-    let sourceW=bitmap?bitmap.width:0, sourceH=bitmap?bitmap.height:0;
     if(!bitmap){
       const img=new Image(); const url=URL.createObjectURL(item.blob);
-      try{ await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url;}); sourceW=img.naturalWidth;sourceH=img.naturalHeight; bitmap=img; }
+      try{ await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url;}); bitmap=img; }
       finally{ URL.revokeObjectURL(url); }
     }
+    const sourceW=bitmap.width||bitmap.naturalWidth, sourceH=bitmap.height||bitmap.naturalHeight;
     if(!sourceW||!sourceH) throw new Error('Không đọc được kích thước ảnh');
-    setPhotoProcessProgress(12,'Đang chuẩn bị xử lý'); await yieldToBrowser();
-    // Auto enhancement keeps original resolution; it does not perform AI upscaling.
-    let scale=1;
+    setPhotoProcessProgress(12,'Đang phân tích ánh sáng'); await yieldToBrowser();
+
+    // Analyze a tiny preview only; avoid reading millions of pixels on low-RAM computers.
+    const sampleScale=Math.min(1,256/Math.max(sourceW,sourceH));
+    sampleCanvas=document.createElement('canvas');
+    sampleCanvas.width=Math.max(1,Math.round(sourceW*sampleScale));
+    sampleCanvas.height=Math.max(1,Math.round(sourceH*sampleScale));
+    const sampleCtx=sampleCanvas.getContext('2d',{willReadFrequently:true});
+    if(!sampleCtx) throw new Error('Trình duyệt không hỗ trợ phân tích ảnh');
+    sampleCtx.drawImage(bitmap,0,0,sampleCanvas.width,sampleCanvas.height);
+    const px=sampleCtx.getImageData(0,0,sampleCanvas.width,sampleCanvas.height).data;
+    let lum=0, sat=0, count=0;
+    for(let i=0;i<px.length;i+=16){
+      const r=px[i],g=px[i+1],b=px[i+2];
+      lum += .2126*r+.7152*g+.0722*b;
+      const hi=Math.max(r,g,b), lo=Math.min(r,g,b);
+      sat += hi ? (hi-lo)/hi : 0; count++;
+    }
+    const avgLum=count?lum/count:128, avgSat=count?sat/count:.25;
+    // Gentle adaptive corrections: protect already-bright images and avoid oversaturating vivid photos.
+    const brightness=avgLum<85?1.10:avgLum<115?1.065:avgLum>205?.98:1.025;
+    const contrast=avgLum<70?1.06:avgLum>210?1.035:1.075;
+    const saturation=avgSat>.55?1.015:avgSat<.18?1.10:1.055;
+
+    setPhotoProcessProgress(32,'Đang cân bằng sáng và màu'); await yieldToBrowser();
     const maxPixels=12_000_000;
-    let outW=sourceW*scale, outH=sourceH*scale;
-    if(outW*outH>maxPixels){ const fit=Math.sqrt(maxPixels/(outW*outH)); outW=Math.max(1,Math.floor(outW*fit));outH=Math.max(1,Math.floor(outH*fit)); scale=Math.min(outW/sourceW,outH/sourceH); }
+    const scale=Math.min(1,Math.sqrt(maxPixels/(sourceW*sourceH)));
+    const outW=Math.max(1,Math.round(sourceW*scale)), outH=Math.max(1,Math.round(sourceH*scale));
     canvas=document.createElement('canvas'); canvas.width=outW; canvas.height=outH;
     const ctx=canvas.getContext('2d',{alpha:false});
     if(!ctx) throw new Error('Trình duyệt không hỗ trợ xử lý ảnh');
-    ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
-    ctx.filter='brightness(1.035) contrast(1.08) saturate(1.06)';
-    ctx.drawImage(bitmap,0,0,outW,outH); ctx.filter='none';
-    setPhotoProcessProgress(55,'Đang cân chỉnh sáng và màu'); await yieldToBrowser();
-    // Gentle unsharp mask for both modes; process in rows so the UI can update progress.
-    const image=ctx.getImageData(0,0,outW,outH);
-    const src=image.data; const copy=new Uint8ClampedArray(src);
-    const amount=0.22;
-    for(let y=1;y<outH-1;y++){
-      for(let x=1;x<outW-1;x++){
-        const i=(y*outW+x)*4;
-        for(let c=0;c<3;c++){
-          const avg=(copy[i-4+c]+copy[i+4+c]+copy[i-outW*4+c]+copy[i+outW*4+c])/4;
-          src[i+c]=Math.max(0,Math.min(255,copy[i+c]+(copy[i+c]-avg)*amount));
-        }
-      }
-      if(y%48===0){
-        setPhotoProcessProgress(55+Math.round((y/outH)*32),'Đang làm nét chi tiết');
-        await yieldToBrowser();
-      }
-    }
-    ctx.putImageData(image,0,0);
-    setPhotoProcessProgress(91,'Đang tạo tệp ảnh mới'); await yieldToBrowser();
-    const outputBlob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Không tạo được tệp ảnh')), 'image/jpeg',0.94));
-    const suffix='_enhanced';
+    ctx.imageSmoothingEnabled=true;
+    try{ctx.imageSmoothingQuality='high';}catch(e){}
+    // Canvas filters are hardware/browser optimized where supported. If unsupported, fall back to an unfiltered draw.
+    const filterValue=`brightness(${brightness}) contrast(${contrast}) saturate(${saturation})`;
+    try{ if('filter' in ctx) ctx.filter=filterValue; }catch(e){}
+    ctx.drawImage(bitmap,0,0,outW,outH);
+    try{ctx.filter='none';}catch(e){}
+    setPhotoProcessProgress(78,'Đang tạo ảnh đã tối ưu'); await yieldToBrowser();
+    const outputBlob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Không tạo được tệp ảnh')),'image/jpeg',.93));
     const base=(item.name||'photo').replace(/\.[^.]+$/,'');
-    const newItem={type:'photo',name:base+suffix+'.jpg',mime:'image/jpeg',blob:outputBlob,size:outputBlob.size,width:outW,height:outH,createdAt:Date.now(),duration:0,processedFrom:item.id,processMode:mode};
-    setPhotoProcessProgress(96,'Đang lưu vào thư viện'); await yieldToBrowser();
+    const newItem={type:'photo',name:base+'_optimized.jpg',mime:'image/jpeg',blob:outputBlob,size:outputBlob.size,width:outW,height:outH,createdAt:Date.now(),duration:0,processedFrom:item.id,processMode:mode};
+    setPhotoProcessProgress(92,'Đang lưu vào thư viện'); await yieldToBrowser();
     await libAddItem(newItem);
     libItems=await libGetAll();
     const newIdx=libItems.findIndex(x=>x.name===newItem.name&&x.createdAt===newItem.createdAt);
@@ -4143,12 +4188,13 @@ async function processCurrentPhoto(mode){
   }finally{
     try{ if(bitmap&&typeof bitmap.close==='function') bitmap.close(); }catch(e){}
     if(canvas){canvas.width=1;canvas.height=1;}
+    if(sampleCanvas){sampleCanvas.width=1;sampleCanvas.height=1;}
     photoProcessBusy=false; buttons.forEach(b=>b.disabled=false);
   }
 }
 const enhanceWarningModal=document.getElementById('enhance-warning-modal');
 function closeEnhanceWarning(){ enhanceWarningModal?.classList.remove('show'); }
-document.getElementById('ld-enhance')?.addEventListener('click',e=>{e.stopPropagation();enhanceWarningModal?.classList.add('show');});
+document.querySelector('#ld-enhance')?.addEventListener('click',e=>{e.stopPropagation();enhanceWarningModal?.classList.add('show');});
 document.getElementById('enhance-warning-cancel')?.addEventListener('click',closeEnhanceWarning);
 document.getElementById('enhance-warning-continue')?.addEventListener('click',()=>{closeEnhanceWarning();processCurrentPhoto('enhance');});
 enhanceWarningModal?.addEventListener('click',e=>{if(e.target===enhanceWarningModal)closeEnhanceWarning();});
