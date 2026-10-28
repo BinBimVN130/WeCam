@@ -1,4 +1,4 @@
-# webs-cam-era
+# webs-cam-era 3.0.0
 
 **Ứng dụng camera trực tiếp trên trình duyệt, với nhiều bộ lọc màu và công cụ chỉnh sửa hình ảnh.**
 
