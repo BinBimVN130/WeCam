@@ -318,14 +318,13 @@
       transition:transform .1s ease;box-shadow:0 1px 4px rgba(0,0,0,.25);
     }
     .color-swatch:hover,.color-swatch.selected{border-color:#fff;transform:scale(1.08)}
-    .custom-color-toggle,.custom-color-apply{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:36px;padding:8px 10px;border:1px solid rgba(255,255,255,.16);border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font:inherit;font-size:12px;cursor:pointer}
-    .custom-color-toggle:hover,.custom-color-apply:hover{background:rgba(255,255,255,.15)}
+    .custom-color-toggle{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:36px;padding:8px 10px;border:1px solid rgba(255,255,255,.16);border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font:inherit;font-size:12px;cursor:pointer}
+    .custom-color-toggle:hover{background:rgba(255,255,255,.15)}
     .custom-color-panel{display:flex;flex-direction:column;gap:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12)}
     .custom-color-panel[hidden]{display:none!important}
     .custom-color-preview-row{display:flex;align-items:center;gap:10px;font-size:12px}
     #custom-color-picker{width:42px;height:34px;padding:2px;border:1px solid rgba(255,255,255,.2);border-radius:8px;background:transparent;cursor:pointer}
     #custom-color-dot{display:inline-block;width:18px;height:18px;flex:0 0 18px;border-radius:50%;background:#fff;border:2px solid rgba(255,255,255,.85);box-shadow:0 0 0 1px rgba(0,0,0,.35);}
-    .custom-color-apply{background:#ffaa00;color:#171717;border:none;font-weight:600}
 
     /* Bộ lọc panel */
     #filter-panel{
@@ -1242,7 +1241,6 @@
     </button>
     <div id="custom-color-panel" class="custom-color-panel" hidden>
       <div class="custom-color-preview-row"><input id="custom-color-picker" type="color" value="#ffffff" aria-label="Chọn màu tùy chỉnh"><strong id="custom-color-hex">#FFFFFF</strong></div>
-      <button type="button" id="custom-color-apply" class="custom-color-apply">Áp dụng màu</button>
     </div>
   </div>
 
@@ -1668,7 +1666,7 @@
         <div class="settings-panel" id="panel-about">
           <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px 12px 8px;gap:12px">
             <svg viewBox="0 -960 960 960" width="56" height="56" style="opacity:.95" aria-label="Biểu tượng web-cam-era">
-              <defs><linearGradient id="app-icon-gradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#111111"/><stop offset="100%" stop-color="#858585"/></linearGradient></defs>
+              <defs><linearGradient id="app-icon-gradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="48%" stop-color="#D9D9DE"/><stop offset="100%" stop-color="#85858D"/></linearGradient></defs>
               <path fill="url(#app-icon-gradient)" d="M480-240q100 0 170-70t70-170q0-87-55.5-153T524-716q-18-2-31 10t-13 30v196L342-342q-13 13-12 31t15 29q29 23 64 32.5t71 9.5Zm0 160q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
             </svg>
             <div style="font-size:18px;font-weight:600">web-cam-era</div>
@@ -3031,17 +3029,12 @@ document.querySelectorAll('.color-swatch').forEach(sw=>{
     toggle.setAttribute('aria-expanded',String(!panel.hidden));
     if(!panel.hidden && picker)syncColor(state.flashColor||picker.value);
   });
-  picker?.addEventListener('input',()=>syncColor(picker.value));
-  document.getElementById('custom-color-apply')?.addEventListener('click',()=>{
-    const hex=syncColor(picker?.value||'#ffffff');
-    document.querySelectorAll('.color-swatch').forEach(sw=>sw.classList.remove('selected'));
+  picker?.addEventListener('input',()=>{
+    const hex=syncColor(picker.value);
     state.flashColor=hex;
+    document.querySelectorAll('.color-swatch').forEach(sw=>sw.classList.remove('selected'));
     if(colorDot)colorDot.style.background=hex;
     updateBackground();
-    if(panel)panel.hidden=true;
-    toggle?.setAttribute('aria-expanded','false');
-    colorPalette.classList.remove('show');
-    showToast('Đã áp dụng màu '+hex.toUpperCase());
   });
   syncColor(state.flashColor||'#ffffff');
 })();
