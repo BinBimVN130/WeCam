@@ -14,4 +14,6 @@ Lưu ý: Độ mượt tùy thuộc vào trình duyệt web/phần cứng/phần
 Cách cài đặt (mang ra ngoài màn hình chính): Trình duyệt -> 3 gạch ( ≡ ) -> Lưu và chia sẻ -> Cài đặt trang dưới dạng ứng dụng... -> [ Cài đặt ]
 
 Ủng hộ: Nếu thấy hữu ích, hãy ủng hộ tôi một ly cafe =))) 
+
+
 <img width="480" height="640" alt="zlp-1790936616589" src="https://github.com/user-attachments/assets/05c9f53d-25c6-4aa7-a31b-16b45ef04a6e" />
