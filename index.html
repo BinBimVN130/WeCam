@@ -675,15 +675,16 @@
     .lib-layout-menu button:hover{background:rgba(255,255,255,.08)}
     .lib-layout-menu button.active{background:#ffaa00;color:#000;font-weight:600}
     .lib-grid{
-      flex:1;overflow:auto;padding:12px 16px 24px;
+      flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:12px 16px 24px;
       display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-      gap:12px;align-content:start;
+      grid-auto-flow:row;grid-auto-rows:max-content;gap:12px;align-content:start;
+      align-items:start;position:relative;isolation:isolate;
     }
     .lib-grid.size-sm{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
     .lib-grid.size-md{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
     .lib-grid.size-lg{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
     .lib-card{
-      display:block;width:100%;min-width:0;align-self:start;aspect-ratio:16/9;border-radius:16px;overflow:hidden;position:relative;
+      display:block;width:100%;min-width:0;min-height:0;align-self:start;aspect-ratio:16/9;border-radius:16px;overflow:hidden;position:relative;box-sizing:border-box;
       background:linear-gradient(145deg,#4a4a4a,#2e2e2e);cursor:pointer;
       border:none;padding:0;color:#fff;
     }
@@ -799,7 +800,7 @@
       transform:rotate(45deg);
     }
     body.lib-selecting .lib-card{cursor:pointer}
-    .lib-import-tile{display:flex;width:100%;min-width:0;align-self:start;box-sizing:border-box;aspect-ratio:16/9;min-height:0;border:1px dashed #f5c542;border-radius:14px;background:rgba(255,193,7,.035);color:#f5c542;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:14px;font-weight:600;transition:background .15s,border-color .15s}
+    .lib-import-tile{display:flex;width:100%;min-width:0;min-height:0;align-self:start;box-sizing:border-box;aspect-ratio:16/9;border:1px dashed #f5c542;border-radius:14px;background:rgba(255,193,7,.035);color:#f5c542;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:14px;font-weight:600;transition:background .15s,border-color .15s}
     .lib-import-tile:hover{background:rgba(255,193,7,.09);border-color:#ffd95a}
     .lib-import-tile svg{width:28px;height:28px}
     body.lib-selecting .lib-import-tile{display:none!important}
@@ -901,7 +902,7 @@
       -webkit-user-drag:none;user-select:none;pointer-events:auto;
     }
     .ld-stage img,.ld-stage video{touch-action:none}
-    .ld-video-toolbar{position:absolute;left:10px;right:10px;bottom:10px;z-index:3;display:flex;align-items:center;gap:6px;padding:5px 7px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(18,18,20,.96);color:#fff;font-size:11px;box-sizing:border-box;transition:opacity .15s ease}.ld-video-toolbar.hidden{opacity:0;pointer-events:none}.ld-vmenu-wrap{position:relative;flex-shrink:0}.ld-vpopup{display:none;position:absolute;bottom:calc(100% + 8px);right:0;z-index:5;min-width:100px;max-height:45vh;overflow:auto;padding:5px;border:1px solid rgba(255,255,255,.15);border-radius:10px;background:#171719;box-shadow:0 6px 22px rgba(0,0,0,.45)}.ld-vpopup.show{display:flex;flex-direction:column;gap:3px}.ld-vpopup button{white-space:nowrap;text-align:left;background:transparent}.ld-vpopup button.active{background:rgba(255,255,255,.2)}.ld-stage video.zoomed{object-fit:contain;touch-action:none}
+    .ld-video-toolbar{position:absolute;left:10px;right:10px;bottom:10px;z-index:3;display:flex;align-items:center;gap:6px;padding:5px 7px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(18,18,20,.96);color:#fff;font-size:11px;box-sizing:border-box;transition:opacity .15s ease}.ld-video-toolbar.hidden{opacity:0;pointer-events:none}.ld-vmenu-wrap{position:relative;flex-shrink:0}.ld-vpopup{display:none;position:absolute;bottom:calc(100% + 8px);right:0;z-index:5;min-width:100px;max-height:45vh;overflow:auto;padding:5px;border:1px solid rgba(255,255,255,.15);border-radius:10px;background:#171719;box-shadow:0 6px 22px rgba(0,0,0,.45)}.ld-vpopup.show{display:flex;flex-direction:column;gap:3px}.ld-vpopup button{white-space:nowrap;text-align:left;background:transparent}.ld-vpopup button.active{background:rgba(255,255,255,.2)}.ld-volume-popup{min-width:44px;min-height:142px;align-items:center;justify-content:center;padding:10px 8px}.ld-volume-popup input[type=range]{writing-mode:vertical-lr;direction:rtl;appearance:slider-vertical;width:18px;height:112px;min-width:18px;flex:none;accent-color:#fff}.ld-vmenu-wrap{position:relative}.ld-vpopup{bottom:calc(100% + 10px);max-height:55vh}.ld-stage video.zoomed{object-fit:contain;touch-action:none}.ld-image-fullscreen.auto-hidden{opacity:0;pointer-events:none;transition:opacity .2s ease}.ld-video-toolbar{transition:opacity .2s ease}
     .ld-video-toolbar button{flex-shrink:0;border:0;border-radius:7px;padding:4px 7px;background:rgba(255,255,255,.10);color:#fff;font:inherit;cursor:pointer}
     .ld-video-toolbar .ld-vplay{width:28px;height:28px;min-width:28px;padding:5px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:#fff;color:#161616}
     .ld-vplay svg{width:15px;height:15px;display:block}
@@ -1457,14 +1458,14 @@
         <button type="button" class="lib-icon-btn" id="lib-dl-sel-btn" title="Tải xuống các mục đã chọn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
         </button>
-        <button type="button" class="lib-icon-btn" id="lib-del-sel-btn" title="Xóa vĩnh viễn các mục đã chọn">
+        <button type="button" class="lib-icon-btn" id="lib-del-sel-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 3h4l1 2H9l1-2Z"/><path d="m6 7 1 13h10l1-13"/><path d="M10 10v6M14 10v6"/></svg>
         </button>
         <button type="button" class="lib-icon-btn" id="lib-layout-btn" title="Bố cục" data-tip="Bố cục" style="width:auto;min-width:36px;padding:0 12px;border-radius:18px;font-size:12px;font-weight:600;gap:6px;display:inline-flex;align-items:center">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
           <span id="lib-layout-label">Trung bình</span>
         </button>
-        <button type="button" class="lib-icon-btn" id="lib-multi-btn" title="Chọn nhiều" data-tip="Chọn nhiều">
+        <button type="button" class="lib-icon-btn" id="lib-multi-btn" data-tip="Chọn nhiều">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         </button>
         <button type="button" class="lib-icon-btn" id="lib-help" title="Lưu ý" data-tip="Lưu ý">
@@ -1581,8 +1582,8 @@
       <h3>Xác nhận</h3>
       <p id="lib-del-msg">Xóa vĩnh viễn ảnh/video này?</p>
       <div class="lib-modal-actions">
-        <button type="button" class="btn-muted" id="lib-del-cancel" title="Hủy, giữ lại ảnh/video">Hủy</button>
-        <button type="button" class="btn-danger" id="lib-del-ok" title="Xóa vĩnh viễn, không thể khôi phục">Xóa</button>
+        <button type="button" class="btn-muted" id="lib-del-cancel">Hủy</button>
+        <button type="button" class="btn-danger" id="lib-del-ok">Xóa</button>
       </div>
     </div>
   </div>
@@ -3857,7 +3858,7 @@ async function restorePreviewResolution(){
   const tip=document.createElement('div');tip.id='instant-tooltip';tip.setAttribute('role','tooltip');document.body.appendChild(tip);
   let current=null;
   function show(el){
-    if(el.matches('button') && (el.textContent||'').trim()) return;
+    if(el.matches('button') && (el.textContent||'').trim() && !el.matches('.ld-vspeed')) return;
     const label=el.getAttribute('data-tip')||el.getAttribute('aria-label');
     if(!label||el.disabled||el.closest('[hidden]'))return;
     current=el;tip.textContent=label;tip.classList.add('show');
@@ -4151,7 +4152,12 @@ libImportInput?.addEventListener('change',async()=>{
     const isVideo=file.type.startsWith('video/');
     try{
       const meta=isVideo?await libReadVideoMetadata(file):{duration:0,width:0,height:0};
-      await libAddItem({type:isVideo?'video':'photo',name:file.name||((isVideo?'Video_':'Ảnh_')+Date.now()),blob:file,mime:file.type|| (isVideo?'video/mp4':'image/jpeg'),width:meta.width,height:meta.height,duration:meta.duration,createdAt:Date.now(),size:file.size});
+      const createdAt=Date.now();
+      const d=new Date(createdAt);
+      const datePart=String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear();
+      const ext=(file.name.match(/\.[a-z0-9]{1,8}$/i)||[''])[0];
+      const name=(isVideo?'VID_':'IMG_')+datePart+ext;
+      await libAddItem({type:isVideo?'video':'photo',name,blob:file,mime:file.type|| (isVideo?'video/mp4':'image/jpeg'),width:meta.width,height:meta.height,duration:meta.duration,createdAt,size:file.size});
       added++;
     }catch(err){console.error('Không nhập được tệp vào thư viện',file.name,err);}
   }
@@ -4368,7 +4374,7 @@ let _libGridUrls = [];
 function makeLibImportTile(){
   const tile=document.createElement('button');
   tile.type='button'; tile.className='lib-import-tile'; tile.id='lib-import-tile';
-  tile.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4m-5 5 5-5 5 5"/><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/><rect x="3" y="3" width="18" height="18" rx="4" opacity=".0"/></svg><span>Nhập ảnh/video</span>';
+  tile.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4m-5 5 5-5 5 5"/><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/><rect x="3" y="3" width="18" height="18" rx="4" opacity=".0"/></svg><span>Nhập tệp</span>';
   tile.addEventListener('click',()=>{ if(!libSelecting) document.getElementById('lib-import-input')?.click(); });
   return tile;
 }
@@ -4514,6 +4520,11 @@ function renderLibDetail(){
       } catch (err) { console.warn('Không thể mở ảnh toàn màn hình', err); }
     });
     stage.appendChild(imageFullscreen);
+    let imageControlsTimer=0;
+    const showImageControls=()=>{imageFullscreen.classList.remove('auto-hidden');if(imageControlsTimer)clearTimeout(imageControlsTimer);imageControlsTimer=setTimeout(()=>imageFullscreen.classList.add('auto-hidden'),4000);};
+    stage.addEventListener('pointermove',showImageControls);
+    stage.addEventListener('pointerleave',()=>{if(imageControlsTimer)clearTimeout(imageControlsTimer);imageFullscreen.classList.add('auto-hidden');});
+    showImageControls();
   } else {
     const v = document.createElement('video');
     v.src = url; v.controls = false; v.playsInline = true; v.preload='metadata';
@@ -4522,7 +4533,7 @@ function renderLibDetail(){
     v.addEventListener('contextmenu', e=>e.preventDefault());
     stage.classList.add('can-zoom');
     const toolbar = document.createElement('div'); toolbar.className='ld-video-toolbar';
-    toolbar.innerHTML='<button type="button" class="ld-vplay" aria-label="Phát video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10-6.5z" fill="currentColor"/></svg></button><span class="ld-video-time">0:00 / --:--</span><input type="range" min="0" max="1000" value="0" aria-label="Tua video"><div class="ld-vmenu-wrap"><button type="button" class="ld-vspeed">1× ▴</button><div class="ld-vpopup ld-speed-popup"></div></div><div class="ld-vmenu-wrap"><button type="button" class="ld-vvolume">Âm lượng ▴</button><div class="ld-vpopup ld-volume-popup"><input type="range" min="0" max="1" step="0.05" value="1" aria-label="Âm lượng"></div></div><button type="button" class="ld-vfullscreen" aria-label="Toàn màn hình">⛶</button>';
+    toolbar.innerHTML='<button type="button" class="ld-vplay" aria-label="Phát video" data-tip="Phát/tạm dừng"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10-6.5z" fill="currentColor"/></svg></button><span class="ld-video-time">0:00 / --:--</span><input type="range" min="0" max="1000" value="0" aria-label="Tua video"><div class="ld-vmenu-wrap"><button type="button" class="ld-vspeed" aria-label="Tốc độ phát" data-tip="Tốc độ phát">1× ▴</button><div class="ld-vpopup ld-speed-popup"></div></div><div class="ld-vmenu-wrap"><button type="button" class="ld-vvolume" aria-label="Âm lượng" data-tip="Âm lượng"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/><path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a8.5 8.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><div class="ld-vpopup ld-volume-popup"><input type="range" min="0" max="1" step="0.05" value="1" aria-label="Âm lượng"></div></div><button type="button" class="ld-vfullscreen" aria-label="Toàn màn hình" data-tip="Toàn màn hình">⛶</button>';
     const playBtn=toolbar.querySelector('.ld-vplay'), timeLabel=toolbar.querySelector('.ld-video-time'), seek=toolbar.querySelector('input[aria-label="Tua video"]'), speedBtn=toolbar.querySelector('.ld-vspeed'), speedPopup=toolbar.querySelector('.ld-speed-popup'), volumeBtn=toolbar.querySelector('.ld-vvolume'), volumePopup=toolbar.querySelector('.ld-volume-popup'), volumeRange=volumePopup.querySelector('input'), fullscreenBtn=toolbar.querySelector('.ld-vfullscreen');
     const speeds=[0.25,0.5,0.75,1,1.25,1.5,2,3,3.5,3.75,4,6,8];
     const fmtTime=t=>{if(!Number.isFinite(t)||t<0)return '--:--';const h=Math.floor(t/3600),m=Math.floor(t%3600/60),sec=Math.floor(t%60);return h?`${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`:`${m}:${String(sec).padStart(2,'0')}`;};
@@ -4553,8 +4564,18 @@ function renderLibDetail(){
     });
     seek.addEventListener('input',()=>{if(Number.isFinite(v.duration)&&v.duration>0)v.currentTime=Number(seek.value)/1000*v.duration;});
     fullscreenBtn.addEventListener('click',e=>{e.stopPropagation();if(document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});else (stage.requestFullscreen?.()||v.requestFullscreen?.())?.catch?.(()=>{});});
-    stage.onclick=e=>{if(e.target.closest('.ld-video-toolbar'))return;if(e.target===stage||e.target===v){toolbar.classList.toggle('hidden');speedPopup.classList.remove('show');volumePopup.classList.remove('show');}};
+    stage.onclick=e=>{if(e.target.closest('.ld-video-toolbar'))return;if(e.target===stage||e.target===v){if(toolbar.classList.contains('hidden'))showControls();else {toolbar.classList.add('hidden');speedPopup.classList.remove('show');volumePopup.classList.remove('show');}}};
     toolbar.addEventListener('click',e=>e.stopPropagation());
+    if(!window.__ldPopupCloserInstalled){window.__ldPopupCloserInstalled=true;document.addEventListener('pointerdown',e=>{if(!e.target.closest('.ld-vmenu-wrap'))document.querySelectorAll('.ld-vpopup.show').forEach(p=>p.classList.remove('show'));});}
+
+    // Controls behave like a video player: appear on movement, hide on leave or after 4 s idle.
+    let controlsTimer=0;
+    const showControls=()=>{toolbar.classList.remove('hidden');if(controlsTimer)clearTimeout(controlsTimer);controlsTimer=setTimeout(()=>{toolbar.classList.add('hidden');speedPopup.classList.remove('show');volumePopup.classList.remove('show');},4000);};
+    const hideControls=()=>{if(controlsTimer)clearTimeout(controlsTimer);toolbar.classList.add('hidden');speedPopup.classList.remove('show');volumePopup.classList.remove('show');};
+    stage.addEventListener('pointermove',showControls);
+    stage.addEventListener('pointerleave',hideControls);
+    stage.addEventListener('pointerdown',e=>{if(e.target===stage||e.target===v)showControls();});
+    showControls();
 
     v.addEventListener('error',()=>{timeLabel.textContent='Không đọc được thời lượng';});
     stage.appendChild(v);stage.appendChild(toolbar);
@@ -4797,7 +4818,7 @@ document.getElementById('lib-multi-btn')?.addEventListener('click', e=>{
   e.stopPropagation();
   if(libSelecting){ exitLibSelectMode(); return; }
   libSelecting = true;
-  document.getElementById('lib-multi-btn')?.setAttribute('title','Hủy chọn nhiều');
+  document.getElementById('lib-multi-btn')?.removeAttribute('title'); document.getElementById('lib-multi-btn')?.removeAttribute('data-tip');
   document.getElementById('lib-multi-btn')?.classList.add('active');
   document.body.classList.add('lib-selecting');
   updateLibTitle();
@@ -4913,6 +4934,12 @@ document.getElementById('ld-prev')?.addEventListener('click', ()=>{
 });
 document.getElementById('ld-next')?.addEventListener('click', ()=>{
   if(libDetailIdx<libItems.length-1){ libDetailIdx++; renderLibDetail(); }
+});
+document.addEventListener('keydown',e=>{
+  const detail=document.getElementById('library-detail');
+  if(!detail?.classList.contains('show')||e.altKey||e.ctrlKey||e.metaKey||/INPUT|TEXTAREA|SELECT/.test(e.target?.tagName||''))return;
+  if(e.key==='ArrowLeft'){e.preventDefault();if(libDetailIdx>0){libDetailIdx--;renderLibDetail();}}
+  else if(e.key==='ArrowRight'){e.preventDefault();if(libDetailIdx<libItems.length-1){libDetailIdx++;renderLibDetail();}}
 });
 
 /* Noise reduce toggle */
