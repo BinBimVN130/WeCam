@@ -8,12 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23ffffff'/%3E%3Cstop offset='100%25' stop-color='%238b8b8b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M480-240q100 0 170-70t70-170q0-87-55.5-153T524-716q-18-2-31 10t-13 30v196L342-342q-13 13-12 31t15 29q29 23 64 32.5t71 9.5Zm0 160q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z'/%3E%3C/svg%3E">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#202124">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js" integrity="sha384-hStSInNIZ8ljtOVrmrgf7zdHMapaLBWoSnPTtF0nzsybp4+LuhDz6sHuEVpWIX8o" crossorigin="anonymous"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
@@ -1787,7 +1781,7 @@ const state = {
   stream:null, mode:'photo', isRecording:false, mediaRecorder:null, recordedChunks:[],
   flipH:false, flipV:false, flashOn:false, flashColor:'#ffffff',
   timerSec:0, isCounting:false, facingMode:'user', videoDeviceId:null, audioDeviceId:null, forceAspect:'16:9', previewRes:'1280x720', captureRes:'1280x720', previewFps:30, micGain:1, noiseReduce:false, photoFmt:'png', videoFmt:'webm', persistSettings:true,
-  recAnimId:null, qrScanning:false, qrAnimId:null,
+  recAnimId:null, recDrawTimer:null, qrScanning:false, qrAnimId:null,
   zoom:1, panX:0, panY:0, isPanning:false,
   panStartX:0, panStartY:0, panOriginX:0, panOriginY:0,
   ev:0, sat:1, temp:0, filter:'none', hdr:true,
@@ -2547,16 +2541,14 @@ async function capturePhoto(){
 
 
 function cancelRecDraw(){
+  try{ if(state.recDrawTimer != null) clearInterval(state.recDrawTimer); }catch(e){}
+  state.recDrawTimer = null;
   try{
     if(state.recAnimId != null){
-      if(typeof video.cancelVideoFrameCallback === 'function')
-        video.cancelVideoFrameCallback(state.recAnimId);
-      else
-        cancelAnimationFrame(state.recAnimId);
+      if(typeof video.cancelVideoFrameCallback === 'function') video.cancelVideoFrameCallback(state.recAnimId);
+      else cancelAnimationFrame(state.recAnimId);
     }
-  }catch(e){
-    try{ cancelAnimationFrame(state.recAnimId); }catch(e2){}
-  }
+  }catch(e){ try{ cancelAnimationFrame(state.recAnimId); }catch(e2){} }
   state.recAnimId = null;
 }
 
@@ -2602,28 +2594,28 @@ async function startRecording(){
   const sourceFps = Number(state.stream?.getVideoTracks?.()[0]?.getSettings?.().frameRate) || 60;
   const requestedFps = Number(state.previewFps) || sourceFps;
   const recFps = Math.max(1, Math.min(120, requestedFps, sourceFps));
-  const useRvfc = typeof video.requestVideoFrameCallback === 'function';
-  let lastDraw = 0;
+  // Không phụ thuộc requestVideoFrameCallback/rAF: các callback này có thể bị
+  // đình chỉ khi tab bị ẩn, làm canvas đứng hình trong khi âm thanh vẫn được ghi.
+  // Dùng timer độc lập và yêu cầu canvas stream lấy frame mới sau mỗi lần vẽ.
   const minGap = 1000 / recFps;
-  const drawLoop = (now) => {
-    if(!state.isRecording) return;
-    const t = (typeof now === 'number') ? now : performance.now();
-    if(t - lastDraw >= minGap - 1){
-      lastDraw = t;
-      try{ drawToCanvas(recCtx,w,h,'fast'); }catch(e){}
-    }
-    if(useRvfc){
-      state.recAnimId = video.requestVideoFrameCallback((_n, meta)=> drawLoop(meta?.expectedDisplayTime || performance.now()));
-    } else {
-      state.recAnimId = requestAnimationFrame(drawLoop);
-    }
-  };
-  // Vẽ 1 frame ngay để canvas không trống
-  try{ drawToCanvas(recCtx,w,h,'fast'); }catch(e){}
-  if(useRvfc) state.recAnimId = video.requestVideoFrameCallback(drawLoop);
-  else state.recAnimId = requestAnimationFrame(drawLoop);
-  const canvasStream=recCanvas.captureStream(recFps);
+  let lastDraw = 0;
+  const canvasStream=recCanvas.captureStream(0);
   state._recCanvasStream = canvasStream;
+  const canvasVideoTrack = canvasStream.getVideoTracks()[0];
+  const drawRecordingFrame = () => {
+    if(!state.isRecording || video.readyState < 2 || !video.videoWidth) return;
+    const now = performance.now();
+    if(now - lastDraw < minGap - 1) return;
+    lastDraw = now;
+    try{
+      drawToCanvas(recCtx,w,h,'fast');
+      if(canvasVideoTrack && typeof canvasVideoTrack.requestFrame === 'function') canvasVideoTrack.requestFrame();
+    }catch(e){}
+  };
+  // Vẽ ngay frame đầu, sau đó dùng interval thay vì callback phụ thuộc render.
+  try{ drawToCanvas(recCtx,w,h,'fast'); }catch(e){}
+  try{ if(canvasVideoTrack && typeof canvasVideoTrack.requestFrame === 'function') canvasVideoTrack.requestFrame(); }catch(e){}
+  state.recDrawTimer = setInterval(drawRecordingFrame, Math.max(10, Math.floor(minGap)));
   const audioTracks=state.stream.getAudioTracks().filter(t=>t.readyState==='live');
   if(audioTracks.length){
     // Khôi phục đúng mức user đã chọn (Tắt=1, 2x, 5x...)
@@ -4670,14 +4662,6 @@ function updateCamInfoPanel(){
 }
 setInterval(updateCamInfoPanel, 1000);
 
-</script>
-<script>
-// Đăng ký PWA để trình duyệt có thể cung cấp chức năng cài đặt ứng dụng.
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').catch(err => console.warn('PWA service worker:', err));
-  });
-}
 </script>
 </body>
 </html>
