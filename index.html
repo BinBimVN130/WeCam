@@ -1901,6 +1901,7 @@ const flipHBtn=document.getElementById('flip-h');
 
 
 function showModeHint(text){
+  if(state._silentMode) return; // đang khởi động: không hiện thông báo đổi chế độ
   const el = document.getElementById('mode-hint');
   if(!el) return;
   el.textContent = text;
@@ -3878,6 +3879,22 @@ try{ if(typeof loadMicGain === 'function') loadMicGain(); }catch(e){}
 updateModePill();
 window.addEventListener('resize', updateModePill);
 
+/** Đếm số khung hình thật trong ms mili giây (qua requestVideoFrameCallback); 0 nếu không đo được. */
+function measureFps(ms){
+  return new Promise(resolve=>{
+    if(typeof video.requestVideoFrameCallback !== 'function' || !video.videoWidth){ resolve(0); return; }
+    let frames = 0, t0 = 0, done = false;
+    const finish = ()=>{ if(done) return; done = true; const dt = (performance.now() - t0) / 1000; resolve(dt > 0.2 ? Math.round(frames / dt) : 0); };
+    const tick = (now, meta)=>{
+      if(done) return;
+      if(!t0){ t0 = performance.now(); } else frames++;
+      if(performance.now() - t0 >= ms) finish();
+      else video.requestVideoFrameCallback(tick);
+    };
+    video.requestVideoFrameCallback(tick);
+    setTimeout(finish, ms + 600);
+  });
+}
 async function runCameraSetupSequence(){
   const modal = document.getElementById('cam-setup-modal');
   const status = document.getElementById('cam-setup-status');
@@ -3918,13 +3935,34 @@ async function runCameraSetupSequence(){
         await new Promise(r=> c.toBlob(()=>r(), 'image/jpeg', 0.5));
       }
     }catch(e){}
-    setStatus('Làm mới camera...', 78);
-    if(!await startCamera(true, true)) throw new Error('Không thể làm mới camera');
+    setStatus('Làm mới camera...', 72);
+    // Lần mở đầu đã xin quyền camera + micro. Luồng cuối cùng chỉ cần hình (chế độ mặc định là chụp ảnh);
+    // mic sẽ được mở lại khi vào chế độ quay video. Mở camera kèm mic dễ làm một số camera chạy FPS thấp.
+    if(!await startCamera(false, true)) throw new Error('Không thể làm mới camera');
     try{
       const track = state.stream?.getVideoTracks()?.[0];
       if(track && typeof applyVideoQuality === 'function') await applyVideoQuality(track);
     }catch(e){}
     await waitForVideoFrame(400);
+    // Khởi động FPS: nhiều camera chỉ đạt FPS đã chọn sau khi áp lại cấu hình / đổi chế độ.
+    // Đo thực tế; nếu thấp hơn mục tiêu thì đi một vòng QR → chụp ảnh ngay sau lớp loading.
+    setStatus('Tối ưu FPS...', 88);
+    try{
+      const track = state.stream?.getVideoTracks()?.[0];
+      const capMax = track?.getCapabilities?.()?.frameRate?.max;
+      const chosen = Number(state.previewFps) > 0 ? Number(state.previewFps) : (capMax || 0);
+      const want = chosen ? Math.min(chosen, capMax || chosen) : 0;
+      let got = await measureFps(700);
+      if(want && got && got < want * 0.85){
+        state._silentMode = true;
+        try{
+          await setMode('qr');
+          await new Promise(r=>setTimeout(r, 250));
+          await setMode('photo');
+          await waitForVideoFrame(400);
+        } finally { state._silentMode = false; }
+      }
+    }catch(e){ state._silentMode = false; }
     setStatus('Đang thiết lập...', 100);
     applyVideoTransform();
     if(aspectBtn) aspectBtn.textContent = state.forceAspect || '16:9';
