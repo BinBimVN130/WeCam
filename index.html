@@ -479,13 +479,11 @@
     #support-qr{display:block;width:min(100%,320px);height:auto;border-radius:12px;pointer-events:none;-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
     .support-caption{font-size:13px;line-height:1.45;text-align:center;color:#41556a}
     .support-close{position:absolute;right:10px;top:10px;width:32px;height:32px;border:0;border-radius:50%;background:rgba(0,0,0,.07);color:#24384c;font-size:24px;cursor:pointer}
-    #app-loading{position:fixed;inset:0;z-index:1000000;display:flex;align-items:center;justify-content:center;background:rgba(5,5,7,.9);color:#fff;transition:opacity .25s ease,visibility .25s ease}
+    #app-loading{position:fixed;inset:0;z-index:1000000;display:flex;align-items:center;justify-content:center;background:#050507;color:#fff;transition:opacity .25s ease,visibility .25s ease}
     #app-loading.done{opacity:0;visibility:hidden;pointer-events:none}
-    .app-loading-inner{width:min(280px,76vw);display:flex;flex-direction:column;align-items:center;gap:14px}
-    .app-loading-logo{width:58px;height:58px;opacity:.96}
-    .app-loading-name{font-size:17px;font-weight:600;letter-spacing:.02em}
-    .app-loading-track{width:100%;height:4px;overflow:hidden;border-radius:10px;background:rgba(255,255,255,.18)}
-    .app-loading-progress{height:100%;width:8%;border-radius:10px;background:#fff;transition:width .18s ease}
+    .app-loading-inner{width:min(280px,76vw)}
+    .app-loading-track{width:100%;height:5px;overflow:hidden;border-radius:10px;background:rgba(255,255,255,.2)}
+    .app-loading-progress{height:100%;width:0;border-radius:10px;background:#fff;transition:width .12s linear}
     #instant-tooltip{position:fixed;z-index:2000;display:none;pointer-events:none;padding:5px 8px;border-radius:7px;background:rgba(25,25,28,.96);border:1px solid rgba(255,255,255,.13);color:#fff;font-size:11px;line-height:1.25;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3)}
     #instant-tooltip.show{display:block}
 
@@ -1200,10 +1198,8 @@
     </filter>
   </defs>
 </svg>
-<div id="app-loading" aria-label="Đang tải webs-cam-era" role="status">
+<div id="app-loading" aria-label="Đang tải" role="status">
   <div class="app-loading-inner">
-    <svg class="app-loading-logo" viewBox="0 -960 960 960" aria-hidden="true"><path fill="currentColor" d="M480-240q100 0 170-70t70-170q0-87-55.5-153T524-716q-18-2-31 10t-13 30v196L342-342q-13 13-12 31t15 29q29 23 64 32.5t71 9.5Zm0 160q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/></svg>
-    <div class="app-loading-name">webs-cam-era</div>
     <div class="app-loading-track"><div class="app-loading-progress" id="app-loading-progress"></div></div>
   </div>
 </div>
@@ -5257,16 +5253,26 @@ setInterval(()=>{
 
 </script>
 
-/* Splash screen: progress while the document initializes. */
+<script>
+/* Splash screen: stays visible until Escape is pressed three times. */
 (function(){
   const screen=document.getElementById('app-loading'),bar=document.getElementById('app-loading-progress');
   if(!screen||!bar)return;
-  let progress=8;
-  const tick=setInterval(()=>{progress=Math.min(92,progress+Math.max(1,(92-progress)*0.12));bar.style.width=progress+'%';},90);
-  const finish=()=>{clearInterval(tick);bar.style.width='100%';setTimeout(()=>screen.classList.add('done'),180);setTimeout(()=>screen.remove(),500);};
-  if(document.readyState==='complete')finish();else window.addEventListener('load',finish,{once:true});
-  setTimeout(finish,3500);
+  let progress=0,escapePresses=0;
+  const tick=setInterval(()=>{
+    if(progress<99){progress=Math.min(99,progress+1);bar.style.width=progress+'%';}
+  },80);
+  document.addEventListener('keydown',function onLoadingKey(e){
+    if(e.key!=='Escape')return;
+    escapePresses++;
+    if(escapePresses>=3){
+      clearInterval(tick);
+      screen.remove();
+      document.removeEventListener('keydown',onLoadingKey);
+    }
+  });
 })();
+</script>
 
 </body>
 </html>
