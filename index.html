@@ -683,7 +683,7 @@
     .lib-grid.size-md{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
     .lib-grid.size-lg{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
     .lib-card{
-      aspect-ratio:16/9;border-radius:16px;overflow:hidden;position:relative;
+      display:block;width:100%;min-width:0;align-self:start;aspect-ratio:16/9;border-radius:16px;overflow:hidden;position:relative;
       background:linear-gradient(145deg,#4a4a4a,#2e2e2e);cursor:pointer;
       border:none;padding:0;color:#fff;
     }
@@ -799,7 +799,7 @@
       transform:rotate(45deg);
     }
     body.lib-selecting .lib-card{cursor:pointer}
-    .lib-import-tile{aspect-ratio:16/9;min-height:0;border:1px dashed #f5c542;border-radius:14px;background:rgba(255,193,7,.035);color:#f5c542;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:14px;font-weight:600;transition:background .15s,border-color .15s}
+    .lib-import-tile{display:flex;width:100%;min-width:0;align-self:start;box-sizing:border-box;aspect-ratio:16/9;min-height:0;border:1px dashed #f5c542;border-radius:14px;background:rgba(255,193,7,.035);color:#f5c542;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:14px;font-weight:600;transition:background .15s,border-color .15s}
     .lib-import-tile:hover{background:rgba(255,193,7,.09);border-color:#ffd95a}
     .lib-import-tile svg{width:28px;height:28px}
     body.lib-selecting .lib-import-tile{display:none!important}
@@ -900,14 +900,16 @@
       transform-origin:center center;
       -webkit-user-drag:none;user-select:none;pointer-events:auto;
     }
-    .ld-stage img{touch-action:none}
-    .ld-video-toolbar{position:absolute;left:10px;right:10px;bottom:10px;z-index:3;display:flex;align-items:center;gap:9px;padding:8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(18,18,20,.88);backdrop-filter:blur(12px);color:#fff;font-size:12px;box-sizing:border-box}
-    .ld-video-toolbar button{flex-shrink:0;border:0;border-radius:8px;padding:6px 9px;background:rgba(255,255,255,.12);color:#fff;font:inherit;cursor:pointer}
-    .ld-video-toolbar .ld-vplay{min-width:34px;font-size:15px}
+    .ld-stage img,.ld-stage video{touch-action:none}
+    .ld-video-toolbar{position:absolute;left:10px;right:10px;bottom:10px;z-index:3;display:flex;align-items:center;gap:6px;padding:5px 7px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(18,18,20,.96);color:#fff;font-size:11px;box-sizing:border-box;transition:opacity .15s ease}.ld-video-toolbar.hidden{opacity:0;pointer-events:none}.ld-vmenu-wrap{position:relative;flex-shrink:0}.ld-vpopup{display:none;position:absolute;bottom:calc(100% + 8px);right:0;z-index:5;min-width:100px;max-height:45vh;overflow:auto;padding:5px;border:1px solid rgba(255,255,255,.15);border-radius:10px;background:#171719;box-shadow:0 6px 22px rgba(0,0,0,.45)}.ld-vpopup.show{display:flex;flex-direction:column;gap:3px}.ld-vpopup button{white-space:nowrap;text-align:left;background:transparent}.ld-vpopup button.active{background:rgba(255,255,255,.2)}.ld-stage video.zoomed{object-fit:contain;touch-action:none}
+    .ld-video-toolbar button{flex-shrink:0;border:0;border-radius:7px;padding:4px 7px;background:rgba(255,255,255,.10);color:#fff;font:inherit;cursor:pointer}
+    .ld-video-toolbar .ld-vplay{width:28px;height:28px;min-width:28px;padding:5px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:#fff;color:#161616}
+    .ld-vplay svg{width:15px;height:15px;display:block}
     .ld-video-toolbar input[type=range]{min-width:0;flex:1;accent-color:#fff;cursor:pointer}
     .ld-video-time{white-space:nowrap;font-variant-numeric:tabular-nums;color:rgba(255,255,255,.85)}
     .ld-stage.can-zoom{cursor:grab}
-    @media(max-width:520px){.ld-video-toolbar{left:5px;right:5px;bottom:5px;gap:5px;padding:6px}.ld-video-toolbar button{padding:6px}.ld-video-time{font-size:10px}}
+    @media(max-width:520px){.ld-video-toolbar{left:5px;right:5px;bottom:5px;gap:4px;padding:4px}.ld-video-toolbar button{padding:4px 5px}.ld-video-toolbar .ld-vplay{width:26px;height:26px;min-width:26px;padding:5px}.ld-video-time{font-size:10px}}
+    .ld-image-fullscreen{position:absolute;right:10px;bottom:10px;z-index:4;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.22);border-radius:10px;background:rgba(18,18,20,.88);color:#fff;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.25)}.ld-image-fullscreen svg{width:19px;height:19px}.ld-image-fullscreen:hover{background:rgba(40,40,40,.98)}.ld-stage:fullscreen{width:100vw;height:100vh;max-height:none;aspect-ratio:auto;border-radius:0;background:#000}.ld-stage:fullscreen img{object-fit:contain;width:100%;height:100%}
     .ld-stage.zooming{cursor:grabbing}
     #ld-zoom-label{
       flex-shrink:0;margin-top:14px;font-size:13px;font-weight:500;
@@ -4148,7 +4150,8 @@ libImportInput?.addEventListener('change',async()=>{
     if(!file.type.startsWith('image/')&&!file.type.startsWith('video/')) continue;
     const isVideo=file.type.startsWith('video/');
     try{
-      await libAddItem({type:isVideo?'video':'photo',name:file.name||((isVideo?'Video_':'Ảnh_')+Date.now()),blob:file,mime:file.type|| (isVideo?'video/mp4':'image/jpeg'),width:0,height:0,duration:0,createdAt:Date.now(),size:file.size});
+      const meta=isVideo?await libReadVideoMetadata(file):{duration:0,width:0,height:0};
+      await libAddItem({type:isVideo?'video':'photo',name:file.name||((isVideo?'Video_':'Ảnh_')+Date.now()),blob:file,mime:file.type|| (isVideo?'video/mp4':'image/jpeg'),width:meta.width,height:meta.height,duration:meta.duration,createdAt:Date.now(),size:file.size});
       added++;
     }catch(err){console.error('Không nhập được tệp vào thư viện',file.name,err);}
   }
@@ -4156,6 +4159,26 @@ libImportInput?.addEventListener('change',async()=>{
   showToast(added?`Đã nhập ${added} tệp vào Thư viện`:'Không nhập được tệp nào');
 });
 
+async function libUpdateItem(item){
+  if(!item || item.id == null) return;
+  const db=await libOpenDb();
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction(LIB_STORE,'readwrite');
+    tx.objectStore(LIB_STORE).put(item);
+    tx.oncomplete=()=>resolve();
+    tx.onerror=()=>reject(tx.error||new Error('Không cập nhật được tệp'));
+  });
+}
+function libReadVideoMetadata(blob){
+  return new Promise(resolve=>{
+    const url=URL.createObjectURL(blob), v=document.createElement('video');
+    v.preload='metadata'; v.muted=true;
+    const done=()=>{const result={duration:Number.isFinite(v.duration)?v.duration:0,width:v.videoWidth||0,height:v.videoHeight||0};URL.revokeObjectURL(url);v.removeAttribute('src');v.load();resolve(result);};
+    v.addEventListener('loadedmetadata',done,{once:true});
+    v.addEventListener('error',()=>{URL.revokeObjectURL(url);resolve({duration:0,width:0,height:0});},{once:true});
+    v.src=url;
+  });
+}
 async function libGetAll(){
   const db = await libOpenDb();
   return new Promise((resolve, reject)=>{
@@ -4360,8 +4383,9 @@ async function renderLibGrid(){
   });
   _libGridUrls.forEach(u=>{ try{ URL.revokeObjectURL(u); }catch(e){} }); _libGridUrls = [];
   grid.innerHTML = '';
-  grid.appendChild(makeLibImportTile());
   if(!list.length){
+    const todayHead=document.createElement('div'); todayHead.className='lib-day-head'; todayHead.textContent='Hôm nay'; todayHead.style.cssText='grid-column:1/-1;font-size:13px;font-weight:600;color:rgba(255,255,255,.55);padding:8px 4px 4px'; grid.appendChild(todayHead);
+    grid.appendChild(makeLibImportTile());
     const empty=document.createElement('div'); empty.className='lib-empty'; empty.textContent='Không có tệp tin nào.'; grid.appendChild(empty);
     updateLibDelBtn();
     return;
@@ -4384,12 +4408,16 @@ async function renderLibGrid(){
     groups[k].push(it);
   });
   const keys = Object.keys(groups).sort((a,b)=> b.localeCompare(a));
+  const nowDate=new Date(); const todayKey=nowDate.getFullYear()+'-'+String(nowDate.getMonth()+1).padStart(2,'0')+'-'+String(nowDate.getDate()).padStart(2,'0');
+  if(!groups[todayKey]){const head=document.createElement('div');head.className='lib-day-head';head.textContent='Hôm nay';head.style.cssText='grid-column:1/-1;font-size:13px;font-weight:600;color:rgba(255,255,255,.55);padding:8px 4px 4px';grid.appendChild(head);grid.appendChild(makeLibImportTile());}
   keys.forEach(k=>{
     const head = document.createElement('div');
     head.className = 'lib-day-head';
     head.textContent = dayLabel(groups[k][0].createdAt);
     head.style.cssText = 'grid-column:1/-1;font-size:13px;font-weight:600;color:rgba(255,255,255,.55);padding:8px 4px 4px';
     grid.appendChild(head);
+    const now=new Date(); const isToday=groups[k].some(x=>{const d=new Date(x.createdAt||0);return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()&&d.getDate()===now.getDate();});
+    if(isToday) grid.appendChild(makeLibImportTile());
     groups[k].forEach((it)=>{
       const realIdx = libItems.indexOf(it);
       const btn = document.createElement('button');
@@ -4410,6 +4438,7 @@ async function renderLibGrid(){
       } else {
         const v = document.createElement('video');
         v.src = url; v.muted = true; v.preload = 'metadata';
+        v.addEventListener('loadedmetadata',async()=>{if(Number.isFinite(v.duration)&&v.duration>0&&Math.abs((it.duration||0)-v.duration)>0.5){it.duration=v.duration;it.width=v.videoWidth||it.width;it.height=v.videoHeight||it.height;try{await libUpdateItem(it);const dur=btn.querySelector('.vid-meta span:last-child');if(dur)dur.textContent=libFmtDur(it.duration);}catch(e){}}},{once:true});
         btn.appendChild(v);
         const meta = document.createElement('div');
         meta.className = 'vid-meta';
@@ -4471,42 +4500,65 @@ function renderLibDetail(){
     img.addEventListener('dragstart', e=>{ e.preventDefault(); return false; });
     img.addEventListener('contextmenu', e=>{ e.preventDefault(); });
     stage.appendChild(img);
+    const imageFullscreen = document.createElement('button');
+    imageFullscreen.type = 'button';
+    imageFullscreen.className = 'ld-image-fullscreen';
+    imageFullscreen.title = 'Toàn màn hình';
+    imageFullscreen.setAttribute('aria-label', 'Xem ảnh toàn màn hình');
+    imageFullscreen.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>';
+    imageFullscreen.addEventListener('click', async e => {
+      e.stopPropagation();
+      try {
+        if (document.fullscreenElement) await document.exitFullscreen();
+        else await stage.requestFullscreen();
+      } catch (err) { console.warn('Không thể mở ảnh toàn màn hình', err); }
+    });
+    stage.appendChild(imageFullscreen);
   } else {
     const v = document.createElement('video');
-    v.src = url; v.controls = false; v.playsInline = true;
+    v.src = url; v.controls = false; v.playsInline = true; v.preload='metadata';
     v.disablePictureInPicture = true;
-    v.style.maxWidth = '100%'; v.style.maxHeight = '100%';
-    v.style.borderRadius = '0';
-    v.addEventListener('contextmenu', e=>{ e.preventDefault(); });
-    const toolbar = document.createElement('div');
-    toolbar.className = 'ld-video-toolbar';
-    toolbar.innerHTML = '<button type="button" class="ld-vplay" aria-label="Phát hoặc tạm dừng">▶</button><span class="ld-video-time">0:00 / 0:00</span><input type="range" min="0" max="1000" value="0" aria-label="Tua video"><button type="button" class="ld-vspeed">1×</button>';
-    const playBtn = toolbar.querySelector('.ld-vplay');
-    const timeLabel = toolbar.querySelector('.ld-video-time');
-    const seek = toolbar.querySelector('input');
-    const speedBtn = toolbar.querySelector('.ld-vspeed');
-    const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
-    let speedIndex = 2;
-    const fmtTime = t => { if(!Number.isFinite(t)) t=0; const m=Math.floor(t/60), sec=Math.floor(t%60); return m+':'+String(sec).padStart(2,'0'); };
-    playBtn.addEventListener('click',()=>{ if(v.paused) v.play().catch(()=>{}); else v.pause(); });
-    v.addEventListener('play',()=>{playBtn.textContent='Ⅱ';});
-    v.addEventListener('pause',()=>{playBtn.textContent='▶';});
-    v.addEventListener('timeupdate',()=>{ if(!seek.matches(':active')) seek.value=String(v.duration ? v.currentTime/v.duration*1000 : 0); timeLabel.textContent=fmtTime(v.currentTime)+' / '+fmtTime(v.duration); });
-    v.addEventListener('loadedmetadata',()=>{timeLabel.textContent=fmtTime(v.currentTime)+' / '+fmtTime(v.duration);});
-    seek.addEventListener('input',()=>{if(Number.isFinite(v.duration)) v.currentTime=Number(seek.value)/1000*v.duration;});
-    speedBtn.addEventListener('click',()=>{speedIndex=(speedIndex+1)%speeds.length;v.playbackRate=speeds[speedIndex];speedBtn.textContent=speeds[speedIndex]+'×';});
-    const storedDur = it.duration || 0;
-    v.addEventListener('loadedmetadata', function onMeta(){
-      if(v.duration === Infinity || !isFinite(v.duration) || (storedDur > 2 && v.duration < storedDur * 0.5)){
-        v.currentTime = 1e101;
-        v.addEventListener('timeupdate', function onTu(){
-          v.removeEventListener('timeupdate', onTu);
-          v.currentTime = 0;
-        });
+    v.style.maxWidth = '100%'; v.style.maxHeight = '100%'; v.style.borderRadius = '0';
+    v.addEventListener('contextmenu', e=>e.preventDefault());
+    stage.classList.add('can-zoom');
+    const toolbar = document.createElement('div'); toolbar.className='ld-video-toolbar';
+    toolbar.innerHTML='<button type="button" class="ld-vplay" aria-label="Phát video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10-6.5z" fill="currentColor"/></svg></button><span class="ld-video-time">0:00 / --:--</span><input type="range" min="0" max="1000" value="0" aria-label="Tua video"><div class="ld-vmenu-wrap"><button type="button" class="ld-vspeed">1× ▴</button><div class="ld-vpopup ld-speed-popup"></div></div><div class="ld-vmenu-wrap"><button type="button" class="ld-vvolume">Âm lượng ▴</button><div class="ld-vpopup ld-volume-popup"><input type="range" min="0" max="1" step="0.05" value="1" aria-label="Âm lượng"></div></div><button type="button" class="ld-vfullscreen" aria-label="Toàn màn hình">⛶</button>';
+    const playBtn=toolbar.querySelector('.ld-vplay'), timeLabel=toolbar.querySelector('.ld-video-time'), seek=toolbar.querySelector('input[aria-label="Tua video"]'), speedBtn=toolbar.querySelector('.ld-vspeed'), speedPopup=toolbar.querySelector('.ld-speed-popup'), volumeBtn=toolbar.querySelector('.ld-vvolume'), volumePopup=toolbar.querySelector('.ld-volume-popup'), volumeRange=volumePopup.querySelector('input'), fullscreenBtn=toolbar.querySelector('.ld-vfullscreen');
+    const speeds=[0.25,0.5,0.75,1,1.25,1.5,2,3,3.5,3.75,4,6,8];
+    const fmtTime=t=>{if(!Number.isFinite(t)||t<0)return '--:--';const h=Math.floor(t/3600),m=Math.floor(t%3600/60),sec=Math.floor(t%60);return h?`${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`:`${m}:${String(sec).padStart(2,'0')}`;};
+    function updateTime(){timeLabel.textContent=fmtTime(v.currentTime)+' / '+fmtTime(v.duration);if(!seek.matches(':active'))seek.value=String(Number.isFinite(v.duration)&&v.duration>0?v.currentTime/v.duration*1000:0);}
+    speeds.forEach(rate=>{const b=document.createElement('button');b.type='button';b.textContent=rate+'×';if(rate===1)b.classList.add('active');b.addEventListener('click',()=>{v.playbackRate=rate;speedBtn.textContent=rate+'× ▴';speedPopup.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));speedPopup.classList.remove('show');});speedPopup.appendChild(b);});
+    const togglePopup=(popup,other)=>{other.classList.remove('show');popup.classList.toggle('show');};
+    speedBtn.addEventListener('click',e=>{e.stopPropagation();togglePopup(speedPopup,volumePopup);});
+    volumeBtn.addEventListener('click',e=>{e.stopPropagation();togglePopup(volumePopup,speedPopup);});
+    volumeRange.addEventListener('input',()=>{v.volume=Number(volumeRange.value);v.muted=v.volume===0;});
+    const playIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10-6.5z" fill="currentColor"/></svg>';
+    const pauseIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM14 5h4v14h-4z" fill="currentColor"/></svg>';
+    playBtn.addEventListener('click',()=>{if(v.paused)v.play().catch(()=>{});else v.pause();});
+    v.addEventListener('play',()=>{playBtn.innerHTML=pauseIcon;playBtn.setAttribute('aria-label','Tạm dừng video');});v.addEventListener('pause',()=>{playBtn.innerHTML=playIcon;playBtn.setAttribute('aria-label','Phát video');});
+    v.addEventListener('timeupdate',updateTime);
+    let savedActualDuration=0;
+    async function saveActualDuration(){
+      if(!Number.isFinite(v.duration)||v.duration<=0||Math.abs((it.duration||0)-v.duration)<=0.5||savedActualDuration===v.duration)return;
+      savedActualDuration=v.duration;it.duration=v.duration;it.width=v.videoWidth||it.width;it.height=v.videoHeight||it.height;
+      try{await libUpdateItem(it);libItems=await libGetAll();}catch(e){console.warn('Không lưu được thời lượng video',e);}
+    }
+    v.addEventListener('durationchange',()=>{updateTime();saveActualDuration();});
+    v.addEventListener('loadedmetadata',async()=>{
+      if(!Number.isFinite(v.duration) || v.duration===Infinity){
+        try{const end=v.seekable.length?v.seekable.end(v.seekable.length-1):0;if(end>0){v.currentTime=Math.max(0,end-0.05);v.addEventListener('timeupdate',function restoreStart(){v.removeEventListener('timeupdate',restoreStart);v.currentTime=0;setTimeout(updateTime,0);},{once:true});}}catch(e){}
       }
+      updateTime();
+      await saveActualDuration();
     });
-    stage.appendChild(v);
-    stage.appendChild(toolbar);
+    seek.addEventListener('input',()=>{if(Number.isFinite(v.duration)&&v.duration>0)v.currentTime=Number(seek.value)/1000*v.duration;});
+    fullscreenBtn.addEventListener('click',e=>{e.stopPropagation();if(document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});else (stage.requestFullscreen?.()||v.requestFullscreen?.())?.catch?.(()=>{});});
+    stage.onclick=e=>{if(e.target.closest('.ld-video-toolbar'))return;if(e.target===stage||e.target===v){toolbar.classList.toggle('hidden');speedPopup.classList.remove('show');volumePopup.classList.remove('show');}};
+    toolbar.addEventListener('click',e=>e.stopPropagation());
+
+    v.addEventListener('error',()=>{timeLabel.textContent='Không đọc được thời lượng';});
+    stage.appendChild(v);stage.appendChild(toolbar);
+
   }
   document.getElementById('ld-prev').disabled = libDetailIdx <= 0;
   document.getElementById('ld-next').disabled = libDetailIdx >= libItems.length-1;
@@ -4912,6 +4964,7 @@ document.getElementById('ld-next')?.addEventListener('click', ()=>{
     if(libViewZoom <= 1.01){ panX = 0; panY = 0; }
     img.style.transform = 'translate('+panX+'px,'+panY+'px) scale('+libViewZoom+')';
     img.style.transformOrigin = 'center center';
+    if(img.tagName==='VIDEO') img.classList.toggle('zoomed',libViewZoom>1.01);
     stage.style.cursor = libViewZoom > 1.05 ? (dragging ? 'grabbing' : 'grab') : 'default';
     updateZoomLabel();
   }
@@ -4923,7 +4976,7 @@ document.getElementById('ld-next')?.addEventListener('click', ()=>{
   });
   stage.addEventListener('wheel', e=>{
     if(!document.getElementById('library-detail')?.classList.contains('show')) return;
-    const media = stage.querySelector('img');
+    const media = stage.querySelector('img, video');
     if(!media) return;
     e.preventDefault();
     libViewZoom = Math.min(5, Math.max(1, libViewZoom + (e.deltaY < 0 ? 0.15 : -0.15)));
@@ -4931,9 +4984,10 @@ document.getElementById('ld-next')?.addEventListener('click', ()=>{
     applyImgTransform(media);
   }, {passive:false});
   stage.addEventListener('pointerdown', e=>{
-    const media = stage.querySelector('img');
+    const media = stage.querySelector('img, video');
     if(!media) return;
-    // Luôn chặn native drag ảnh
+    if(e.target.closest('.ld-video-toolbar')) return;
+    // Luôn chặn native drag ảnh/video
     e.preventDefault();
     if(libViewZoom <= 1.05) return;
     dragging = true;
@@ -4945,7 +4999,7 @@ document.getElementById('ld-next')?.addEventListener('click', ()=>{
   stage.addEventListener('pointermove', e=>{
     if(!dragging) return;
     e.preventDefault();
-    const media = stage.querySelector('img');
+    const media = stage.querySelector('img, video');
     if(!media) return;
     panX = ox + (e.clientX - sx);
     panY = oy + (e.clientY - sy);
@@ -4957,7 +5011,7 @@ document.getElementById('ld-next')?.addEventListener('click', ()=>{
   function endDrag(){
     dragging = false;
     stage.classList.remove('zooming');
-    applyImgTransform(stage.querySelector('img'));
+    applyImgTransform(stage.querySelector('img, video'));
   }
   stage.addEventListener('pointerup', endDrag);
   stage.addEventListener('pointercancel', endDrag);
