@@ -5255,21 +5255,28 @@ setInterval(()=>{
 </script>
 
 <script>
-/* Splash screen: progress animates during setup, turns yellow on completion, then hides. */
+/* Splash screen: stop at 99% while setup runs; complete and hide only when page setup finishes. */
 (function(){
   const screen=document.getElementById('app-loading'),bar=document.getElementById('app-loading-progress');
   if(!screen||!bar)return;
   let progress=0,finished=false;
   const tick=setInterval(()=>{
-    if(progress<90){progress=Math.min(90,progress+1);bar.style.width=progress+'%';}
+    if(progress<99){progress=Math.min(99,progress+1);bar.style.width=progress+'%';}
   },45);
   function finishLoading(){
     if(finished)return;
     finished=true;
     clearInterval(tick);
-    bar.classList.add('ready');
-    bar.style.width='100%';
-    setTimeout(()=>{screen.classList.add('done');setTimeout(()=>screen.remove(),280);},220);
+    progress=99;
+    bar.style.width='99%';
+    // The UI stays at 99% until it is ready to disappear; 100% is set as it hides.
+    requestAnimationFrame(()=>{
+      screen.classList.add('done');
+      bar.classList.add('ready');
+      bar.style.width='100%';
+      screen.addEventListener('transitionend',()=>screen.remove(),{once:true});
+      setTimeout(()=>screen.remove(),350);
+    });
   }
   if(document.readyState==='complete') finishLoading();
   else window.addEventListener('load',finishLoading,{once:true});
