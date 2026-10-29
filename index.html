@@ -1237,6 +1237,9 @@
     <button class="ctrl-btn" id="hdr-btn" title="HDR phần mềm: Tắt" aria-pressed="false" style="position:relative;margin-top:8px">
       <span style="font-size:11px;font-weight:700;letter-spacing:-.4px">HDR</span>
     </button>
+    <button class="ctrl-btn" id="backlight-btn" title="Bù ngược sáng: Tắt" aria-pressed="false" style="position:relative;margin-top:6px">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/><path d="M3 20h18" opacity=".65"/></svg>
+    </button>
 
     <button class="ctrl-btn" id="timer-btn" title="Hẹn giờ">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -2019,9 +2022,10 @@ function applyFilters(){
   const br = Math.max(0.55, Math.min(1.5, 1 + state.ev * 0.25));
   const sat = Math.max(0, Math.min(2, Number(state.sat) || 0));
   // Nhiệt độ màu dùng lớp phủ độc lập, tránh hue-rotate làm lệch màu da khi kéo về lạnh.
-  // HDR xem trực tiếp nhẹ: giảm nhẹ tương phản tổng thể, nâng sáng vừa phải. Đây là HDR giả lập, không phải đa phơi sáng.
-  // Khi quét QR, tắt lớp hiệu ứng HDR xem trước để ưu tiên FPS; bộ giải mã luôn đọc khung hình gốc.
-  const hdrFilter = state.hdr && state.mode !== 'qr' ? ' brightness(1.04) contrast(0.95) saturate(1.1)' : '';
+  // HDR phần mềm kết hợp nâng vùng tối và nén tương phản nhẹ để xử lý cảnh cửa sổ ngược sáng.
+  // Đây là HDR giả lập một khung hình, không thể khôi phục vùng đã cháy trắng hoàn toàn.
+  // Khi quét QR, tắt hiệu ứng HDR xem trước để ưu tiên FPS.
+  const hdrFilter = state.hdr && state.mode !== 'qr' ? ' brightness(1.07) contrast(0.88) saturate(1.08)' : '';
   const extra = state.mode === 'qr' ? '' : (filterCssExtra() + hdrFilter);
   const neutral = Math.abs(br - 1) < 0.001 && Math.abs(sat - 1) < 0.001 && !extra;
   // Trung tính → 'none': trình duyệt bỏ hẳn bước lọc trên mỗi khung hình (nhẹ GPU hơn, FPS ổn định hơn).
@@ -2068,8 +2072,9 @@ function applySoftwareHDR(targetCanvas){
     lctx.drawImage(targetCanvas,0,0,w,h);
     const out=targetCanvas.getContext('2d');if(!out)return;
     out.imageSmoothingEnabled=true;out.imageSmoothingQuality='high';
-    out.save();out.globalCompositeOperation='soft-light';out.globalAlpha=.30;out.filter='brightness(1.5) contrast(0.9)';out.drawImage(layer,0,0,targetCanvas.width,targetCanvas.height);out.restore();
-    out.save();out.globalCompositeOperation='multiply';out.globalAlpha=.10;out.filter='brightness(0.72)';out.drawImage(layer,0,0,targetCanvas.width,targetCanvas.height);out.restore();
+    out.save();out.globalCompositeOperation='soft-light';out.globalAlpha=.40;out.filter='brightness(1.48) contrast(0.82)';out.drawImage(layer,0,0,targetCanvas.width,targetCanvas.height);out.restore();
+    // Giữ vùng cửa sổ sáng bằng cách trộn lớp tối rất nhẹ, đồng thời mở vùng bóng.
+    out.save();out.globalCompositeOperation='multiply';out.globalAlpha=.16;out.filter='brightness(0.82) contrast(0.92)';out.drawImage(layer,0,0,targetCanvas.width,targetCanvas.height);out.restore();
   }catch(err){console.warn('Software HDR fallback',err)}
   finally{if(layer){layer.width=1;layer.height=1;}}
 }
@@ -2756,7 +2761,9 @@ async function startRecording(){
       if(canvasVideoTrack && typeof canvasVideoTrack.requestFrame === 'function') canvasVideoTrack.requestFrame();
     }catch(e){}
   };
-  // Vẽ ngay frame đầu, sau đó dùng interval thay vì callback phụ thuộc render.
+  // Vẽ ngay frame đầu; timer chỉ làm nhiệm vụ lập lịch/đánh thức vòng quay.
+  // Khi tab hiển thị, ưu tiên frame mới từ camera để tránh ghi lặp frame;
+  // khi tab ẩn, cho phép timer dự phòng vì một số trình duyệt ngừng rVFC.
   try{ drawToCanvas(recCtx,w,h,'fast'); }catch(e){}
   try{ if(canvasVideoTrack && typeof canvasVideoTrack.requestFrame === 'function') canvasVideoTrack.requestFrame(); }catch(e){}
   state.recDrawTimer = setInterval(drawRecordingFrame, Math.max(4, Math.floor(minGap / 3)));
@@ -2769,7 +2776,9 @@ async function startRecording(){
       if(g != null && g !== ''){ const v = parseFloat(g); if(!isNaN(v)&&v>0) gainVal = Math.min(100, Math.max(1, v)); state.micGain = gainVal; }
     }catch(e){}
     const needProcess = gainVal > 1.01;
-    if(!needProcess){
+    // Khi bật Khử tiếng ồn, luôn đưa âm thanh qua Web Audio dù gain đang ở 1x.
+    // Nếu không, trước đây nhánh 1x bỏ qua toàn bộ bộ lọc phần mềm.
+    if(!needProcess && state.noiseReduce !== true){
       canvasStream.addTrack(audioTracks[0]);
     } else {
       try{
@@ -3944,25 +3953,9 @@ async function runCameraSetupSequence(){
       if(track && typeof applyVideoQuality === 'function') await applyVideoQuality(track);
     }catch(e){}
     await waitForVideoFrame(400);
-    // Khởi động FPS: nhiều camera chỉ đạt FPS đã chọn sau khi áp lại cấu hình / đổi chế độ.
-    // Đo thực tế; nếu thấp hơn mục tiêu thì đi một vòng QR → chụp ảnh ngay sau lớp loading.
-    setStatus('Tối ưu FPS...', 88);
-    try{
-      const track = state.stream?.getVideoTracks()?.[0];
-      const capMax = track?.getCapabilities?.()?.frameRate?.max;
-      const chosen = Number(state.previewFps) > 0 ? Number(state.previewFps) : (capMax || 0);
-      const want = chosen ? Math.min(chosen, capMax || chosen) : 0;
-      let got = await measureFps(700);
-      if(want && got && got < want * 0.85){
-        state._silentMode = true;
-        try{
-          await setMode('qr');
-          await new Promise(r=>setTimeout(r, 250));
-          await setMode('photo');
-          await waitForVideoFrame(400);
-        } finally { state._silentMode = false; }
-      }
-    }catch(e){ state._silentMode = false; }
+    // Bỏ quy trình tự động chuyển QR rồi quay lại ảnh khi khởi động.
+    // Giữ chế độ chụp ảnh mặc định; không đổi mode ngầm để “ép” FPS.
+    setStatus('Hoàn tất khởi tạo camera...', 88);
     setStatus('Đang thiết lập...', 100);
     applyVideoTransform();
     if(aspectBtn) aspectBtn.textContent = state.forceAspect || '16:9';
