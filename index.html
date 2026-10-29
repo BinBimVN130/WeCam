@@ -17,7 +17,7 @@
   })();
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>web-cam-era</title>
+  <title>webs-cam-era</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -212,8 +212,8 @@
     #settings-overlay.show #settings-modal{transform:none}
     .settings-shell-head{height:62px;flex-shrink:0;display:flex;align-items:center;gap:14px;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.1);background:#101012}
     .settings-shell-head strong{font-size:17px;font-weight:600}
-    .settings-back{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;cursor:pointer}
-    .settings-back svg{width:20px;height:20px}
+    .settings-back{width:36px;height:36px;flex-shrink:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .settings-back svg{width:18px;height:18px}
     .settings-content{display:flex;flex:1;min-height:0;overflow:hidden}
     body.settings-open #app > :not(#settings-overlay):not(#toast){pointer-events:none!important}
     body.settings-open #settings-overlay{pointer-events:auto!important}
@@ -262,7 +262,16 @@
       font-size:12px;font-weight:500;color:rgba(255,255,255,.45);
       padding:16px 0 6px;letter-spacing:.02em;
     }
-    .about-links{display:flex;flex-direction:column;gap:10px;width:100%;max-width:280px;margin-top:8px}
+    .about-layout{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:start;padding:22px 18px 12px}
+    .about-brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .about-brand svg{width:66px;height:66px;flex-shrink:0;opacity:.95}
+    .about-brand-name{font-size:24px;font-weight:700;letter-spacing:-.03em;overflow-wrap:anywhere}
+    .about-version{font-size:13px;color:rgba(255,255,255,.5);margin-top:4px}
+    .about-links{display:flex;flex-direction:column;gap:8px;width:190px;max-width:38vw;margin:0}
+    .about-whatsnew{margin:10px 0 0;max-width:640px;padding:16px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.045)}
+    .about-whatsnew h3{font-size:16px;margin:0 0 10px;font-weight:650}
+    .about-whatsnew ul{margin:0;padding-left:20px;color:rgba(255,255,255,.75);font-size:13px;line-height:1.7}
+    @media(max-width:520px){.about-layout{grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:18px 12px 8px}.about-brand{gap:8px}.about-brand svg{width:48px;height:48px}.about-brand-name{font-size:18px}.about-links{width:120px;max-width:40vw}.about-link{padding:10px;font-size:12px;gap:7px}.about-whatsnew{margin:16px 12px;padding:13px}}
     .about-link{
       display:flex;align-items:center;gap:12px;padding:12px 14px;
       border-radius:12px;border:1px solid rgba(255,255,255,.12);
@@ -462,13 +471,21 @@
     .about-link#support-btn{width:100%;font:inherit;text-align:left;cursor:pointer}
     .about-link#support-btn:hover{background:rgba(255,191,0,.2);border-color:rgba(255,191,0,.5)}
     .about-link#support-btn:hover svg{color:#ffc928}
-    .support-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.72);backdrop-filter:none}
+    .support-modal{position:fixed;inset:0;z-index:99999;pointer-events:auto;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.72);backdrop-filter:none}
+    body.settings-open #app > #support-modal{pointer-events:auto!important;z-index:99999}
     .support-modal[hidden]{display:none!important}
     .support-card{position:relative;width:min(420px,calc(100vw - 36px));padding:24px 18px 20px;border-radius:24px;background:#f8fcff;color:#10253b;box-shadow:0 18px 60px rgba(0,0,0,.42);display:flex;flex-direction:column;align-items:center;gap:14px}
     .support-title{font-size:20px;font-weight:700;text-align:center;padding:0 28px}
     #support-qr{display:block;width:min(100%,320px);height:auto;border-radius:12px;pointer-events:none;-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
     .support-caption{font-size:13px;line-height:1.45;text-align:center;color:#41556a}
     .support-close{position:absolute;right:10px;top:10px;width:32px;height:32px;border:0;border-radius:50%;background:rgba(0,0,0,.07);color:#24384c;font-size:24px;cursor:pointer}
+    #app-loading{position:fixed;inset:0;z-index:1000000;display:flex;align-items:center;justify-content:center;background:rgba(5,5,7,.9);color:#fff;transition:opacity .25s ease,visibility .25s ease}
+    #app-loading.done{opacity:0;visibility:hidden;pointer-events:none}
+    .app-loading-inner{width:min(280px,76vw);display:flex;flex-direction:column;align-items:center;gap:14px}
+    .app-loading-logo{width:58px;height:58px;opacity:.96}
+    .app-loading-name{font-size:17px;font-weight:600;letter-spacing:.02em}
+    .app-loading-track{width:100%;height:4px;overflow:hidden;border-radius:10px;background:rgba(255,255,255,.18)}
+    .app-loading-progress{height:100%;width:8%;border-radius:10px;background:#fff;transition:width .18s ease}
     #instant-tooltip{position:fixed;z-index:2000;display:none;pointer-events:none;padding:5px 8px;border-radius:7px;background:rgba(25,25,28,.96);border:1px solid rgba(255,255,255,.13);color:#fff;font-size:11px;line-height:1.25;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3)}
     #instant-tooltip.show{display:block}
 
@@ -1183,6 +1200,13 @@
     </filter>
   </defs>
 </svg>
+<div id="app-loading" aria-label="Đang tải webs-cam-era" role="status">
+  <div class="app-loading-inner">
+    <svg class="app-loading-logo" viewBox="0 -960 960 960" aria-hidden="true"><path fill="currentColor" d="M480-240q100 0 170-70t70-170q0-87-55.5-153T524-716q-18-2-31 10t-13 30v196L342-342q-13 13-12 31t15 29q29 23 64 32.5t71 9.5Zm0 160q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/></svg>
+    <div class="app-loading-name">webs-cam-era</div>
+    <div class="app-loading-track"><div class="app-loading-progress" id="app-loading-progress"></div></div>
+  </div>
+</div>
 <div id="app">
   <div id="fps" class="advanced-hidden"><span class="fps-main">FPS: --</span><span class="fps-detail"> | --x-- --p --hz</span></div>
 
@@ -1755,29 +1779,23 @@
         </div>
 
         <div class="settings-panel" id="panel-about">
-          <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px 12px 8px;gap:12px">
-            <svg viewBox="0 -960 960 960" width="56" height="56" style="opacity:.95" aria-label="Biểu tượng web-cam-era">
-              <defs><linearGradient id="app-icon-gradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="48%" stop-color="#D9D9DE"/><stop offset="100%" stop-color="#85858D"/></linearGradient></defs>
-              <path fill="url(#app-icon-gradient)" d="M480-240q100 0 170-70t70-170q0-87-55.5-153T524-716q-18-2-31 10t-13 30v196L342-342q-13 13-12 31t15 29q29 23 64 32.5t71 9.5Zm0 160q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
-            </svg>
-            <div style="font-size:18px;font-weight:600">web-cam-era</div>
-            <div style="font-size:13px;color:rgba(255,255,255,.5)">Phiên bản 3.0.0</div>
-            <div class="about-links">
-              <a class="about-link" href="https://github.com/BinBimVN130/webs-cam-era" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12 24 5.37 18.63 0 12 0z"/></svg>
-                GitHub
-              </a>
-              <a class="about-link" href="https://mail.google.com/mail/?view=cm&fs=1&to=binken12344@gmail.com" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
-                Gmail
-              </a>
-              <button type="button" class="about-link" id="support-btn" aria-haspopup="dialog" aria-controls="support-modal">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v7a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M16 11h2a2.5 2.5 0 0 1 0 5h-2M3 22h15M7 5c-1-1 1-2 0-3M12 5c-1-1 1-2 0-3"/></svg>
-                Ủng hộ
-              </button>
+          <div class="about-layout">
+            <div class="about-brand">
+              <svg viewBox="0 -960 960 960" aria-label="Biểu tượng webs-cam-era">
+                <defs><linearGradient id="app-icon-gradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="48%" stop-color="#D9D9DE"/><stop offset="100%" stop-color="#85858D"/></linearGradient></defs>
+                <path fill="url(#app-icon-gradient)" d="M480-240q100 0 170-70t70-170q0-87-55.5-153T524-716q-18-2-31 10t-13 30v196L342-342q-13 13-12 31t15 29q29 23 64 32.5t71 9.5Zm0 160q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
+              </svg>
+              <div><div class="about-brand-name">webs-cam-era</div><div class="about-version">Phiên bản 3.0.0</div></div>
             </div>
+            <div class="about-links">
+              <a class="about-link" href="https://github.com/BinBimVN130/webs-cam-era" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12 24 5.37 18.63 0 12 0z"/></svg>GitHub</a>
+              <a class="about-link" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=binken12344@gmail.com" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>Gmail</a>
+              <button type="button" class="about-link" id="support-btn" aria-haspopup="dialog" aria-controls="support-modal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v7a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M16 11h2a2.5 2.5 0 0 1 0 5h-2M3 22h15M7 5c-1-1 1-2 0-3M12 5c-1-1 1-2 0-3"/></svg>Ủng hộ</button>
+            </div>
+            <section class="about-whatsnew"><h3>Có gì mới?</h3><ul><li>HDR phần mềm để cải thiện độ sáng và chi tiết ảnh.</li><li>Tối ưu ảnh thông minh và quy trình xử lý ảnh.</li><li>Cải thiện hiệu suất quét mã QR.</li><li>Tối ưu hiệu năng để chạy mượt hơn trên máy cấu hình thấp.</li></ul></section>
           </div>
         </div>
+
         <div class="settings-panel active" id="panel-general">
           <div class="settings-section-label">Giao diện</div>
           <div class="settings-row">
@@ -3529,6 +3547,32 @@ function stopSettingsMicMeter(){
 }
 
 let settingsCamPaused = false;
+let settingsPreviewActive = false;
+let settingsPreviewRaf = 0;
+function stopSettingsPreview(){
+  if(settingsPreviewRaf) cancelAnimationFrame(settingsPreviewRaf);
+  settingsPreviewRaf=0;
+}
+function drawSettingsPreview(){
+  const frame=document.getElementById('settings-camera-frame');
+  const panel=document.getElementById('panel-camera');
+  if(!settingsPreviewActive || !panel?.classList.contains('active')){stopSettingsPreview();return;}
+  if(frame && video.readyState>=2 && video.videoWidth && video.videoHeight){
+    if(frame.width!==video.videoWidth||frame.height!==video.videoHeight){frame.width=video.videoWidth;frame.height=video.videoHeight;}
+    try{frame.getContext('2d')?.drawImage(video,0,0,frame.width,frame.height);}catch(e){}
+  }
+  settingsPreviewRaf=requestAnimationFrame(drawSettingsPreview);
+}
+async function activateSettingsPreview(){
+  settingsPreviewActive=true;
+  if(settingsCamPaused) await resumeCamFromSettings();
+  if(!settingsPreviewActive || !document.getElementById('panel-camera')?.classList.contains('active'))return;
+  stopSettingsPreview();drawSettingsPreview();updateCamInfoPanel();
+}
+function deactivateSettingsPreview(){
+  settingsPreviewActive=false;stopSettingsPreview();
+  if(!settingsCamPaused) pauseCamForSettings();
+}
 function pauseCamForSettings(){
   if(settingsCamPaused) return;
   settingsCamPaused = true;
@@ -3554,6 +3598,7 @@ async function resumeCamFromSettings(){
 }
 function openSettings(){
   closeAllMenus();
+  settingsPreviewActive=false;stopSettingsPreview();
   pauseCamForSettings();
   document.body.classList.add('settings-open');
   document.documentElement.classList.add('settings-open');
@@ -3579,6 +3624,7 @@ function openSettings(){
   }, 100);
 }
 function closeSettings(){
+  stopSettingsPreview();settingsPreviewActive=false;
   settingsOverlay.classList.remove('show');
   document.body.classList.remove('settings-open');
   document.documentElement.classList.remove('settings-open');
@@ -3599,7 +3645,8 @@ document.querySelectorAll('.settings-nav-item[data-panel]').forEach(btn=>{
     if(title) title.textContent = ({general:'Chung',micro:'Mic',devices:'Thiết bị',camera:'Camera',advanced:'Tính năng nâng cao',about:'Giới thiệu'})[id] || 'Camera';
     if(id==='micro') startSettingsMicMeter();
     else stopSettingsMicMeter();
-    if(id==='camera') updateCamInfoPanel();
+    if(id==='camera') activateSettingsPreview();
+    else if(settingsPreviewActive) deactivateSettingsPreview();
   });
 });
 
@@ -4557,7 +4604,7 @@ function renderLibDetail(){
     let imageControlsTimer=0;
     const showImageControls=()=>{imageFullscreen.classList.remove('auto-hidden');if(imageControlsTimer)clearTimeout(imageControlsTimer);imageControlsTimer=setTimeout(()=>imageFullscreen.classList.add('auto-hidden'),4000);};
     stage.addEventListener('pointermove',showImageControls);
-    stage.addEventListener('pointerleave',()=>{if(imageControlsTimer)clearTimeout(imageControlsTimer);imageFullscreen.classList.add('auto-hidden');});
+    stage.addEventListener('pointerleave',()=>{if(document.fullscreenElement===stage){showImageControls();return;}if(imageControlsTimer)clearTimeout(imageControlsTimer);imageFullscreen.classList.add('auto-hidden');});
     showImageControls();
   } else {
     const v = document.createElement('video');
@@ -4605,7 +4652,7 @@ function renderLibDetail(){
     // Controls behave like a video player: appear on movement, hide on leave or after 4 s idle.
     let controlsTimer=0;
     const showControls=()=>{toolbar.classList.remove('hidden');if(controlsTimer)clearTimeout(controlsTimer);controlsTimer=setTimeout(()=>{toolbar.classList.add('hidden');speedPopup.classList.remove('show');volumePopup.classList.remove('show');},4000);};
-    const hideControls=()=>{if(controlsTimer)clearTimeout(controlsTimer);toolbar.classList.add('hidden');speedPopup.classList.remove('show');volumePopup.classList.remove('show');};
+    const hideControls=()=>{if(document.fullscreenElement===stage){showControls();return;}if(controlsTimer)clearTimeout(controlsTimer);toolbar.classList.add('hidden');speedPopup.classList.remove('show');volumePopup.classList.remove('show');};
     stage.addEventListener('pointermove',showControls);
     stage.addEventListener('pointerleave',hideControls);
     stage.addEventListener('pointerdown',e=>{if(e.target===stage||e.target===v)showControls();});
@@ -5209,5 +5256,17 @@ setInterval(()=>{
 }, 1000);
 
 </script>
+
+/* Splash screen: progress while the document initializes. */
+(function(){
+  const screen=document.getElementById('app-loading'),bar=document.getElementById('app-loading-progress');
+  if(!screen||!bar)return;
+  let progress=8;
+  const tick=setInterval(()=>{progress=Math.min(92,progress+Math.max(1,(92-progress)*0.12));bar.style.width=progress+'%';},90);
+  const finish=()=>{clearInterval(tick);bar.style.width='100%';setTimeout(()=>screen.classList.add('done'),180);setTimeout(()=>screen.remove(),500);};
+  if(document.readyState==='complete')finish();else window.addEventListener('load',finish,{once:true});
+  setTimeout(finish,3500);
+})();
+
 </body>
 </html>
