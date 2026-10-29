@@ -481,10 +481,10 @@
     .support-close{position:absolute;right:10px;top:10px;width:32px;height:32px;border:0;border-radius:50%;background:rgba(0,0,0,.07);color:#24384c;font-size:24px;cursor:pointer}
     #app-loading{position:fixed;inset:0;z-index:1000000;display:flex;align-items:center;justify-content:center;background:#050507;color:#fff;transition:opacity .25s ease,visibility .25s ease}
     #app-loading.done{opacity:0;visibility:hidden;pointer-events:none}
-    .app-loading-inner{width:min(280px,76vw)}
-    .app-loading-track{width:100%;height:5px;overflow:hidden;border-radius:10px;background:rgba(255,255,255,.2)}
-    .app-loading-progress{height:100%;width:0;border-radius:10px;background:#fff;transition:width .18s linear,background-color .18s ease}
-    .app-loading-progress.ready{background:#ffd22e}
+    .app-loading-inner{width:min(280px,76vw);display:flex;flex-direction:column;align-items:center;gap:9px}
+    .app-loading-track{width:100%;height:5px;overflow:hidden;border-radius:10px;background:rgba(255,255,255,.16)}
+    .app-loading-progress{height:100%;width:0;border-radius:10px;background:#ffd22e;transition:width .18s linear}
+    .app-loading-label{font-size:10px;line-height:1.2;font-weight:400;letter-spacing:.15px;color:rgba(255,255,255,.22);text-align:center;user-select:none}
     #instant-tooltip{position:fixed;z-index:2000;display:none;pointer-events:none;padding:5px 8px;border-radius:7px;background:rgba(25,25,28,.96);border:1px solid rgba(255,255,255,.13);color:#fff;font-size:11px;line-height:1.25;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3)}
     #instant-tooltip.show{display:block}
 
@@ -1202,6 +1202,7 @@
 <div id="app-loading" aria-label="Đang tải" role="status">
   <div class="app-loading-inner">
     <div class="app-loading-track"><div class="app-loading-progress" id="app-loading-progress"></div></div>
+    <div class="app-loading-label" id="app-loading-label">Đang thiết lập...</div>
   </div>
 </div>
 <div id="app">
@@ -5271,9 +5272,8 @@ setInterval(()=>{
     bar.style.width='99%';
     // The UI stays at 99% until it is ready to disappear; 100% is set as it hides.
     requestAnimationFrame(()=>{
-      screen.classList.add('done');
-      bar.classList.add('ready');
       bar.style.width='100%';
+      screen.classList.add('done');
       screen.addEventListener('transitionend',()=>screen.remove(),{once:true});
       setTimeout(()=>screen.remove(),350);
     });
