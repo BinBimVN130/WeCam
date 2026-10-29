@@ -1,4 +1,4 @@
-<img width="50" height="50" alt="timelapse_24dp_FFFFFF_FILL1_wght700_GRAD-25_opsz24" src="https://github.com/user-attachments/assets/edfed21e-e2c2-4e1f-8694-0ab550f9f963" />
+<img width="100" height="100" alt="timelapse_24dp_FFFFFF_FILL1_wght700_GRAD-25_opsz24" src="https://github.com/user-attachments/assets/edfed21e-e2c2-4e1f-8694-0ab550f9f963" />
 
 
 
