@@ -194,10 +194,10 @@
 
     /* Settings modal */
     #settings-overlay{
-      display:flex;position:fixed;inset:0;z-index:280;
-      background:rgba(0,0,0,.72);
-      align-items:center;justify-content:center;
-      padding:20px;
+      display:flex;position:fixed;inset:0;z-index:390;
+      background:#0a0a0a;
+      align-items:stretch;justify-content:stretch;
+      padding:0;
       opacity:0;visibility:hidden;pointer-events:none;
       transition:opacity .18s ease,visibility .18s;
     }
@@ -205,22 +205,23 @@
       opacity:1;visibility:visible;pointer-events:auto;
     }
     #settings-modal{
-      width:min(720px,96vw);min-height:min(480px,82vh);max-height:min(580px,90vh);
-      background:#1c1c1e;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:16px;
-      box-shadow:0 16px 48px rgba(0,0,0,.55);
-      display:flex;overflow:hidden;
-      transform:scale(0.96);
-      transition:transform .18s ease;
+      width:100%;height:100%;min-height:0;max-height:none;
+      background:#0a0a0a;border:0;border-radius:0;box-shadow:none;
+      display:flex;flex-direction:column;overflow:hidden;transform:none;
     }
-    #settings-overlay.show #settings-modal{
-      transform:scale(1);
-    }
+    #settings-overlay.show #settings-modal{transform:none}
+    .settings-shell-head{height:62px;flex-shrink:0;display:flex;align-items:center;gap:14px;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.1);background:#101012}
+    .settings-shell-head strong{font-size:17px;font-weight:600}
+    .settings-back{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;cursor:pointer}
+    .settings-back svg{width:20px;height:20px}
+    .settings-content{display:flex;flex:1;min-height:0;overflow:hidden}
+    body.settings-open #app > :not(#settings-overlay):not(#toast){pointer-events:none!important}
+    body.settings-open #settings-overlay{pointer-events:auto!important}
+    .settings-nav{overflow-y:auto}
+    .settings-body{overflow-y:auto}
     .settings-nav{
-      width:200px;flex-shrink:0;padding:16px 12px;
-      border-right:1px solid rgba(255,255,255,.1);
-      background:#161618;
+      width:230px;flex-shrink:0;padding:16px 12px;
+      border-right:1px solid rgba(255,255,255,.1);background:#111113;
     }
     .settings-nav-title{
       font-size:12px;color:rgba(255,255,255,.45);padding:4px 10px 10px;font-weight:500;
@@ -239,7 +240,7 @@
     .settings-panel{display:none}
     .settings-panel.active{display:block}
     .settings-nav-item svg{width:18px;height:18px;flex-shrink:0;opacity:.9}
-    .settings-body{flex:1;padding:18px 20px 20px;overflow-y:auto;min-width:0}
+    .settings-body{flex:1;padding:18px 24px 24px;overflow-y:auto;min-width:0}
     .settings-body-head{
       display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;
     }
@@ -926,7 +927,7 @@
       width:48px;height:48px;border-radius:8px;border:2px solid transparent;
       overflow:hidden;background:#333;cursor:pointer;padding:0;flex-shrink:0;
     }
-    .ld-thumb.active{border-color:#fff}
+    .ld-thumb.active{border-color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.35)}
     .ld-thumb img,.ld-thumb video{width:100%;height:100%;object-fit:cover;pointer-events:none}
 
     /* Info / help / confirm modals */
@@ -975,22 +976,15 @@
     }
     #cam-setup-modal.show{display:flex;opacity:1}
     #cam-setup-modal.closing{opacity:0}
-    #cam-setup-modal .setup-spin{
-      width:44px;height:44px;border-radius:50%;
-      border:4px solid rgba(255,255,255,.15);
-      border-top-color:#fff;
-      animation:setupSpin .7s linear infinite;
-    }
-    #cam-setup-modal .setup-bar-track{
-      width:min(200px,50vw);height:4px;border-radius:2px;
-      background:rgba(255,255,255,.12);overflow:hidden;
-    }
+    #cam-setup-modal .setup-spin{display:none}
+    #cam-setup-modal .setup-bar-track{display:none}
     #cam-setup-modal .setup-bar-fill{
       height:100%;width:8%;border-radius:2px;background:#ffaa00;
       transition:width .4s cubic-bezier(.4,0,.2,1);
     }
     #cam-setup-modal .setup-text{
-      font-size:14px;font-weight:500;color:rgba(255,255,255,.85);margin:0;
+      position:absolute;left:20px;right:20px;bottom:28px;text-align:center;
+      font-size:11px;font-weight:400;color:rgba(255,255,255,.76);margin:0;
     }
     @keyframes setupSpin{to{transform:rotate(360deg)}}
 
@@ -1162,6 +1156,7 @@
       #color-palette{max-width:calc(100vw - 24px);max-height:calc(100vh - 24px);overflow:auto;}
       .settings-row{gap:8px;flex-wrap:wrap;}
       .settings-row select{max-width:58vw;min-width:0;}
+      .settings-nav{width:138px;padding:12px 7px}.settings-nav-item{padding:10px 8px;font-size:12px;gap:6px}.settings-body{padding:14px 12px 20px}.settings-shell-head{height:54px;padding:0 12px}.settings-camera-info-row{flex-direction:column!important}.settings-camera-info-row>div{flex:none!important;width:100%}
     }
     @media(max-width:380px){
       #stage{width:calc(100vw - 100px);height:calc((100vw - 100px)*9/16);}
@@ -1600,6 +1595,11 @@
   </div>
 <div id="settings-overlay">
     <div id="settings-modal" role="dialog" aria-modal="true">
+      <div class="settings-shell-head">
+        <button type="button" class="settings-back" id="settings-close" aria-label="Quay lại"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+        <strong>Cài đặt</strong>
+      </div>
+      <div class="settings-content">
       <div class="settings-nav">
         <div class="settings-nav-title">Tổng quan</div>
         <button type="button" class="settings-nav-item active" data-panel="general">
@@ -1634,10 +1634,7 @@
         </button>
       </div>
       <div class="settings-body">
-        <div class="settings-body-head">
-          <h2 id="settings-title">Chung</h2>
-          <button type="button" class="settings-close" id="settings-close">×</button>
-        </div>
+        <div class="settings-body-head"><h2 id="settings-title">Chung</h2></div>
         
         
         <div class="settings-panel" id="panel-micro">
@@ -1744,10 +1741,16 @@
             </select>
           </div>
           <div id="smart-resolution-note" style="display:none;align-items:flex-start;gap:7px;padding:2px 4px 12px;font-size:12px;line-height:1.5;color:rgba(255,255,255,.72)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg><span>Bạn không thể chỉnh thủ công khi bật tính năng này.</span></div>
-          <div class="settings-section-label">Thông tin</div>
-          <div class="settings-row" style="flex-direction:column;align-items:flex-start;gap:8px;border-bottom:none">
-            <div class="info-row" style="font-size:13px;color:rgba(255,255,255,.75)">FPS đã chọn: <span id="cam-info-fps-want" style="color:#fff">—</span> | FPS đo từ khung hình: <span id="cam-info-fps" style="color:#fff">—</span></div>
-            <div class="info-row" style="font-size:13px;color:rgba(255,255,255,.75)">Độ phân giải: <span id="cam-info-res" style="color:#fff">—</span></div>
+          <div class="settings-section-label">Xem trước & Thông tin</div>
+          <div class="settings-camera-info-row" style="display:flex;align-items:stretch;gap:16px;min-width:0">
+            <div style="flex:1;min-width:0;aspect-ratio:16/9;background:#000;border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center">
+              <canvas id="settings-camera-frame" style="width:100%;height:100%;object-fit:contain"></canvas>
+            </div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;padding:8px 0">
+              <div class="info-row" style="font-size:13px;color:rgba(255,255,255,.75)">FPS đã chọn: <span id="cam-info-fps-want" style="color:#fff">—</span></div>
+              <div class="info-row" style="font-size:13px;color:rgba(255,255,255,.75)">FPS đo từ khung hình: <span id="cam-info-fps" style="color:#fff">—</span></div>
+              <div class="info-row" style="font-size:13px;color:rgba(255,255,255,.75)">Độ phân giải: <span id="cam-info-res" style="color:#fff">—</span></div>
+            </div>
           </div>
         </div>
 
@@ -1809,6 +1812,7 @@
             <button type="button" id="btn-factory-reset" style="padding:8px 14px;border-radius:10px;border:1px solid rgba(255,59,48,.55);background:rgba(255,59,48,.18);color:#ff6b63;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">Khôi phục</button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -3524,8 +3528,35 @@ function stopSettingsMicMeter(){
   state._settingsMicStream = null;
 }
 
+let settingsCamPaused = false;
+function pauseCamForSettings(){
+  if(settingsCamPaused) return;
+  settingsCamPaused = true;
+  try{
+    const frame=document.getElementById('settings-camera-frame');
+    if(frame && video.videoWidth && video.videoHeight){
+      frame.width=video.videoWidth; frame.height=video.videoHeight;
+      frame.getContext('2d')?.drawImage(video,0,0,frame.width,frame.height);
+    }
+  }catch(e){}
+  try{ stopQRScan(); }catch(e){}
+  try{ stopMicMeter(); }catch(e){}
+  state._fpsRunning=false;
+  try{ video.pause(); }catch(e){}
+  try{ state.stream?.getTracks()?.forEach(t=>t.stop()); }catch(e){}
+  state.stream=null;
+  try{ video.srcObject=null; }catch(e){}
+}
+async function resumeCamFromSettings(){
+  if(!settingsCamPaused) return;
+  try{ await startCamera(state.mode==='video',true); settingsCamPaused=false; }
+  catch(e){ console.warn('Không thể khôi phục camera sau Cài đặt:',e); noCamera.classList.remove('hidden'); }
+}
 function openSettings(){
   closeAllMenus();
+  pauseCamForSettings();
+  document.body.classList.add('settings-open');
+  document.documentElement.classList.add('settings-open');
   const adv = document.getElementById('set-advanced-info'); if(adv) adv.checked = !!state.advancedInfo;
   syncSmartResolutionUI();
   if(setPreviewRes) setPreviewRes.value = state.previewRes || '1280x720';
@@ -3549,7 +3580,10 @@ function openSettings(){
 }
 function closeSettings(){
   settingsOverlay.classList.remove('show');
+  document.body.classList.remove('settings-open');
+  document.documentElement.classList.remove('settings-open');
   stopSettingsMicMeter();
+  setTimeout(()=>resumeCamFromSettings(),100);
 }
 if(settingsBtn) settingsBtn.addEventListener('click', e=>{ e.stopPropagation(); openSettings(); });
 
@@ -4597,6 +4631,7 @@ function renderLibDetail(){
     t.addEventListener('click', ()=>{ libDetailIdx=i; renderLibDetail(); });
     film.appendChild(t);
   });
+  requestAnimationFrame(()=>film.querySelector('.ld-thumb.active')?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}));
 }
 let photoProcessBusy = false;
 function setPhotoProcessProgress(percent, status){
