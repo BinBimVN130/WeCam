@@ -215,7 +215,7 @@
     .settings-back{width:36px;height:36px;flex-shrink:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
     .settings-back svg{width:18px;height:18px}
     .settings-content{display:flex;flex:1;min-height:0;overflow:hidden}
-    body.settings-open #app > :not(#settings-overlay):not(#toast){pointer-events:none!important}
+    body.settings-open #app > :not(#settings-overlay):not(#toast):not(#support-modal){pointer-events:none!important}
     body.settings-open #settings-overlay{pointer-events:auto!important}
     .settings-nav{overflow-y:auto}
     .settings-body{overflow-y:auto}
@@ -262,25 +262,33 @@
       font-size:12px;font-weight:500;color:rgba(255,255,255,.45);
       padding:16px 0 6px;letter-spacing:.02em;
     }
-    .about-layout{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:start;padding:22px 18px 12px}
-    .about-brand{display:flex;align-items:center;gap:12px;min-width:0}
-    .about-brand svg{width:66px;height:66px;flex-shrink:0;opacity:.95}
-    .about-brand-name{font-size:24px;font-weight:700;letter-spacing:-.03em;overflow-wrap:anywhere}
-    .about-version{font-size:13px;color:rgba(255,255,255,.5);margin-top:4px}
-    .about-links{display:flex;flex-direction:column;gap:8px;width:190px;max-width:38vw;margin:0}
-    .about-whatsnew{margin:4px 0 0;max-width:640px;padding:12px 16px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.045)}
-    .about-whatsnew h3{font-size:16px;margin:0 0 6px;font-weight:650}
-    .about-whatsnew ul{margin:0;padding-left:20px;color:rgba(255,255,255,.75);font-size:13px;line-height:1.7}
-    @media(max-width:520px){.about-layout{grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:18px 12px 8px}.about-brand{gap:8px}.about-brand svg{width:48px;height:48px}.about-brand-name{font-size:18px}.about-links{width:120px;max-width:40vw}.about-link{padding:10px;font-size:12px;gap:7px}.about-whatsnew{margin:16px 12px;padding:13px}}
-    .about-link{
-      display:flex;align-items:center;gap:12px;padding:12px 14px;
-      border-radius:12px;border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);color:#fff;text-decoration:none;
-      font-size:14px;font-weight:500;transition:background .15s;
-    }
-    .about-link:hover{background:rgba(255,255,255,.12)}
-    .about-link svg{width:18px;height:18px;flex-shrink:0}
-    .about-link.disabled{opacity:.45;pointer-events:none;cursor:default}
+    .about-layout{display:flex;flex-direction:column;gap:18px;padding:26px 18px 20px;max-width:560px;margin:0 auto}
+    .about-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+    .about-logo{width:92px;height:92px;border-radius:26px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;background:radial-gradient(circle at 30% 18%,rgba(255,255,255,.16),rgba(255,255,255,.03) 70%),#16161a;border:1px solid rgba(255,255,255,.12);box-shadow:0 10px 30px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.12)}
+    .about-logo svg{width:60px;height:60px}
+    .about-brand-name{font-size:26px;font-weight:700;letter-spacing:-.03em;overflow-wrap:anywhere}
+    .about-version{display:inline-block;font-size:12px;color:rgba(255,255,255,.62);padding:3px 11px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1)}
+    .about-tagline{font-size:13px;line-height:1.5;color:rgba(255,255,255,.55);max-width:340px;margin-top:6px}
+    .about-actions{display:flex;flex-direction:column;gap:10px}
+    .about-action{display:flex;align-items:center;gap:14px;width:100%;padding:13px 16px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.055);color:#fff;text-decoration:none;font:inherit;text-align:left;cursor:pointer;transition:background .16s,border-color .16s,transform .12s}
+    .about-action:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
+    .about-action:active{transform:scale(.985)}
+    .about-action .ico{width:40px;height:40px;flex:0 0 40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.09)}
+    .about-action .ico svg{width:20px;height:20px}
+    .about-action .txt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+    .about-action .txt b{font-size:14.5px;font-weight:600}
+    .about-action .txt small{font-size:12px;color:rgba(255,255,255,.5)}
+    .about-action .chev{width:16px;height:16px;flex:0 0 16px;opacity:.4}
+    .about-action.primary{background:linear-gradient(135deg,rgba(255,170,0,.24),rgba(255,120,0,.12));border-color:rgba(255,170,0,.45)}
+    .about-action.primary:hover{background:linear-gradient(135deg,rgba(255,170,0,.34),rgba(255,120,0,.18));border-color:rgba(255,190,50,.7)}
+    .about-action.primary .ico{background:#ffaa00;color:#1a1200}
+    .about-action.primary .txt small{color:rgba(255,220,150,.75)}
+    .about-whatsnew{padding:16px 18px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.04)}
+    .about-whatsnew h3{font-size:15px;margin:0 0 10px;font-weight:650}
+    .about-whatsnew ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+    .about-whatsnew li{position:relative;padding-left:24px;font-size:13px;line-height:1.55;color:rgba(255,255,255,.76)}
+    .about-whatsnew li::before{content:'';position:absolute;left:2px;top:.5em;width:8px;height:8px;border-radius:50%;background:#ffaa00;box-shadow:0 0 0 3px rgba(255,170,0,.18)}
+    @media(max-width:520px){.about-layout{padding:18px 12px 16px;gap:14px}.about-logo{width:76px;height:76px;border-radius:22px}.about-logo svg{width:48px;height:48px}.about-brand-name{font-size:22px}.about-action{padding:11px 12px;gap:12px}.about-action .ico{width:36px;height:36px;flex-basis:36px}}
     .switch{position:relative;display:inline-block;width:44px;height:26px;flex-shrink:0}
     .switch input{opacity:0;width:0;height:0}
     .switch-slider{
@@ -378,26 +386,23 @@
     .filter-item .fname{font-size:11px;color:rgba(255,255,255,.75);font-weight:500}
 
     #timer-menu{
-      display:flex;position:fixed;z-index:60;
-      background:rgba(30,30,32,.92);border-radius:18px;padding:10px 8px;
-      flex-direction:column;gap:2px;min-width:160px;gap:6px;
+      display:flex;position:fixed;z-index:60;flex-direction:column;gap:12px;
+      background:rgba(30,30,32,.92);border-radius:18px;padding:14px 16px 16px;
       box-shadow:0 12px 40px rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.16);
+      min-width:160px;
       opacity:0;visibility:hidden;pointer-events:none;
       transform:translateX(-8px);
       transition:opacity .18s ease,visibility .18s,transform .18s ease;
     }
-    #timer-menu.show{
-      opacity:1;visibility:visible;pointer-events:auto;
-      transform:translateX(0);
-    }
+    #timer-menu.show{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(0)}
+    .timer-list{display:flex;flex-direction:column;gap:8px}
     .timer-opt{
-      padding:9px 14px;border:none;background:transparent;color:#fff;
-      font-size:14px;border-radius:8px;cursor:pointer;text-align:center;white-space:nowrap;
+      min-height:36px;padding:8px 12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);
+      color:#fff;font-size:13px;font-weight:500;border-radius:10px;cursor:pointer;text-align:center;white-space:nowrap;
+      transition:background .15s,border-color .15s;
     }
-    .timer-opt:hover{background:rgba(255,255,255,.14)}
-    .timer-opt.active{background:#ffaa00;color:#000;font-weight:600}
-    #timer-menu .timer-opt{text-align:left;padding:9px 12px}
-    #timer-menu .panel-head{margin:0 2px 4px}
+    .timer-opt:hover{background:rgba(255,255,255,.15)}
+    .timer-opt.active{background:#ffaa00;border-color:#ffaa00;color:#000;font-weight:600}
 
     /* Cụm EV / bão hòa / nhiệt độ thu gọn mặc định */
     #hdr-btn{font-size:11px;font-weight:700;letter-spacing:-.3px;}
@@ -468,23 +473,25 @@
 
     
 
-    .about-link#support-btn{width:100%;font:inherit;text-align:left;cursor:pointer}
-    .about-link#support-btn:hover{background:rgba(255,191,0,.2);border-color:rgba(255,191,0,.5)}
-    .about-link#support-btn:hover svg{color:#ffc928}
-    .support-modal{position:fixed;inset:0;z-index:99999;pointer-events:auto;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.72);backdrop-filter:none}
-    body.settings-open #app > #support-modal{pointer-events:auto!important;z-index:99999}
+    .support-modal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.72);backdrop-filter:none;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s}
+    .support-modal.show{opacity:1;visibility:visible;pointer-events:auto}
+    body.settings-open #app > #support-modal.show{pointer-events:auto!important;z-index:99999}
     .support-modal[hidden]{display:none!important}
-    .support-card{position:relative;width:min(420px,calc(100vw - 36px));padding:24px 18px 20px;border-radius:24px;background:#f8fcff;color:#10253b;box-shadow:0 18px 60px rgba(0,0,0,.42);display:flex;flex-direction:column;align-items:center;gap:14px}
+    .support-card{transform:translateY(16px) scale(.94);opacity:0;transition:transform .28s cubic-bezier(.2,.9,.3,1.08),opacity .22s ease;position:relative;width:min(420px,calc(100vw - 36px));padding:24px 18px 20px;border-radius:24px;background:#f8fcff;color:#10253b;box-shadow:0 18px 60px rgba(0,0,0,.42);display:flex;flex-direction:column;align-items:center;gap:14px}
     .support-title{font-size:20px;font-weight:700;text-align:center;padding:0 28px}
     #support-qr{display:block;width:min(100%,320px);height:auto;border-radius:12px;pointer-events:none;-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
     .support-caption{font-size:13px;line-height:1.45;text-align:center;color:#41556a}
-    .support-close{position:absolute;right:10px;top:10px;width:32px;height:32px;border:0;border-radius:50%;background:rgba(0,0,0,.07);color:#24384c;font-size:24px;cursor:pointer}
+    .support-modal.show .support-card{transform:none;opacity:1}
+    .support-close{position:absolute;right:10px;top:10px;z-index:2;width:34px;height:34px;border:0;border-radius:50%;background:rgba(0,0,0,.08);color:#24384c;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;pointer-events:auto;transition:background .15s}
+    .support-close:hover{background:rgba(0,0,0,.16)}
     #app-loading{position:fixed;inset:0;z-index:1000000;display:flex;align-items:center;justify-content:center;background:#050507;color:#fff;transition:opacity .25s ease,visibility .25s ease}
     #app-loading.done{opacity:0;visibility:hidden;pointer-events:none}
     .app-loading-inner{width:min(280px,76vw);display:flex;flex-direction:column;align-items:center;gap:9px}
-    .app-loading-track{width:100%;height:5px;overflow:hidden;border-radius:10px;background:rgba(255,255,255,.16)}
-    .app-loading-progress{height:100%;width:0;border-radius:10px;background:#ffd22e;transition:width .18s linear}
-    .app-loading-label{font-size:10px;line-height:1.2;font-weight:400;letter-spacing:.15px;color:rgba(255,255,255,.22);text-align:center;user-select:none}
+    .app-loading-track{width:100%;height:6px;overflow:hidden;border-radius:10px;background:rgba(255,255,255,.18)}
+    .app-loading-progress{height:100%;width:0;border-radius:10px;background:#ffd22e;box-shadow:0 0 10px rgba(255,210,46,.55);transition:width .12s linear;will-change:width}
+    .app-loading-label{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 26px);font-size:10px;line-height:1.3;font-weight:400;letter-spacing:.2px;color:rgba(255,255,255,.34);text-align:center;user-select:none;pointer-events:none}
+    /* Màn thiết lập cũ không dùng nữa: mọi tiến trình hiển thị trên #app-loading (thanh vàng) */
+    #cam-setup-modal,#cam-setup-modal.show{display:none !important}
     #instant-tooltip{position:fixed;z-index:2000;display:none;pointer-events:none;padding:5px 8px;border-radius:7px;background:rgba(25,25,28,.96);border:1px solid rgba(255,255,255,.13);color:#fff;font-size:11px;line-height:1.25;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3)}
     #instant-tooltip.show{display:block}
 
@@ -528,8 +535,21 @@
     body.mode-qr .left-divider{display:none !important}
 
     
+
+    #factory-reset-modal{display:none;position:fixed;inset:0;z-index:2147483001;background:rgba(0,0,0,.58);align-items:center;justify-content:center;padding:18px}
+    #factory-reset-modal.show{display:flex}
+    #factory-reset-modal .factory-reset-box{max-width:380px;transform:none;opacity:1}
+    .factory-reset-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+    .factory-reset-actions button{border:0;border-radius:8px;padding:9px 13px;background:rgba(255,255,255,.12);color:#fff;font:inherit;cursor:pointer}
+    .factory-reset-actions #factory-reset-confirm{background:#e5b52b;color:#171717;font-weight:650}
+    .ld-video-toolbar{background:linear-gradient(180deg,rgba(28,28,30,.86),rgba(0,0,0,.96));border-color:rgba(255,255,255,.16);backdrop-filter:blur(10px);padding:7px 9px;gap:8px}
+    .ld-video-toolbar input[type=range]{accent-color:#f33}
+    .ld-video-toolbar .ld-vplay{background:#f33;color:#fff}
+    #mic-meter{border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px 10px;backdrop-filter:blur(8px)}
+    #mic-meter svg{width:16px;height:16px}
+
     #perm-modal{
-      display:none;position:fixed;top:0;left:0;right:0;z-index:500;
+      display:none;position:fixed;top:0;left:0;right:0;z-index:2147483000;
       background:transparent;align-items:flex-start;justify-content:center;
       padding:18px 16px 0;opacity:0;pointer-events:none;
       transition:opacity .2s ease;
@@ -628,21 +648,16 @@
 
     /* Library overlay */
     #library-overlay{
-      display:none;position:fixed;inset:0;z-index:400;
+      display:flex;position:fixed;inset:0;z-index:400;
       background:#0a0a0a;flex-direction:column;
       color:#fff;font-family:inherit;
-      opacity:0;transform:translateY(100%);
-      transition:opacity .3s ease, transform .3s cubic-bezier(.4,0,.2,1);
-      pointer-events:auto;
+      opacity:0;visibility:hidden;pointer-events:none;transform:scale(.97);
+      transition:opacity .2s ease,transform .26s cubic-bezier(.2,.8,.2,1),visibility .2s;
     }
-    #library-overlay.show{display:flex !important;opacity:1;transform:translateY(0);pointer-events:auto}
-    #library-overlay:not(.show){display:none!important;visibility:hidden!important;pointer-events:none!important}
+    #library-overlay.show{opacity:1;visibility:visible;transform:none;pointer-events:auto}
     body.library-open #app > :not(#library-overlay):not(#library-detail):not(.lib-modal):not(#toast){pointer-events:none !important}
     body.library-open #library-detail{pointer-events:auto !important}
     body.library-open #library-overlay{pointer-events:auto !important}
-    #library-overlay.closing{
-      opacity:0;transform:translateY(100%);pointer-events:none;
-    }
     #library-overlay.show .lib-card:nth-child(-n+36){
       animation:libIn .22s ease both;
     }
@@ -820,6 +835,8 @@
     .lib-import-tile{display:flex;width:100%;min-width:0;min-height:0;align-self:start;box-sizing:border-box;aspect-ratio:16/9;border:1px dashed #f5c542;border-radius:14px;background:rgba(255,193,7,.035);color:#f5c542;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:14px;font-weight:600;transition:background .15s,border-color .15s}
     .lib-import-tile:hover{background:rgba(255,193,7,.09);border-color:#ffd95a}
     .lib-import-tile svg{width:28px;height:28px}
+    .lib-grid.size-sm .lib-import-tile{font-size:10px;gap:3px;border-radius:10px}
+    .lib-grid.size-sm .lib-import-tile svg{width:15px;height:15px}
     body.lib-selecting .lib-import-tile{display:none!important}
     .lib-empty{
       grid-column:1/-1;text-align:center;padding:48px 16px;min-height:45vh;display:flex;align-items:center;justify-content:center;
@@ -1205,6 +1222,49 @@
     <div class="app-loading-label" id="app-loading-label">Đang thiết lập...</div>
   </div>
 </div>
+<script>
+/* Màn loading: thanh vàng chạy theo tiến trình thiết lập thật. Chỉ ẩn khi finish() được gọi. */
+(function(){
+  var screen=document.getElementById('app-loading'),
+      bar=document.getElementById('app-loading-progress'),
+      label=document.getElementById('app-loading-label');
+  var shown=0,target=8,done=false,timer=null,safety=null;
+  function paint(){ if(bar) bar.style.width=shown.toFixed(1)+'%'; }
+  function step(){
+    if(done) return;
+    var ceiling=target>=100?100:Math.min(96,target+10);
+    if(shown<target) shown+=Math.max(0.5,(target-shown)*0.2);
+    else if(shown<ceiling) shown+=0.12;
+    if(shown>ceiling) shown=ceiling;
+    paint();
+  }
+  function remove(){ if(screen&&screen.parentNode) screen.parentNode.removeChild(screen); }
+  window.AppLoading={
+    set:function(pct,text){
+      if(done) return;
+      if(typeof pct==='number'&&pct>target) target=Math.min(100,pct);
+      if(text&&label) label.textContent=text;
+    },
+    finish:function(){
+      if(done) return; done=true;
+      clearInterval(timer); clearTimeout(safety);
+      shown=100; paint();
+      setTimeout(function(){
+        if(!screen) return;
+        screen.classList.add('done');
+        screen.addEventListener('transitionend',remove,{once:true});
+        setTimeout(remove,500);
+      },200);
+    }
+  };
+  if(!screen||!bar) return;
+  paint();
+  timer=setInterval(step,40);
+  /* Phòng hờ: nếu script chính lỗi/treo thì vẫn không kẹt ở màn loading */
+  safety=setTimeout(function(){ window.AppLoading.finish(); },60000);
+  window.addEventListener('error',function(){ setTimeout(function(){ if(!done&&target<30) window.AppLoading.finish(); },4000); });
+})();
+</script>
 <div id="app">
   <div id="fps" class="advanced-hidden"><span class="fps-main">FPS: --</span><span class="fps-detail"> | --x-- --p --hz</span></div>
 
@@ -1223,18 +1283,15 @@
             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
             <circle cx="12" cy="13" r="4"/>
           </svg>
-          <span style="position:absolute;right:-4px;bottom:-2px;width:22px;height:22px;border-radius:50%;background:#4a4a4a;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;border:2px solid #4a4a4a">?</span>
         </div>
-        <div class="nc-spin"></div>
       </div>
       <div id="countdown"></div>
       <div id="rec-timer">00:00:00</div>
       <div id="qr-hint">Đưa QR vào khung hình để bắt đầu quét</div>
       <div id="mode-hint"></div>
       <div id="mic-meter">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-          <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v4m-3 0h6"/><path d="M19.5 5.5l2 2m-17 0 2-2" opacity=".65"/>
         </svg>
         <div class="bar-bg"><div class="bar-fill" id="mic-bar"></div></div>
       </div>
@@ -1378,10 +1435,12 @@
 
   <div id="timer-menu" class="popup-menu">
     <div class="panel-head">Hẹn giờ <button type="button" class="close-x" data-close="timer-menu" aria-label="Đóng">×</button></div>
-    <button type="button" class="timer-opt active" data-sec="0">Tắt</button>
-    <button type="button" class="timer-opt" data-sec="3">3 giây</button>
-    <button type="button" class="timer-opt" data-sec="5">5 giây</button>
-    <button type="button" class="timer-opt" data-sec="10">10 giây</button>
+    <div class="timer-list">
+      <button type="button" class="timer-opt active" data-sec="0">Tắt</button>
+      <button type="button" class="timer-opt" data-sec="3">3 giây</button>
+      <button type="button" class="timer-opt" data-sec="5">5 giây</button>
+      <button type="button" class="timer-opt" data-sec="10">10 giây</button>
+    </div>
   </div>
 
   <div class="adj-popup" id="ev-popup" role="group" aria-label="Bù trừ sáng">
@@ -1762,7 +1821,7 @@
               <option value="24">24 FPS</option><option value="30">30 FPS</option><option value="50">50 FPS</option><option value="60">60 FPS</option><option value="120">120 FPS</option><option value="0">Không giới hạn</option>
             </select>
           </div>
-          <div id="smart-resolution-note" style="display:none;align-items:flex-start;gap:7px;padding:2px 4px 12px;font-size:12px;line-height:1.5;color:rgba(255,255,255,.72)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg><span>Bạn không thể chỉnh thủ công khi bật tính năng này.</span></div>
+          <div id="smart-resolution-note" style="display:none;align-items:flex-start;gap:7px;padding:2px 4px 12px;font-size:12px;line-height:1.5;color:rgba(255,255,255,.72)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg><span>Không thể điều chỉnh thông số thủ công khi bật tính năng này</span></div>
           <div class="settings-section-label">Xem trước & Thông tin</div>
           <div class="settings-camera-info-row" style="display:flex;align-items:stretch;gap:16px;min-width:0">
             <div style="flex:1;min-width:0;aspect-ratio:16/9;background:#000;border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center">
@@ -1778,19 +1837,21 @@
 
         <div class="settings-panel" id="panel-about">
           <div class="about-layout">
-            <div class="about-brand">
-              <svg viewBox="0 -960 960 960" aria-label="Biểu tượng webs-cam-era">
+            <div class="about-hero">
+              <div class="about-logo"><svg viewBox="0 -960 960 960" aria-label="Biểu tượng webs-cam-era">
                 <defs><linearGradient id="app-icon-gradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="48%" stop-color="#D9D9DE"/><stop offset="100%" stop-color="#85858D"/></linearGradient></defs>
                 <path fill="url(#app-icon-gradient)" d="M480-240q100 0 170-70t70-170q0-87-55.5-153T524-716q-18-2-31 10t-13 30v196L342-342q-13 13-12 31t15 29q29 23 64 32.5t71 9.5Zm0 160q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
-              </svg>
-              <div><div class="about-brand-name">webs-cam-era</div><div class="about-version">Phiên bản 3.0.0</div></div>
+              </svg></div>
+              <div class="about-brand-name">webs-cam-era</div>
+              <div class="about-version">Phiên bản 3.0.0</div>
+              <p class="about-tagline">Camera chạy ngay trên trình duyệt: nhẹ, nhanh, không cần cài đặt.</p>
             </div>
-            <div class="about-links">
-              <a class="about-link" href="https://github.com/BinBimVN130/webs-cam-era" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12 24 5.37 18.63 0 12 0z"/></svg>GitHub</a>
-              <a class="about-link" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=binken12344@gmail.com" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>Gmail</a>
-              <button type="button" class="about-link" id="support-btn" aria-haspopup="dialog" aria-controls="support-modal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v7a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M16 11h2a2.5 2.5 0 0 1 0 5h-2M3 22h15M7 5c-1-1 1-2 0-3M12 5c-1-1 1-2 0-3"/></svg>Ủng hộ</button>
+            <div class="about-actions">
+              <button type="button" class="about-action primary" id="support-btn" aria-haspopup="dialog" aria-controls="support-modal"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v7a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M16 11h2a2.5 2.5 0 0 1 0 5h-2M3 22h15M7 5c-1-1 1-2 0-3M12 5c-1-1 1-2 0-3"/></svg></span><span class="txt"><b>Ủng hộ tác giả</b><small>Mời mình một ly cà phê</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+              <a class="about-action" href="https://github.com/BinBimVN130/webs-cam-era" target="_blank" rel="noopener noreferrer"><span class="ico"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12 24 5.37 18.63 0 12 0z"/></svg></span><span class="txt"><b>GitHub</b><small>Mã nguồn và góp ý</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
+              <a class="about-action" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=binken12344@gmail.com" target="_blank" rel="noopener noreferrer"><span class="ico"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg></span><span class="txt"><b>Gmail</b><small>Liên hệ và báo lỗi</small></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
             </div>
-            <section class="about-whatsnew"><h3>Có gì mới?</h3><ul><li>HDR phần mềm để cải thiện độ sáng và chi tiết ảnh.</li><li>Tối ưu ảnh thông minh và quy trình xử lý ảnh.</li><li>Cải thiện hiệu suất quét mã QR.</li><li>Tối ưu hiệu năng để chạy mượt hơn trên máy cấu hình thấp.</li></ul></section>
+            <section class="about-whatsnew"><h3>Có gì mới?</h3><ul><li>HDR phần mềm để cải thiện độ sáng và chi tiết ảnh.</li><li>Tối ưu ảnh thông minh và quy trình xử lý ảnh.</li><li>Cải thiện hiệu suất quét mã QR.</li><li>Quay video mượt hơn; video WebM giờ tua được.</li><li>Hiệu ứng mở/đóng cho Thư viện và menu Ủng hộ.</li><li>Tối ưu hiệu năng để chạy mượt hơn trên máy cấu hình thấp.</li></ul></section>
           </div>
         </div>
 
@@ -1845,11 +1906,16 @@
   </div>
   <div id="fullscreen-flash"></div>
   <div id="zoom-label">1x</div>
+  <div id="factory-reset-modal" role="dialog" aria-modal="true" aria-labelledby="factory-reset-title">
+    <div class="perm-box factory-reset-box">
+      <div class="perm-body"><strong id="factory-reset-title">Khôi phục cài đặt gốc?</strong><p>Mọi thiết lập của ứng dụng và thư viện sẽ được đặt lại. Bạn có muốn tiếp tục?</p><div class="factory-reset-actions"><button type="button" id="factory-reset-cancel">Hủy</button><button type="button" id="factory-reset-confirm">Khôi phục</button></div></div>
+    </div>
+  </div>
   <div id="perm-modal">
     <div class="perm-box">
       <div class="perm-warn-icon" aria-hidden="true">!</div>
       <div class="perm-body">
-        <p>Hãy cấp quyền truy cập camera và micro cho trang web này</p>
+        <p>Vui lòng cấp quyền truy cập đầu vào cho trang này.</p>
         <button type="button" id="perm-ok">OK</button>
       </div>
     </div>
@@ -1968,9 +2034,11 @@ function hidePermModal(){
   m.classList.remove('show');
   setTimeout(()=>{ m.style.display = ''; }, 220);
 }
-document.getElementById('perm-ok')?.addEventListener('click', ()=>{
-  hidePermModal();
-});
+document.getElementById('perm-ok')?.addEventListener('click', hidePermModal);
+document.addEventListener('pointerdown', e=>{
+  const m=document.getElementById('perm-modal');
+  if(m?.classList.contains('show') && !e.target.closest('#perm-modal')) hidePermModal();
+}, true);
 
 function showToast(msg,ms=2500){
   toast.textContent=msg;toast.classList.add('show');
@@ -2341,6 +2409,16 @@ async function applyVideoQuality(track){
     try{ await track.applyConstraints({ width:{ideal:tw}, height:{ideal:th} }); }catch(e2){}
   }
 }
+function getNoiseSuppressionConstraints(){
+  const supported = navigator.mediaDevices?.getSupportedConstraints?.() || {};
+  const enabled = state.noiseReduce === true;
+  const constraints = {};
+  if('echoCancellation' in supported) constraints.echoCancellation = enabled;
+  if('noiseSuppression' in supported) constraints.noiseSuppression = enabled;
+  if('autoGainControl' in supported) constraints.autoGainControl = enabled && !(parseFloat(state.micGain) > 1.01);
+  return constraints;
+}
+
 async function startCamera(withAudio=false, forceRestart=false){
   try{
     if(!forceRestart){
@@ -2393,15 +2471,10 @@ async function startCamera(withAudio=false, forceRestart=false){
     }
     let audioConstraint = false;
     if(withAudio){
-      const nr = state.noiseReduce === true;
-      const supportedAudio = navigator.mediaDevices?.getSupportedConstraints?.() || {};
-      const baseAud = {};
-      if('echoCancellation' in supportedAudio) baseAud.echoCancellation = nr;
-      if('noiseSuppression' in supportedAudio) baseAud.noiseSuppression = nr;
-      if('autoGainControl' in supportedAudio) baseAud.autoGainControl = nr && !(parseFloat(state.micGain) > 1.01); // AGC tự động sẽ chống lại mức khuếch đại thủ công
+      const noiseConstraints = getNoiseSuppressionConstraints();
       audioConstraint = state.audioDeviceId
-        ? { deviceId: { exact: state.audioDeviceId }, ...baseAud }
-        : baseAud;
+        ? { deviceId: { exact: state.audioDeviceId }, ...noiseConstraints }
+        : noiseConstraints;
     }
     try{
       state.stream = await navigator.mediaDevices.getUserMedia({
@@ -2762,6 +2835,73 @@ function resetRecordingAfterError(){
   document.getElementById('app').classList.remove('recording-active');
 }
 
+/* Sửa WebM do MediaRecorder tạo ra: ghi Duration vào Info để hiện thời lượng và tua được. */
+async function fixWebmSeekable(blob, durationMs){
+  try{
+    if(!blob || !(durationMs>0) || blob.size<64) return blob;
+    const head=new Uint8Array(await blob.slice(0,Math.min(blob.size,262144)).arrayBuffer());
+    const L=head.length;
+    const idLen=b=>b&0x80?1:b&0x40?2:b&0x20?3:b&0x10?4:0;
+    const szLen=b=>{for(let i=0;i<8;i++)if(b&(0x80>>i))return i+1;return 0;};
+    const rd=(p,end)=>{
+      if(p>=end)return null;
+      const il=idLen(head[p]);if(!il||p+il>=end)return null;
+      let id=0;for(let i=0;i<il;i++)id=id*256+head[p+i];
+      const sp=p+il,sl=szLen(head[sp]);if(!sl||sp+sl>end)return null;
+      let val=head[sp]&(0xFF>>sl),ones=val===(0xFF>>sl);
+      for(let i=1;i<sl;i++){val=val*256+head[sp+i];if(head[sp+i]!==0xFF)ones=false;}
+      const ds=sp+sl;
+      return {id,start:p,sp,sl,ds,size:ones?-1:val,end:ones?-1:ds+val};
+    };
+    const eh=rd(0,L);
+    if(!eh||eh.id!==0x1A45DFA3||eh.end<0||eh.end>=L)return blob;
+    const seg=rd(eh.end,L);
+    if(!seg||seg.id!==0x18538067)return blob;
+    let info=null,seek=null,q=seg.ds;
+    while(q<L){
+      const c=rd(q,L);
+      if(!c||c.end<0||c.end>L)break;
+      if(c.id===0x1C53BB6B)return blob;           // đã có Cues: giữ nguyên
+      if(c.id===0x1F43B675)break;                 // Cluster đầu tiên
+      if(c.id===0x1549A966)info=c;
+      else if(c.id===0x114D9B74)seek=c;
+      q=c.end;
+    }
+    if(!info)return blob;
+    let scale=1000000;const kids=[];
+    for(let r=info.ds;r<info.end;){
+      const k=rd(r,info.end);
+      if(!k||k.end<0||k.end>info.end)return blob;
+      if(k.id===0x2AD7B1){let v=0;for(let i=k.ds;i<k.end;i++)v=v*256+head[i];if(v>0)scale=v;}
+      if(k.id!==0x4489)kids.push(head.slice(k.start,k.end));
+      r=k.end;
+    }
+    const dur=new Uint8Array(11);dur[0]=0x44;dur[1]=0x89;dur[2]=0x88;
+    new DataView(dur.buffer).setFloat64(3,durationMs*1e6/scale);
+    let payload=11;kids.forEach(k=>{payload+=k.length;});
+    const hdr=new Uint8Array(12);hdr.set([0x15,0x49,0xA9,0x66,0x01]);
+    let n=payload;for(let i=11;i>=5;i--){hdr[i]=n&255;n=Math.floor(n/256);}
+    const delta=12+payload-(info.end-info.start);
+    if(seg.size>=0){                               // Segment có kích thước xác định: cập nhật theo phần chèn thêm
+      let v=seg.size+delta;
+      for(let i=seg.sl-1;i>=0;i--){head[seg.sp+i]=v&255;v=Math.floor(v/256);}
+      head[seg.sp]|=(0x80>>(seg.sl-1));
+    }
+    if(seek){                                      // SeekHead sẽ lệch vị trí → đổi thành Void
+      const Ln=seek.end-seek.start;
+      if(Ln>=3){
+        head[seek.start]=0xEC;const rem=Ln-1;
+        if(rem-1<=126)head[seek.start+1]=0x80|(rem-1);
+        else{const sz=rem-2;head[seek.start+1]=0x40|(sz>>8);head[seek.start+2]=sz&255;}
+      }
+    }
+    return new Blob([head.subarray(0,info.start),hdr,...kids,dur,head.subarray(info.end),blob.slice(L)],{type:blob.type||'video/webm'});
+  }catch(e){
+    console.warn('fixWebmSeekable',e);
+    return blob;
+  }
+}
+
 async function startRecording(){
   if(!state.stream||state.isRecording||!video.videoWidth) return;
   try{
@@ -2792,18 +2932,25 @@ async function startRecording(){
   const hasRvfc = typeof video.requestVideoFrameCallback === 'function';
   const markFrame = () => {
     frameReady = true;
-    if(state.isRecording && hasRvfc) state._recRvfc = video.requestVideoFrameCallback(markFrame);
+    if(state.isRecording){
+      // Vẽ ngay khi camera có khung mới → nhịp khung đều, hết giật do timer lệch pha.
+      try{ drawRecordingFrame(); }catch(e){}
+      if(hasRvfc) state._recRvfc = video.requestVideoFrameCallback(markFrame);
+    }
   };
+  // Chỉ giới hạn nhịp vẽ khi FPS quay thấp hơn FPS camera hoặc không có rVFC.
+  const capGap = (!hasRvfc || recFps < sourceFps * 0.95) ? (1000 / recFps) * 0.85 : 0;
   if(hasRvfc) state._recRvfc = video.requestVideoFrameCallback(markFrame);
   const canvasStream=recCanvas.captureStream(0);
   state._recCanvasStream = canvasStream;
   const canvasVideoTrack = canvasStream.getVideoTracks()[0];
+  try{ if(canvasVideoTrack) canvasVideoTrack.contentHint = 'motion'; }catch(e){}
   const drawRecordingFrame = () => {
     if(!state.isRecording || video.readyState < 2 || !video.videoWidth) return;
     // Tab bị ẩn thì rVFC có thể ngừng → vẫn vẽ theo timer để không đứng hình.
     if(hasRvfc && !frameReady && !document.hidden) return;
     const now = performance.now();
-    if(now - lastDraw < minGap * 0.85) return;
+    if(capGap && now - lastDraw < capGap) return;
     lastDraw = now;
     frameReady = false;
     try{
@@ -2965,25 +3112,35 @@ async function startRecording(){
     try{ state._recAudioCtx && state._recAudioCtx.close(); }catch(e){}
     state._recAudioCtx = null;
     state._recGainNode = null;
-    const blob=new Blob(state.recordedChunks,{type:mime||'video/webm'});
+    const rawBlob=new Blob(state.recordedChunks,{type:mime||'video/webm'});
+    state.recordedChunks=[];
     const ext = (mime||'').includes('mp4') ? 'mp4' : 'webm';
-    if(!blob.size){
+    if(!rawBlob.size){
       showToast('Video trống — thử quay lại');
-      state.recordedChunks=[];
       return;
     }
     const vname = `Video_${Date.now()}.${ext}`;
-    const dur = typeof recSeconds === 'number' ? recSeconds : 0;
-    libAddItem({
-      type: 'video', name: vname, blob, mime: mime||'video/webm',
-      width: recCanvas.width, height: recCanvas.height, duration: dur,
-      createdAt: Date.now(), size: blob.size
-    }).then(()=> showToast('Đã lưu vào Thư viện'))
-      .catch(()=> { downloadBlob(blob, vname); showToast('Đã tải video (.' + ext + ')'); });
-    state.recordedChunks=[];
+    const durMs = state._recStartTs ? Math.max(0, performance.now() - state._recStartTs) : ((typeof recSeconds === 'number' ? recSeconds : 0) * 1000);
+    state._recStartTs = 0;
+    const dur = durMs / 1000;
+    const vw1 = recCanvas.width, vh1 = recCanvas.height;
+    (async()=>{
+      let blob = rawBlob, fixed = false;
+      // WebM từ MediaRecorder thiếu thời lượng → không tua được. Ghi thêm Duration trước khi lưu.
+      if(ext === 'webm'){ const nb = await fixWebmSeekable(rawBlob, durMs); if(nb && nb !== rawBlob){ blob = nb; fixed = true; } }
+      try{
+        await libAddItem({
+          type: 'video', name: vname, blob, mime: mime||'video/webm',
+          width: vw1, height: vh1, duration: dur,
+          createdAt: Date.now(), size: blob.size, seekFixed: fixed
+        });
+        showToast('Đã lưu vào Thư viện');
+      }catch(e){ downloadBlob(blob, vname); showToast('Đã tải video (.' + ext + ')'); }
+    })();
   };
   try{
     state.mediaRecorder.start(1000);
+    state._recStartTs = performance.now();
   }catch(e){
     console.error('MediaRecorder.start thất bại:', e);
     resetRecordingAfterError();
@@ -3229,6 +3386,14 @@ zoomSlider.addEventListener('input',()=>{
   }
 });
 
+// Cuộn chuột trên khung camera để phóng to/thu nhỏ.
+cameraFrame.addEventListener('wheel', e=>{
+  if(!state.stream || !video.videoWidth) return;
+  e.preventDefault();
+  zoomSlider.value=String(Math.max(Number(zoomSlider.min),Math.min(Number(zoomSlider.max),state.zoom+(e.deltaY<0?0.2:-0.2))));
+  zoomSlider.dispatchEvent(new Event('input',{bubbles:true}));
+},{passive:false});
+
 // Pan
 videoWrap.addEventListener('pointerdown',e=>{
   if(state.zoom<=1.05) return;
@@ -3311,7 +3476,7 @@ timerBtn.addEventListener('click',e=>{
   e.stopPropagation();
   const open = timerMenu.classList.contains('show');
   closeAllMenus();
-  if(!open){ placePopup(timerMenu,timerBtn); timerMenu.classList.add('show'); }
+  if(!open){ placePopup(timerMenu,timerBtn,'top'); timerMenu.classList.add('show'); }
 });
 document.querySelectorAll('.timer-opt').forEach(opt=>{
   opt.addEventListener('click',()=>{
@@ -3838,18 +4003,21 @@ document.getElementById('btn-restart-cam')?.addEventListener('click', async ()=>
   }catch(e){ notifyApplied(false); }
 });
 const btnFactory = document.getElementById('btn-factory-reset');
-if(btnFactory) btnFactory.addEventListener('click', async ()=>{
-  if(!confirm('Mọi thứ sẽ được đặt lại về ban đầu, vui lòng kiểm tra lại các dữ liệu của bạn. Xác nhận khôi phục cài đặt gốc?')) return;
+const factoryResetModal = document.getElementById('factory-reset-modal');
+function closeFactoryReset(){ factoryResetModal?.classList.remove('show'); }
+btnFactory?.addEventListener('click', ()=>factoryResetModal?.classList.add('show'));
+document.getElementById('factory-reset-cancel')?.addEventListener('click', closeFactoryReset);
+factoryResetModal?.addEventListener('click', e=>{ if(e.target===factoryResetModal) closeFactoryReset(); });
+document.getElementById('factory-reset-confirm')?.addEventListener('click', async ()=>{
+  closeFactoryReset();
   try{
-    localStorage.clear();
-    sessionStorage.clear();
-    await new Promise((resolve)=>{
-      const req = indexedDB.deleteDatabase(LIB_DB);
-      req.onsuccess = ()=> resolve();
-      req.onerror = ()=> resolve();
-      req.onblocked = ()=> resolve();
+    ['webcam-persist-v1','webcam-persist-on','webcam-mic-gain','webcam-font','webcam-photo-fmt','webcam-video-fmt','webcam-lib-size','webcam-noise-reduce','webcam-qr-history'].forEach(k=>localStorage.removeItem(k));
+    sessionStorage.removeItem('flashTipShown');
+    await new Promise(resolve=>{
+      const req=indexedDB.deleteDatabase(LIB_DB);
+      req.onsuccess=req.onerror=req.onblocked=()=>resolve();
     });
-  }catch(e){}
+  }catch(e){ console.warn('Không thể xóa toàn bộ dữ liệu ứng dụng:',e); }
   location.reload();
 });
 
@@ -3960,7 +4128,18 @@ async function restorePreviewResolution(){
   document.addEventListener('mouseout',e=>{const el=e.target.closest(targetSelector);if(el&&!el.contains(e.relatedTarget))hide(el);});
   document.addEventListener('focusin',e=>{const el=e.target.closest(targetSelector);if(el)show(el);});
   document.addEventListener('focusout',e=>hide(e.target.closest?.(targetSelector)));
-  document.addEventListener('click',e=>{if(e.target.closest('button'))hide();});
+  // Ẩn tooltip ngay khi bấm (pha capture: không bị chặn bởi stopPropagation của các nút)
+  document.addEventListener('pointerdown',()=>hide(),true);
+  document.addEventListener('click',()=>hide(),true);
+  document.addEventListener('keydown',()=>hide(),true);
+  window.addEventListener('scroll',()=>hide(),true);
+  // Nút đổi trạng thái (vd: Chọn nhiều → Hủy) hoặc bị gỡ khỏi trang: tự ẩn tooltip còn sót
+  let tipChk=0;
+  document.addEventListener('mousemove',()=>{
+    if(!current||tipChk)return;
+    tipChk=setTimeout(()=>{tipChk=0;const el=current;if(!el)return;
+      if(!el.isConnected||!el.hasAttribute('data-tip')||el.disabled||(el.matches('button')&&(el.textContent||'').trim()&&!el.matches('.ld-vspeed')))hide(el);},120);
+  },{passive:true});
   new MutationObserver(records=>records.forEach(rec=>{
     if(rec.type==='attributes' && rec.attributeName==='title')migrateTitles(rec.target,true);
     (rec.addedNodes||[]).forEach(n=>{if(n.nodeType===1)migrateTitles(n);});
@@ -3971,10 +4150,13 @@ async function restorePreviewResolution(){
 (function(){
   const modal=document.getElementById('support-modal'),open=document.getElementById('support-btn'),close=document.getElementById('support-close');
   if(!modal||!open||!close)return;
-  open.addEventListener('click',()=>{modal.hidden=false;close.focus();});
-  close.addEventListener('click',()=>{modal.hidden=true;open.focus();});
-  modal.addEventListener('click',e=>{if(e.target===modal)modal.hidden=true;});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.hidden)modal.hidden=true;});
+  let hideT=0;
+  function openSupport(){clearTimeout(hideT);modal.hidden=false;void modal.offsetWidth;modal.classList.add('show');try{close.focus({preventScroll:true});}catch(e){}}
+  function closeSupport(){if(modal.hidden)return;modal.classList.remove('show');clearTimeout(hideT);hideT=setTimeout(()=>{modal.hidden=true;},280);try{open.focus({preventScroll:true});}catch(e){}}
+  open.addEventListener('click',openSupport);
+  close.addEventListener('click',e=>{e.stopPropagation();closeSupport();});
+  modal.addEventListener('click',e=>{if(e.target===modal)closeSupport();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.hidden)closeSupport();});
   const qr=document.getElementById('support-qr');
   ['contextmenu','dragstart','selectstart','copy'].forEach(type=>qr.addEventListener(type,e=>e.preventDefault()));
 })();
@@ -4067,26 +4249,11 @@ function measureFps(ms){
   });
 }
 async function runCameraSetupSequence(){
-  const modal = document.getElementById('cam-setup-modal');
-  const status = document.getElementById('cam-setup-status');
-  const bar = document.getElementById('cam-setup-bar');
   function setStatus(t, pct){
-    if(status) status.textContent = t || 'Đang thiết lập...';
-    if(bar && pct != null) bar.style.width = Math.min(100, Math.max(0, pct)) + '%';
+    try{ window.AppLoading && window.AppLoading.set(pct, t || 'Đang thiết lập...'); }catch(e){}
   }
-  function showSetup(){
-    if(!modal) return;
-    modal.style.display = 'flex';
-    void modal.offsetWidth;
-    modal.classList.remove('closing');
-    modal.classList.add('show');
-  }
-  function hideSetup(){
-    if(!modal) return;
-    modal.classList.add('closing');
-    modal.classList.remove('show');
-    setTimeout(()=>{ modal.style.display = 'none'; modal.classList.remove('closing'); }, 160);
-  }
+  function showSetup(){ setStatus('Đang thiết lập...', 10); }
+  function hideSetup(){ try{ window.AppLoading && window.AppLoading.finish(); }catch(e){} }
   showSetup();
   try{
     const res = state.previewRes || '1280x720';
@@ -4151,6 +4318,7 @@ async function runCameraSetupSequence(){
 
 async function bootCameraSetup(){
   if(!navigator.mediaDevices?.getUserMedia){
+    try{ window.AppLoading && window.AppLoading.finish(); }catch(e){}
     noCamera.classList.remove('hidden');
     showPermModal();
     return;
@@ -4158,6 +4326,7 @@ async function bootCameraSetup(){
   try{
     await runCameraSetupSequence();
   }catch(e){
+    try{ window.AppLoading && window.AppLoading.finish(); }catch(_){}
     noCamera.classList.remove('hidden');
     showPermModal();
   }
@@ -4349,11 +4518,7 @@ async function openLibrary(){
     const det = document.getElementById('library-detail');
     if(det){ det.classList.remove('show'); det.style.display='none'; det.style.opacity='0'; det.style.pointerEvents='none'; }
     ov.classList.remove('closing');
-    ov.style.display='flex';
-    ov.style.visibility='visible';
-    ov.style.opacity='1';
-    ov.style.transform='translateY(0)';
-    ov.style.pointerEvents='auto';
+    ['display','visibility','opacity','transform','pointerEvents'].forEach(k=>{ ov.style[k]=''; });
     void ov.offsetWidth;
     ov.classList.add('show');
     document.body.classList.add('library-open');
@@ -4407,11 +4572,7 @@ function closeLibrary(){
   document.documentElement.classList.remove('library-open','lib-selecting');
   if(ov){
     ov.classList.remove('show','closing');
-    ov.style.opacity='0';
-    ov.style.transform='translateY(100%)';
-    ov.style.pointerEvents='none';
-    ov.style.visibility='hidden';
-    ov.style.display='none';
+    ['display','visibility','opacity','transform','pointerEvents'].forEach(k=>{ ov.style[k]=''; });
   }
   // Remove only stale blocking styles on app's direct children; preserve intentional disabled controls.
   const app=document.getElementById('app');
@@ -4607,6 +4768,18 @@ function renderLibDetail(){
   } else {
     const v = document.createElement('video');
     v.src = url; v.controls = false; v.playsInline = true; v.preload='metadata';
+    // Video WebM cũ (thiếu Duration) → sửa một lần để xem được thời lượng và tua được
+    if(/webm/i.test(it.mime||it.blob?.type||'') && !it.seekFixed && it.blob && it.duration>0 && Number.isFinite(it.duration)){
+      fixWebmSeekable(it.blob, it.duration*1000).then(async nb=>{
+        it.seekFixed = true;
+        if(nb && nb !== it.blob){ it.blob = nb; it.size = nb.size; }
+        try{ await libUpdateItem(it); }catch(e){}
+        if(nb && v.isConnected && v.paused && v.currentTime===0){
+          const old=v.src; v.src=URL.createObjectURL(nb); try{ v.load(); }catch(e){}
+          try{ URL.revokeObjectURL(old); }catch(e){}
+        }
+      }).catch(()=>{});
+    }
     v.disablePictureInPicture = true;
     v.style.maxWidth = '100%'; v.style.maxHeight = '100%'; v.style.borderRadius = '0';
     v.addEventListener('contextmenu', e=>e.preventDefault());
@@ -4614,7 +4787,7 @@ function renderLibDetail(){
     const toolbar = document.createElement('div'); toolbar.className='ld-video-toolbar';
     toolbar.innerHTML='<button type="button" class="ld-vplay" aria-label="Phát video" data-tip="Phát/tạm dừng"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10-6.5z" fill="currentColor"/></svg></button><span class="ld-video-time">0:00 / --:--</span><input type="range" min="0" max="1000" value="0" aria-label="Tua video"><div class="ld-vmenu-wrap"><button type="button" class="ld-vspeed" aria-label="Tốc độ phát" data-tip="Tốc độ phát">1× ▴</button><div class="ld-vpopup ld-speed-popup"></div></div><div class="ld-vmenu-wrap"><button type="button" class="ld-vvolume" aria-label="Âm lượng" data-tip="Âm lượng"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/><path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a8.5 8.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><div class="ld-vpopup ld-volume-popup"><input type="range" min="0" max="1" step="0.05" value="1" aria-label="Âm lượng"></div></div><button type="button" class="ld-vfullscreen" aria-label="Toàn màn hình" data-tip="Toàn màn hình">⛶</button>';
     const playBtn=toolbar.querySelector('.ld-vplay'), timeLabel=toolbar.querySelector('.ld-video-time'), seek=toolbar.querySelector('input[aria-label="Tua video"]'), speedBtn=toolbar.querySelector('.ld-vspeed'), speedPopup=toolbar.querySelector('.ld-speed-popup'), volumeBtn=toolbar.querySelector('.ld-vvolume'), volumePopup=toolbar.querySelector('.ld-volume-popup'), volumeRange=volumePopup.querySelector('input'), fullscreenBtn=toolbar.querySelector('.ld-vfullscreen');
-    const speeds=[0.25,0.5,0.75,1,1.25,1.5,2,3,3.5,3.75,4,6,8];
+    const speeds=[0.25,0.5,0.75,1,1.25,1.5,1.75,2];
     const fmtTime=t=>{if(!Number.isFinite(t)||t<0)return '--:--';const h=Math.floor(t/3600),m=Math.floor(t%3600/60),sec=Math.floor(t%60);return h?`${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`:`${m}:${String(sec).padStart(2,'0')}`;};
     function updateTime(){timeLabel.textContent=fmtTime(v.currentTime)+' / '+fmtTime(v.duration);if(!seek.matches(':active'))seek.value=String(Number.isFinite(v.duration)&&v.duration>0?v.currentTime/v.duration*1000:0);}
     speeds.forEach(rate=>{const b=document.createElement('button');b.type='button';b.textContent=rate+'×';if(rate===1)b.classList.add('active');b.addEventListener('click',()=>{v.playbackRate=rate;speedBtn.textContent=rate+'× ▴';speedPopup.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));speedPopup.classList.remove('show');});speedPopup.appendChild(b);});
@@ -4886,7 +5059,7 @@ applyLibGridSize(libGridSize);
     e.preventDefault();
     e.stopPropagation();
     const ov=document.getElementById('library-overlay');
-    if(document.body.classList.contains('library-open') && (!ov || !ov.classList.contains('show') || getComputedStyle(ov).display==='none')){
+    if(document.body.classList.contains('library-open') && (!ov || !ov.classList.contains('show') || getComputedStyle(ov).visibility==='hidden')){
       document.body.classList.remove('library-open','lib-selecting');
       document.documentElement.classList.remove('library-open','lib-selecting');
     }
@@ -5037,11 +5210,7 @@ document.addEventListener('keydown',e=>{
     const track = state.stream?.getAudioTracks?.().find(t => t.readyState === 'live');
     if(track && typeof track.applyConstraints === 'function'){
       try{
-        await track.applyConstraints({
-          noiseSuppression: state.noiseReduce,
-          echoCancellation: state.noiseReduce,
-          autoGainControl: state.noiseReduce && !(parseFloat(state.micGain) > 1.01)
-        });
+        await track.applyConstraints(getNoiseSuppressionConstraints());
         showToast(state.noiseReduce ? 'Đã yêu cầu khử ồn từ trình duyệt/micro' : 'Đã tắt khử ồn');
       }catch(e){
         showToast(state.noiseReduce ? 'Thiết bị/trình duyệt không đổi được khử ồn trực tiếp; áp dụng khi quay mới' : 'Đã lưu thiết lập; áp dụng khi quay mới');
@@ -5255,33 +5424,6 @@ setInterval(()=>{
 
 </script>
 
-<script>
-/* Splash screen: stop at 99% while setup runs; complete and hide only when page setup finishes. */
-(function(){
-  const screen=document.getElementById('app-loading'),bar=document.getElementById('app-loading-progress');
-  if(!screen||!bar)return;
-  let progress=0,finished=false;
-  const tick=setInterval(()=>{
-    if(progress<99){progress=Math.min(99,progress+1);bar.style.width=progress+'%';}
-  },45);
-  function finishLoading(){
-    if(finished)return;
-    finished=true;
-    clearInterval(tick);
-    progress=99;
-    bar.style.width='99%';
-    // The UI stays at 99% until it is ready to disappear; 100% is set as it hides.
-    requestAnimationFrame(()=>{
-      bar.style.width='100%';
-      screen.classList.add('done');
-      screen.addEventListener('transitionend',()=>screen.remove(),{once:true});
-      setTimeout(()=>screen.remove(),350);
-    });
-  }
-  if(document.readyState==='complete') finishLoading();
-  else window.addEventListener('load',finishLoading,{once:true});
-})();
-</script>
 
 </body>
 </html>
