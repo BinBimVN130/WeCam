@@ -4,6 +4,7 @@
 
 [![Live Demo](https://img.shields.io/badge/Open%20app-ffaa00?style=for-the-badge)](https://binbimvn130.github.io/WeCam/)
 [![Version](https://img.shields.io/badge/version-3.0.0-blue?style=flat-square)](https://github.com/BinBimVN130/webs-cam-era)
+![AI Assisted](https://img.shields.io/badge/AI-assisted%20development-8A63D2?style=for-the-badge&logo=openai&logoColor=white)
 
 — Ứng dụng camera chạy trực tiếp trên trình duyệt. Hướng đến trải nghiệm đơn giản, gọn và tận dụng tối đa phần cứng sẵn có. Giao diện được tối ưu hóa để dễ dùng, phù hợp cho nhiều người.
 
@@ -34,6 +35,7 @@
 - FPS / độ phân giải / độ mượt phụ thuộc webcam và trình duyệt.
 - Khử tiếng ồn có thể không tương thích mọi thiết bị.
 - Việc cập nhật sẽ không làm mất dữ liệu nhưng bạn tải về trước cho an toàn.
+ - Created and directed by BinBimVN130, with AI-assisted development.
 
 
  Cách cài đặt ứng dụng này: Trình duyệt -> 3 gạch ( ≡ ) -> Lưu và chia sẻ -> Cài đặt trang dưới dạng ứng dụng... -> [Cài đặt]
