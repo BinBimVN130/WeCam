@@ -1,6 +1,4 @@
-<img width="100" height="100" alt="timelapse_24dp_FFFFFF_FILL1_wght700_GRAD-25_opsz24" src="https://github.com/user-attachments/assets/edfed21e-e2c2-4e1f-8694-0ab550f9f963" />
-
-
+<img width="1055" height="1078" alt="Ảnh1" src="https://github.com/user-attachments/assets/36448608-0565-4a54-aa91-3b9419cc8e5c" />
 
 # WeCam 3.0
 
