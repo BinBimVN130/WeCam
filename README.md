@@ -12,8 +12,6 @@ Lưu ý: Độ mượt tùy thuộc vào trình duyệt/phần cứng/phần m�
 - Việc cập nhật sẽ không làm mất dữ liệu ảnh và video nhưng bạn tải về trước cho an toàn.
 - Quyền riêng tư: Dữ liệu được lưu trữ trong bộ nhớ trình duyệt.
 
-Link truy cập: [https://binbimvn130.github.io/WeCam/] 
-
 Cách cài đặt ứng dụng này: Trình duyệt -> 3 gạch ( ≡ ) -> Lưu và chia sẻ -> Cài đặt trang dưới dạng ứng dụng... -> [ Cài đặt ]
 
 ---
