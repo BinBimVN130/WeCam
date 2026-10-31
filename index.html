@@ -384,7 +384,7 @@
       display:flex;position:fixed;z-index:60;flex-direction:column;gap:12px;
       background:rgba(30,30,32,.92);border-radius:18px;padding:14px 16px 16px;
       box-shadow:0 12px 40px rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.16);
-      width:176px;
+      width:196px;max-height:calc(100vh - 24px);
       opacity:0;visibility:hidden;pointer-events:none;
       transform:translateX(-8px);
       transition:opacity .18s ease,visibility .18s,transform .18s ease;
@@ -394,8 +394,24 @@
       transform:translateX(0);
     }
     .filter-grid{
-      display:grid;grid-template-columns:repeat(2,1fr);gap:12px 10px;
+      display:grid;grid-template-columns:repeat(2,1fr);gap:12px 10px;align-content:start;
+      flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;padding-right:8px;scrollbar-gutter:stable;
+      scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.3) transparent;
     }
+    .filter-grid::-webkit-scrollbar{width:6px;height:0}
+    .filter-grid::-webkit-scrollbar-track{background:transparent}
+    .filter-grid::-webkit-scrollbar-thumb{background:rgba(255,255,255,.28);border-radius:6px}
+    .filter-grid::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.45)}
+    .filter-amount{flex:none;margin:0 -16px -16px;padding:12px 16px 14px;border-top:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:0 0 18px 18px}
+    .filter-amount-head{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;font-weight:500;color:rgba(255,255,255,.75);margin-bottom:8px}
+    #filter-amount-val{font-variant-numeric:tabular-nums;color:#ffaa00}
+    #filter-amount{display:block;width:100%;height:14px;margin:0;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer;touch-action:pan-y}
+    #filter-amount:disabled{opacity:.4;cursor:default}
+    #filter-amount::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:linear-gradient(to right,#ffaa00 var(--p,100%),rgba(255,255,255,.22) var(--p,100%))}
+    #filter-amount::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;margin-top:-5.5px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+    #filter-amount::-moz-range-track{height:3px;border-radius:2px;background:rgba(255,255,255,.22)}
+    #filter-amount::-moz-range-progress{height:3px;border-radius:2px;background:#ffaa00}
+    #filter-amount::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:#fff}
     .filter-item{
       display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;
       border:none;background:transparent;color:#fff;padding:0;
@@ -406,7 +422,6 @@
     }
     .filter-item.selected .thumb, .filter-item:hover .thumb{border-color:#fff;transform:scale(1.03)}
     .filter-item .fname{font-size:11px;color:rgba(255,255,255,.75);font-weight:500}
-    #filter-panel{max-height:calc(100vh - 24px);overflow-y:auto}
 
     #timer-menu{
       display:flex;position:fixed;z-index:60;flex-direction:column;gap:12px;
@@ -1460,6 +1475,10 @@
         <span class="fname">Điện ảnh</span>
       </button>
     </div>
+    <div class="filter-amount">
+      <div class="filter-amount-head"><span>Nồng độ</span><span id="filter-amount-val">100%</span></div>
+      <input type="range" id="filter-amount" min="0" max="100" step="1" value="100" aria-label="Nồng độ bộ lọc" disabled>
+    </div>
   </div>
 
   <div id="timer-menu" class="popup-menu">
@@ -1963,7 +1982,7 @@ const state = {
   recAnimId:null, recDrawTimer:null, qrScanning:false, qrAnimId:null,
   zoom:1, panX:0, panY:0, isPanning:false,
   panStartX:0, panStartY:0, panOriginX:0, panOriginY:0,
-  ev:0, sat:1, temp:0, filter:'none', hdr:false,
+  ev:0, sat:1, temp:0, filter:'none', filterAmount:1, hdr:false,
   frameCount:0, lastFpsTime:performance.now()
 };
 
@@ -2103,23 +2122,33 @@ function placePopup(el, btn, align){
   }
 }
 
-/* Bộ lọc: css = hàm lọc gốc của trình duyệt (nhẹ); overlay = lớp màu/gradient phủ lên ảnh (xem trước + ảnh/video xuất ra). */
+/* Bộ lọc: fx = các hàm lọc gốc của trình duyệt (nhẹ); overlay = lớp màu/gradient phủ lên ảnh (xem trước + ảnh/video xuất ra).
+   Nồng độ (state.filterAmount, 0..1) nội suy từ trung tính tới giá trị đầy đủ của fx và nhân với độ mờ của overlay. */
 const FILTER_PRESETS = {
-  vivid:{css:' saturate(1.38) contrast(1.09) brightness(1.02)'},
-  fresh:{css:' saturate(1.2) hue-rotate(-3deg) brightness(1.045) contrast(1.025)'},
-  natural:{css:' contrast(1.04) saturate(1.06) brightness(1.012)'},
-  dawn:{css:' sepia(0.14) saturate(1.22) hue-rotate(-8deg) brightness(1.035) contrast(1.02)'},
-  vintage:{css:' sepia(0.3) contrast(1.06) brightness(0.985) saturate(0.86)'},
-  sharp:{css:' contrast(1.13) saturate(1.04) brightness(1.01)'},
-  mono:{css:' grayscale(1) contrast(1.14) brightness(1.015)'},
-  igsunset:{css:' contrast(1.05) saturate(1.12) brightness(1.04)', overlay:{stops:['#5b34b8','#9a2a78','#e0642a'], angle:45, blend:'overlay', alpha:0.85}},
-  clarendon:{css:' contrast(1.18) saturate(1.32) brightness(1.05)'},
-  golden:{css:' sepia(0.16) saturate(1.28) brightness(1.06) contrast(1.04)', overlay:{stops:['#ffc466','#ff7a3c','#ffa05a'], angle:160, blend:'soft-light', alpha:0.6}},
-  film:{css:' sepia(0.2) contrast(1.1) saturate(0.88) brightness(1.01)', overlay:{stops:['#f2dfc6'], angle:0, blend:'soft-light', alpha:0.4}},
-  y2k:{css:' contrast(1.14) saturate(1.28) brightness(1.08)', overlay:{stops:['#00e5ff','#ff5ac8'], angle:135, blend:'soft-light', alpha:0.5}},
-  cinema:{css:' contrast(1.2) saturate(0.9) brightness(0.96)', overlay:{stops:['#1aa6b7','#ff8a3d'], angle:180, blend:'soft-light', alpha:0.55}}
+  vivid:{fx:{saturate:1.38, contrast:1.09, brightness:1.02}},
+  fresh:{fx:{saturate:1.2, 'hue-rotate':-3, brightness:1.045, contrast:1.025}},
+  natural:{fx:{contrast:1.04, saturate:1.06, brightness:1.012}},
+  dawn:{fx:{sepia:0.14, saturate:1.22, 'hue-rotate':-8, brightness:1.035, contrast:1.02}},
+  vintage:{fx:{sepia:0.3, contrast:1.06, brightness:0.985, saturate:0.86}},
+  sharp:{fx:{contrast:1.13, saturate:1.04, brightness:1.01}},
+  mono:{fx:{grayscale:1, contrast:1.14, brightness:1.015}},
+  igsunset:{fx:{}, overlay:{stops:['#5b35a3','#a02a6a','#e0642a'], angle:45, blend:'normal', alpha:0.6}},
+  clarendon:{fx:{contrast:1.18, saturate:1.32, brightness:1.05}},
+  golden:{fx:{sepia:0.16, saturate:1.28, brightness:1.06, contrast:1.04}, overlay:{stops:['#ffc466','#ff7a3c','#ffa05a'], angle:160, blend:'soft-light', alpha:0.6}},
+  film:{fx:{sepia:0.2, contrast:1.1, saturate:0.88, brightness:1.01}, overlay:{stops:['#f2dfc6'], angle:0, blend:'soft-light', alpha:0.4}},
+  y2k:{fx:{contrast:1.14, saturate:1.28, brightness:1.08}, overlay:{stops:['#00e5ff','#ff5ac8'], angle:135, blend:'soft-light', alpha:0.5}},
+  cinema:{fx:{contrast:1.2, saturate:0.9, brightness:0.96}, overlay:{stops:['#1aa6b7','#ff8a3d'], angle:180, blend:'soft-light', alpha:0.55}}
 };
-function filterCssExtra(){ return FILTER_PRESETS[state.filter]?.css || ''; }
+const FX_ZERO_BASE = {sepia:true, grayscale:true, 'hue-rotate':true};
+function filterCssExtra(){
+  const p = FILTER_PRESETS[state.filter];
+  const k = state.filterAmount;
+  if(!p || k <= 0) return '';
+  return Object.entries(p.fx).map(([fn, v])=>{
+    const base = FX_ZERO_BASE[fn] ? 0 : 1;
+    return ` ${fn}(${+(base + (v - base) * k).toFixed(3)}${fn === 'hue-rotate' ? 'deg' : ''})`;
+  }).join('');
+}
 function overlayCss(ov){ return ov.stops.length > 1 ? `linear-gradient(${ov.angle}deg,${ov.stops.join(',')})` : ov.stops[0]; }
 function paintOverlay(c, w, h, ov){
   let fill = ov.stops[0];
@@ -2130,23 +2159,24 @@ function paintOverlay(c, w, h, ov){
     ov.stops.forEach((col,i)=>g.addColorStop(i/(ov.stops.length-1), col));
     fill = g;
   }
-  c.save(); c.globalCompositeOperation = ov.blend; c.globalAlpha = ov.alpha; c.fillStyle = fill; c.fillRect(0, 0, w, h); c.restore();
+  c.save(); c.globalCompositeOperation = ov.blend === 'normal' ? 'source-over' : ov.blend; c.globalAlpha = ov.alpha; c.fillStyle = fill; c.fillRect(0, 0, w, h); c.restore();
 }
-function activeFilterOverlay(){ return state.mode === 'qr' ? null : (FILTER_PRESETS[state.filter]?.overlay || null); }
+function activeFilterOverlay(){ return state.mode === 'qr' || state.filterAmount <= 0 ? null : (FILTER_PRESETS[state.filter]?.overlay || null); }
 /* Lớp phủ xem trước: chỉ tồn tại trong DOM khi bộ lọc hiện tại có overlay */
 function applyFilterOverlay(){
   const ov = activeFilterOverlay();
   let el = document.getElementById('filter-overlay');
   if(!ov){ if(el) el.remove(); return; }
-  if(el && el.dataset.f === state.filter) return;
+  const key = state.filter + ':' + state.filterAmount;
+  if(el && el.dataset.f === key) return;
   if(!el){
     el = document.createElement('div'); el.id = 'filter-overlay'; el.setAttribute('aria-hidden','true');
     videoWrap.insertBefore(el, document.getElementById('temp-overlay'));
   }
-  el.dataset.f = state.filter;
+  el.dataset.f = key;
   el.style.background = overlayCss(ov);
   el.style.mixBlendMode = ov.blend;
-  el.style.opacity = String(ov.alpha);
+  el.style.opacity = String(ov.alpha * state.filterAmount);
 }
 function applyTemperatureOverlay(){
   const overlay = document.getElementById('temp-overlay');
@@ -2166,6 +2196,21 @@ function updateResetButtons(){
   document.querySelectorAll('.adj-reset').forEach(btn=>{ const on = !!mods[btn.dataset.reset]; btn.classList.toggle('show', on); btn.tabIndex = on ? 0 : -1; });
   return mods;
 }
+/* Thanh Nồng độ: tắt khi chưa chọn bộ lọc nào */
+function syncFilterAmountUI(){
+  const sl = document.getElementById('filter-amount'), val = document.getElementById('filter-amount-val');
+  if(!sl || !val) return;
+  const pct = String(Math.round(state.filterAmount * 100));
+  sl.disabled = state.filter === 'none';
+  sl.value = pct;
+  sl.style.setProperty('--p', pct + '%');
+  val.textContent = pct + '%';
+}
+document.getElementById('filter-amount')?.addEventListener('input', e=>{
+  state.filterAmount = Number(e.target.value) / 100;
+  syncFilterAmountUI();
+  scheduleApplyFilters();
+});
 function applyFilters(){
   const br = Math.max(0.55, Math.min(1.5, 1 + state.ev * 0.25));
   const sat = Math.max(0, Math.min(2, Number(state.sat) || 0));
@@ -2700,7 +2745,7 @@ function drawToCanvas(targetCtx,tw,th,quality){
   targetCtx.restore();
   // Lớp phủ bộ lọc rồi nhiệt độ màu: vẽ ngoài phép lật để giống màn hình xem trước.
   const fo = activeFilterOverlay();
-  if(fo) paintOverlay(targetCtx, tw, th, fo);
+  if(fo) paintOverlay(targetCtx, tw, th, {...fo, alpha: fo.alpha * state.filterAmount});
   const temp = Math.max(-1, Math.min(1, Number(state.temp) || 0));
   if(Math.abs(temp) > 0.005) paintOverlay(targetCtx, tw, th, {stops:[temp < 0 ? '#55b9ff' : '#ffad62'], angle:0, blend:'soft-light', alpha:Math.abs(temp) * 0.42});
 }
@@ -3385,7 +3430,8 @@ function stopMicMeter(){
 function resetAdjustmentsForQR(){
   state.timerSec = 0;
   try{ timerBtn?.classList.remove('active'); }catch(e){}
-  state.ev = 0; state.sat = 1; state.temp = 0; state.filter = 'none';
+  state.ev = 0; state.sat = 1; state.temp = 0; state.filter = 'none'; state.filterAmount = 1;
+  syncFilterAmountUI();
   document.querySelectorAll('.timer-opt').forEach(o=>o.classList.toggle('active', o.dataset.sec==='0'));
   if(timerBtn) timerBtn.classList.remove('active');
   document.querySelectorAll('.filter-item').forEach(x=>x.classList.remove('selected'));
@@ -3748,6 +3794,7 @@ if(filterBtn && filterPanel){
       document.querySelectorAll('.filter-item').forEach(x=>x.classList.remove('selected'));
       it.classList.add('selected');
       state.filter = it.dataset.filter || 'none';
+      syncFilterAmountUI();
       applyFilters();
     });
   });
