@@ -8,10 +8,6 @@
 
 — Ứng dụng camera chạy trực tiếp trên trình duyệt. Hướng đến trải nghiệm đơn giản, gọn và tận dụng tối đa phần cứng sẵn có. Giao diện được tối ưu hóa để dễ dùng, phù hợp cho nhiều người.
 
-Lưu ý: Độ mượt tùy thuộc vào trình duyệt/phần cứng/phần mềm/đầu vào và nhiều yếu tố khác.
-- Việc cập nhật sẽ không làm mất dữ liệu ảnh và video nhưng bạn tải về trước cho an toàn.
-- Quyền riêng tư: Dữ liệu được lưu trữ trong bộ nhớ trình duyệt.
-
 ## Tính năng
 
 | Nhóm | Chi tiết |
