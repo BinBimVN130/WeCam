@@ -24,7 +24,7 @@ Lưu ý: Độ mượt tùy thuộc vào trình duyệt/phần cứng/phần m�
 
 ## Cách dùng
 
-1. Mở [trang demo](https://binbimvn130.github.io/webs-cam-era/)
+1. Mở [Ứng dụng tại đây](https://binbimvn130.github.io/WeCam/)
 2. Cho phép **camera** và **micro** cho trang khi trình duyệt hỏi.
 
 ## Quyền riêng tư
