@@ -2,7 +2,7 @@
 
 # WeCam
 
-[![Open App](https://img.shields.io/badge/OPEN-Open%20App-FFAA00?style=for-the-badge&labelColor=FFAA00)](https://binbimvn130.github.io/webs-cam-era/)
+[![Live Demo](https://img.shields.io/badge/demo-mở%20ngay-ffaa00?style=for-the-badge)](https://binbimvn130.github.io/webs-cam-era/)
 ![Version](https://img.shields.io/badge/version-3.0.0-22C55E?style=for-the-badge)
 ![AI Assisted](https://img.shields.io/badge/AI-assisted%20development-8A63D2?style=for-the-badge&logo=openai&logoColor=white)
 
