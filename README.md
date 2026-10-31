@@ -2,8 +2,8 @@
 
 # WeCam
 
-[![Open App](https://img.shields.io/badge/launch-Open%20App-ffaa00?style=for-the-badge)](https://binbimvn130.github.io/webs-cam-era/)
-![Version](https://img.shields.io/badge/version-3.0.0-8A63D2?style=for-the-badge)
+[![Open App](https://img.shields.io/badge/OPEN-Open%20App-FFAA00?style=for-the-badge&labelColor=FFAA00)](https://binbimvn130.github.io/webs-cam-era/)
+![Version](https://img.shields.io/badge/version-3.0.0-22C55E?style=for-the-badge)
 ![AI Assisted](https://img.shields.io/badge/AI-assisted%20development-8A63D2?style=for-the-badge&logo=openai&logoColor=white)
 
 — Ứng dụng camera chạy trực tiếp trên trình duyệt. Hướng đến trải nghiệm đơn giản, gọn và tận dụng tối đa phần cứng sẵn có. Giao diện được tối ưu hóa để dễ dùng, phù hợp cho nhiều người.
