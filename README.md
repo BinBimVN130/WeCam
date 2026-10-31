@@ -38,8 +38,10 @@ Lưu ý: Độ mượt tùy thuộc vào trình duyệt/phần cứng/phần m�
 
 - FPS / độ phân giải / độ mượt phụ thuộc webcam và trình duyệt.
 - Khử tiếng ồn có thể không tương thích mọi thiết bị.
+- Việc cập nhật sẽ không làm mất dữ liệu nhưng bạn tải về trước cho an toàn.
 
- ## Cách cài đặt ứng dụng này: Trình duyệt -> 3 gạch ( ≡ ) -> Lưu và chia sẻ -> Cài đặt trang dưới dạng ứng dụng... -> [ Cài đặt ]
+
+ Cách cài đặt ứng dụng này: Trình duyệt -> 3 gạch ( ≡ ) -> Lưu và chia sẻ -> Cài đặt trang dưới dạng ứng dụng... -> [Cài đặt]
 
 
 ## Liên hệ
