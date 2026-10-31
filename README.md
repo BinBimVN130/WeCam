@@ -8,7 +8,7 @@ Là dự án camera chạy trên trình duyệt web, giúp bạn chụp ảnh, q
 
 — Ứng dụng camera chạy trực tiếp trên trình duyệt, tập trung giao diện & hiệu suất, tối ưu ảnh thông minh, cải thiện hiệu suất quét mã QR và vận hành mượt mà trên máy tính cấu hình thấp. Xây dựng bằng HTML, CSS và JavaScript, hướng đến trải nghiệm camera nhẹ, gọn và tận dụng tối đa phần cứng sẵn có. Giao diện được tối ưu hóa để dễ dùng phù hợp cho nhiều người.
 
-Link truy cập: [https://binbimvn130.github.io/wecam/] 
+Link truy cập: [https://binbimvn130.github.io/WeCam/] 
 
 Lưu ý: Độ mượt tùy thuộc vào trình duyệt web/phần cứng/phần mềm/camera và nhiều yếu tố khác.
 - Việc cập nhật sẽ không làm mất dữ liệu ảnh và video nhưng bạn tải về trước cho an toàn.
