@@ -2,7 +2,7 @@
 
 # WeCam
 
-[![Live Demo](https://img.shields.io/badge/Open%20app-ffaa00?style=for-the-badge)](https://binbimvn130.github.io/webs-cam-era/)
+[![Live Demo](https://img.shields.io/badge/Open%20app-ffaa00?style=for-the-badge)](https://binbimvn130.github.io/WeCam/)
 [![Version](https://img.shields.io/badge/version-3.0.0-blue?style=flat-square)](https://github.com/BinBimVN130/webs-cam-era)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 
