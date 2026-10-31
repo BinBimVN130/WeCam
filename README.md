@@ -12,6 +12,19 @@ Lưu ý: Độ mượt tùy thuộc vào trình duyệt/phần cứng/phần m�
 - Việc cập nhật sẽ không làm mất dữ liệu ảnh và video nhưng bạn tải về trước cho an toàn.
 - Quyền riêng tư: Dữ liệu được lưu trữ trong bộ nhớ trình duyệt.
 
+## Tính năng
+
+| Nhóm | Chi tiết |
+|------|----------|
+| **Chụp & quay** | Ảnh (PNG / WebP / AVIF), video (WebM / MP4), hẹn giờ 3s · 5s · 10s |
+| **Quét QR** | Quét realtime, lịch sử quét, sao chép kết quả |
+| **Điều chỉnh** | Zoom tối đa 10× + pan, EV, độ bão hòa, nhiệt độ màu, bộ lọc |
+| **Flash web** | Đèn flash ảo + chọn màu nền |
+| **Khung hình** | 16:9 · 4:3 · 1:1 |
+| **Thư viện** | Lưu ảnh/video trong trình duyệt (IndexedDB), xem · tải · xóa · chọn nhiều |
+| **Âm thanh** | Khuếch đại micro, khử tiếng ồn (BETA), thanh đo mức mic khi quay |
+| **Cài đặt** | Độ phân giải, FPS, camera/mic, font, lưu tùy chọn, khôi phục gốc |
+
 Cách cài đặt ứng dụng này: Trình duyệt -> 3 gạch ( ≡ ) -> Lưu và chia sẻ -> Cài đặt trang dưới dạng ứng dụng... -> [ Cài đặt ]
 
 ---
