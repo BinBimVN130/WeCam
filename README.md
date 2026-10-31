@@ -37,7 +37,8 @@
  Cách cài đặt ứng dụng này: Trình duyệt -> 3 gạch ( ≡ ) -> Lưu và chia sẻ -> Cài đặt trang dưới dạng ứng dụng... -> [Cài đặt]
 
 ## Ảnh chụp màn hình
-<img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/ee9a737b-e4f6-4e30-985d-b08666ff42d7" />
+<img width="1366" height="606" alt="image" src="https://github.com/user-attachments/assets/c7064f3a-f24f-42a5-bc96-110901554da9" />
+
 
 
 ## Liên hệ
