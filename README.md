@@ -16,17 +16,35 @@ Lưu ý: Độ mượt tùy thuộc vào trình duyệt/phần cứng/phần m�
 
 | Nhóm | Chi tiết |
 |------|----------|
-| **Chụp & quay** | Ảnh (PNG / WebP / AVIF), video (WebM / MP4), hẹn giờ 3s · 5s · 10s |
-| **Quét QR** | Quét realtime, lịch sử quét, sao chép kết quả |
-| **Điều chỉnh** | Zoom tối đa 10× + pan, EV, độ bão hòa, nhiệt độ màu, bộ lọc |
-| **Flash web** | Đèn flash ảo + chọn màu nền |
-| **Khung hình** | 16:9 · 4:3 · 1:1 |
-| **Thư viện** | Lưu ảnh/video trong trình duyệt (IndexedDB), xem · tải · xóa · chọn nhiều |
-| **Âm thanh** | Khuếch đại micro, khử tiếng ồn (BETA), thanh đo mức mic khi quay |
-| **Cài đặt** | Độ phân giải, FPS, camera/mic, font, lưu tùy chọn, khôi phục gốc |
+| **Chụp & quay & quét** | Ảnh (PNG / WebP / AVIF), video (WebM / MP4)|
+| **Điều chỉnh** | Zoom 10×, bộ lọc, hẹn giờ, Đèn flash ảo, khung hình|
+| **Thư viện** | Lưu ảnh/video trong trình duyệt (IndexedDB), xem · tải · xóa vĩnh viễn|
+| **Âm thanh** | Khuếch đại micro, khử tiếng ồn|
+| **Cài đặt** | Độ phân giải, FPS, đâu vào, Âm thanh và nhiều hơn nữa|
 
-Cách cài đặt ứng dụng này: Trình duyệt -> 3 gạch ( ≡ ) -> Lưu và chia sẻ -> Cài đặt trang dưới dạng ứng dụng... -> [ Cài đặt ]
+## Cách dùng
 
+1. Mở [trang demo](https://binbimvn130.github.io/webs-cam-era/)
+2. Cho phép **camera** và **micro** cho trang khi trình duyệt hỏi.
+
+## Quyền riêng tư
+
+- Không đăng nhập, không server lưu ảnh/video của bạn.
+- Ảnh & video trong **Thư viện** chỉ nằm trên trình duyệt (IndexedDB).
+- Xóa dữ liệu trang web, lịch sử truy cập / đổi trình duyệt / chế độ ẩn danh → tệp có thể mất. Muốn giữ lâu hãy **Tải về**.
+- Không framework, không backend, dữ liệu giữ trên máy bạn.
+
+## Lưu ý
+
+- FPS / độ phân giải / độ mượt phụ thuộc webcam và trình duyệt.
+- Khử tiếng ồn có thể không tương thích mọi thiết bị.
+
+ ## Cách cài đặt ứng dụng này: Trình duyệt -> 3 gạch ( ≡ ) -> Lưu và chia sẻ -> Cài đặt trang dưới dạng ứng dụng... -> [ Cài đặt ]
+
+
+## Liên hệ
+
+- Gmail: [binken12344@gmail.com](mailto:binken12344@gmail.com)
 ---
 
 Ủng hộ: Nếu thấy hữu ích, hãy ủng hộ tôi một ly cafe =))) 
