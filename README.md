@@ -18,11 +18,6 @@
 | **Âm thanh** | Khuếch đại micro, khử tiếng ồn|
 | **Cài đặt** | Độ phân giải, FPS, đâu vào, Âm thanh và nhiều hơn nữa|
 
-## Cách dùng
-
-1. Mở [Ứng dụng tại đây](https://binbimvn130.github.io/WeCam/)
-2. Cho phép **camera** và **micro** cho trang khi trình duyệt hỏi.
-
 ## Quyền riêng tư
 
 - Không đăng nhập, không server lưu ảnh/video của bạn.
@@ -35,6 +30,7 @@
 - FPS / độ phân giải / độ mượt phụ thuộc webcam và trình duyệt.
 - Khử tiếng ồn có thể không tương thích mọi thiết bị.
 - Việc cập nhật sẽ không làm mất dữ liệu nhưng bạn tải về trước cho an toàn.
+- Vui lòng cho phép truy cập camera và micro
  - Created and directed by BinBimVN130, with AI-assisted development.
 
 
