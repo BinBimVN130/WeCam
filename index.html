@@ -295,7 +295,7 @@
     .storage-pct{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-bottom:14px;color:#ffaa00}
     .storage-track{height:12px;border-radius:8px;background:rgba(255,255,255,.12);overflow:hidden}
     .storage-fill{height:100%;width:0;border-radius:8px;background:#ffaa00;transition:width .45s cubic-bezier(.2,.8,.2,1)}
-    .file-viewer{position:fixed;inset:0;z-index:1000030;display:flex;align-items:center;justify-content:center;padding:60px 16px 16px;background:rgba(0,0,0,.9);opacity:0;transition:opacity .2s ease}
+    .file-viewer{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:60px 16px 16px;background:rgba(0,0,0,.9);opacity:0;transition:opacity .2s ease}
     .file-viewer.show{opacity:1}
     .fv-stage{position:relative;width:min(1100px,100%);height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:14px;background:#000}
     .fv-stage img,.fv-stage video{max-width:100%;max-height:100%;object-fit:contain;display:block}
@@ -576,8 +576,8 @@
     .confirm-box.danger .confirm-icon{background:rgba(255,69,58,.2);color:#ff453a}
     .confirm-title{font-size:16px;font-weight:650;text-align:center;margin:0 0 6px}
     .confirm-msg{font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.72);text-align:center;margin:0 0 16px;white-space:pre-line}
-    .confirm-actions{display:flex;flex-wrap:wrap;gap:10px}
-    .confirm-actions button{flex:1 1 110px;min-height:42px;border:0;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s,transform .1s}
+    .confirm-actions{display:flex;gap:10px}
+    .confirm-actions button{flex:1;min-height:42px;border:0;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s,transform .1s}
     .confirm-actions button:active{transform:scale(.97)}
     .confirm-cancel{background:rgba(255,255,255,.1);color:#fff}
     .confirm-cancel:hover{background:rgba(255,255,255,.18)}
@@ -1813,7 +1813,7 @@
             <div><div class="lab">Chuyển độ phân giải thông minh (BETA)</div><div class="hint">Tự động cấu hình thấp nhất khi quay video, cấu hình cao cho chụp ảnh. <a href="#" id="smart-learn-more" style="color:#0a84ff;text-decoration:underline">Tìm hiểu thêm</a></div></div>
             <label class="switch"><input type="checkbox" id="set-smart-resolution"><span class="switch-slider"></span></label>
           </div>
-          <div class="settings-row" id="smart-manual-res-row" style="border-bottom:none">
+          <div class="settings-row" id="smart-manual-res-row">
             <div>
               <div class="lab">Độ phân giải</div>
               <div class="hint preview-res-note">Áp dụng cho khung hình xem trước.<br>*Lưu ý: Chọn độ phân giải thấp trên thiết bị cũ để có FPS cao khi chụp/quay/quét QR.</div>
@@ -2078,17 +2078,19 @@ function placePopup(el, btn, align){
 }
 
 /* Bộ lọc: fx = các hàm lọc màu gốc của trình duyệt (GPU gộp thành một bước, không dùng blur/shadow); overlay = lớp gradient phủ lên ảnh
-   (xem trước + ảnh/video xuất ra). Nồng độ (state.filterAmount, 0..1) nội suy từ trung tính tới giá trị đầy đủ của fx
-   và nhân với độ mờ của overlay. */
+   (xem trước + ảnh/video xuất ra); thumb = kiểu ô chuyển màu ở menu. Nồng độ (state.filterAmount, 0..1) nội suy từ trung tính
+   tới giá trị đầy đủ của fx và nhân với độ mờ của overlay. */
 const FILTER_PRESETS = {
   vivid:{name:'Rực rỡ', thumb:'background:linear-gradient(135deg,#00d2ff,#00a650);filter:saturate(1.7)', fx:{saturate:1.38, contrast:1.09, brightness:1.02}},
   fresh:{name:'Tươi mới', thumb:'background:linear-gradient(135deg,#eaff8a,#6be7a1);filter:brightness(1.12) saturate(1.25)', fx:{saturate:1.2, 'hue-rotate':-3, brightness:1.045, contrast:1.025}},
   natural:{name:'Tự nhiên', thumb:'background:linear-gradient(135deg,#d7a98c,#6fae91);filter:saturate(.95)', fx:{contrast:1.04, saturate:1.06, brightness:1.012}},
-  dawn:{name:'Bình minh', thumb:'background:linear-gradient(135deg,#ffd08a,#ed7546);filter:sepia(.22) saturate(1.2)', fx:{sepia:0.14, saturate:1.22, 'hue-rotate':-8, brightness:1.035, contrast:1.02}},
-  film:{name:'Phim cũ', thumb:'background:linear-gradient(135deg,#d9c3a0,#7a6a58);filter:sepia(.3)', fx:{sepia:0.2, contrast:1.1, saturate:0.88, brightness:1.01}, overlay:{stops:['#f2dfc6'], angle:0, blend:'soft-light', alpha:0.4}},
   sharp:{name:'Sắc nét', thumb:'background:linear-gradient(135deg,#f8e1ff,#dfe6e9)', fx:{contrast:1.13, saturate:1.04, brightness:1.01}},
   mono:{name:'Đen trắng', thumb:'background:linear-gradient(135deg,#eeeeee,#4a4a4a);filter:grayscale(1)', fx:{grayscale:1, contrast:1.14, brightness:1.015}},
-  igsunset:{name:'Cam tím', thumb:'background:linear-gradient(45deg,#5b35a3,#9a2a78 50%,#e0642a)', fx:{}, overlay:{stops:['#5b35a3','#a02a6a','#e0642a'], angle:45, blend:'normal', alpha:0.6}}
+  igsunset:{name:'Cam tím', thumb:'background:linear-gradient(45deg,#5b34b8,#9a2a78 50%,#e0642a)', fx:{}, overlay:{stops:['#5b35a3','#a02a6a','#e0642a'], angle:45, blend:'normal', alpha:0.6}},
+  golden:{name:'Giờ vàng', thumb:'background:linear-gradient(135deg,#ffd27a,#ff8a3d)', fx:{sepia:0.16, saturate:1.28, brightness:1.06, contrast:1.04}, overlay:{stops:['#ffc466','#ff7a3c','#ffa05a'], angle:160, blend:'soft-light', alpha:0.6}},
+  film:{name:'Phim cũ', thumb:'background:linear-gradient(135deg,#d9c3a0,#7a6a58);filter:sepia(.3)', fx:{sepia:0.2, contrast:1.1, saturate:0.88, brightness:1.01}, overlay:{stops:['#f2dfc6'], angle:0, blend:'soft-light', alpha:0.4}},
+  y2k:{name:'Y2K', thumb:'background:linear-gradient(135deg,#00e5ff,#ff5ac8)', fx:{contrast:1.14, saturate:1.28, brightness:1.08}, overlay:{stops:['#00e5ff','#ff5ac8'], angle:135, blend:'soft-light', alpha:0.5}},
+  cinema:{name:'Điện ảnh', thumb:'background:linear-gradient(180deg,#1aa6b7,#ff8a3d)', fx:{contrast:1.2, saturate:0.9, brightness:0.96}, overlay:{stops:['#1aa6b7','#ff8a3d'], angle:180, blend:'soft-light', alpha:0.55}}
 };
 const FX_ZERO_BASE = {sepia:true, grayscale:true, 'hue-rotate':true};
 /* Chuỗi hàm lọc ở nồng độ k; bỏ qua hàm đã trung tính để trình duyệt xử lý ít bước nhất */
@@ -2105,7 +2107,7 @@ function filterCssExtra(){
   const p = FILTER_PRESETS[state.filter];
   return p && state.filterAmount > 0 ? fxCss(p.fx, state.filterAmount) : '';
 }
-/* Dựng các ô bộ lọc từ FILTER_PRESETS; ảnh xem trước là dải chuyển màu (thumb) */
+/* Dựng các ô bộ lọc (ô chuyển màu + tên) từ FILTER_PRESETS, đặt sau ô "Không" */
 function buildFilterGrid(){
   const grid = document.querySelector('.filter-grid');
   if(!grid) return;
@@ -2953,17 +2955,17 @@ async function cleanupLibrary(){
 }
 
 /* Hộp thoại xác nhận nổi, thay cho confirm() của trình duyệt */
-/* Hộp thoại nổi nhiều nút: buttons = [{label, value, kind:'primary'|'secondary', focus, onClick}].
-   Có onClick thì bấm nút không đóng hộp thoại (vd: "Xem tệp"). Esc trả về escapeValue. */
-function appChoice(message, opt){
+function appConfirm(message, opt){
+  opt = opt || {};
   return new Promise(resolve=>{
     const m=document.createElement('div'); m.className='confirm-modal';
-    m.innerHTML='<div class="confirm-box'+(opt.danger?' danger':'')+'" role="alertdialog" aria-modal="true"><div class="confirm-icon" aria-hidden="true"></div><h3 class="confirm-title"></h3><p class="confirm-msg"></p><div class="confirm-actions"></div></div>';
+    m.innerHTML='<div class="confirm-box'+(opt.danger?' danger':'')+'" role="alertdialog" aria-modal="true"><div class="confirm-icon" aria-hidden="true"></div><h3 class="confirm-title"></h3><p class="confirm-msg"></p><div class="confirm-actions"><button type="button" class="confirm-cancel"></button><button type="button" class="confirm-ok"></button></div></div>';
     m.querySelector('.confirm-icon').textContent=opt.icon||'!';
     m.querySelector('.confirm-title').textContent=opt.title||'Xác nhận';
     m.querySelector('.confirm-msg').textContent=message||'';
-    const actions=m.querySelector('.confirm-actions');
-    let done=false, focusEl=null;
+    const ok=m.querySelector('.confirm-ok'), cancel=m.querySelector('.confirm-cancel');
+    ok.textContent=opt.okText||'Xác nhận';
+    let done=false;
     const finish=v=>{
       if(done) return; done=true;
       document.removeEventListener('keydown',onKey,true);
@@ -2972,30 +2974,18 @@ function appChoice(message, opt){
       resolve(v);
     };
     const onKey=e=>{
-      if(e.key!=='Escape' || document.getElementById('file-viewer')) return;
-      e.preventDefault(); e.stopPropagation(); finish(opt.escapeValue);
+      if(e.key==='Escape'){ e.preventDefault(); e.stopPropagation(); finish(false); }
+      else if(e.key==='Enter'){ e.preventDefault(); e.stopPropagation(); finish(document.activeElement!==cancel); }
     };
-    opt.buttons.forEach(b=>{
-      const el=document.createElement('button'); el.type='button';
-      el.className=b.kind==='primary'?'confirm-ok':'confirm-cancel';
-      el.textContent=b.label;
-      el.addEventListener('click',()=>{ if(b.onClick) b.onClick(); else finish(b.value); });
-      actions.appendChild(el);
-      if(b.focus) focusEl=el;
-    });
-    m.addEventListener('click',e=>{ if(e.target===m && opt.escapeValue!==undefined) finish(opt.escapeValue); });
+    ok.addEventListener('click',()=>finish(true));
+    if(opt.hideCancel) cancel.remove();
+    else{ cancel.textContent=opt.cancelText||'Hủy'; cancel.addEventListener('click',()=>finish(false)); }
+    m.addEventListener('click',e=>{ if(e.target===m) finish(false); });
     document.addEventListener('keydown',onKey,true);
     document.body.appendChild(m);
     requestAnimationFrame(()=>m.classList.add('show'));
-    try{ (focusEl||actions.lastElementChild).focus({preventScroll:true}); }catch(e){}
+    try{ (opt.danger&&!opt.hideCancel?cancel:ok).focus({preventScroll:true}); }catch(e){}
   });
-}
-function appConfirm(message, opt){
-  opt = opt || {};
-  const buttons = [];
-  if(!opt.hideCancel) buttons.push({ label:opt.cancelText||'Hủy', value:false, kind:'secondary', focus:!!opt.danger });
-  buttons.push({ label:opt.okText||'Xác nhận', value:true, kind:'primary', focus:!opt.danger || !!opt.hideCancel });
-  return appChoice(message, { title:opt.title||'Xác nhận', icon:opt.icon, danger:opt.danger, buttons, escapeValue:false });
 }
 
 function appInfo(title, message){
@@ -3058,7 +3048,7 @@ function createMicProcessor(track, gainVal, noiseReduce){
 }
 
 /* Quay video dài: dữ liệu quay nằm trong bộ nhớ cho tới khi lưu, nên phải dừng sớm trước khi trình duyệt hết bộ nhớ/dung lượng.
-   Dừng khi: (1) đoạn quay đạt giới hạn kích thước theo RAM thiết bị, (2) dung lượng còn lại của trang không đủ để lưu đoạn này,
+   Dừng khi: (1) đoạn quay đạt giới hạn kích thước theo RAM thiết bị, (2) dung lượng còn lại của trang không đủ để lưu đoạn này (bỏ qua khi bật "Lưu tệp về máy"),
    (3) bộ quay báo lỗi. Đoạn đã quay luôn được lưu trọn vẹn rồi mới hiện cảnh báo. */
 const REC_CAP_BYTES = Math.min(1024 ** 3, Math.max(256 * 1024 ** 2, (navigator.deviceMemory || 4) * 256 * 1024 ** 2));
 let recQuotaBusy = false, recQuotaAt = 0;
@@ -3079,28 +3069,9 @@ function checkRecordingLimits(){
     if(state.recBytes * 1.1 + 64 * 1024 ** 2 > free) stopRecordingForLimit('storage');
   }).catch(()=>{}).finally(()=>{ recQuotaBusy = false; });
 }
-/* Sau khi đoạn quay bị dừng vì giới hạn: chế độ "Lưu tệp về máy" thì tự cắt đoạn và quay tiếp; ngược lại hỏi người dùng. */
-async function handleRecordingLimitStop(r){
-  if(state.saveToDevice){
-    showToast('Đã lưu một đoạn video, đang quay tiếp...');
-    await startRecording();
-    return;
-  }
-  const choice = await appChoice('Cảnh báo: Video đã được dừng quay và được lưu để tránh xảy ra lỗi.', {
-    title:'Đã dừng quay', escapeValue:'close',
-    buttons:[
-      { label:'Đóng', value:'close', kind:'secondary' },
-      { label:'Xem tệp', kind:'secondary', onClick:()=>openFileViewer({ type:'video', name:r.name, blob:r.blob, mime:r.mime, duration:r.duration, seekFixed:true }) },
-      { label:'Quay tiếp và lưu về máy', value:'resume', kind:'primary', focus:true }
-    ]
-  });
-  if(choice === 'resume'){
-    state.saveToDevice = true;
-    syncSettingsUI();
-    savePersistedSettings();
-    showToast('Đã bật "Lưu tệp về máy"');
-    await startRecording();
-  }
+/* Sau khi đoạn quay bị dừng vì giới hạn: video đã được lưu trọn vẹn (vào thư viện, hoặc về máy nếu bật "Lưu tệp về máy") */
+function notifyRecordingStopped(){
+  appConfirm('Cảnh báo: Video đã được dừng quay và được lưu để tránh xảy ra lỗi.', { title:'Đã dừng quay', okText:'Đóng', hideCancel:true });
 }
 
 /* Sửa WebM do MediaRecorder tạo ra: ghi Duration vào Info để hiện thời lượng và tua được. */
@@ -3355,7 +3326,7 @@ async function startRecording(){
       // WebM từ MediaRecorder thiếu thời lượng → không tua được. Ghi thêm Duration trước khi lưu.
       if(ext === 'webm'){ const nb = await fixWebmSeekable(rawBlob, durMs); if(nb && nb !== rawBlob){ blob = nb; fixed = true; } }
       await saveCaptured({ type:'video', name:vname, blob, mime:mime||'video/webm', width:vw1, height:vh1, duration:dur, seekFixed:fixed }, 'video');
-      if(stopReason) handleRecordingLimitStop({ name:vname, blob, mime:mime||'video/webm', duration:dur });
+      if(stopReason) notifyRecordingStopped();
     })();
   };
   try{
@@ -3890,21 +3861,20 @@ function applyFont(id){
 
 /* Settings mic meter */
 let settingsMicRaf = null;
-let settingsMicToken = 0;
-/* Luôn mở luồng mic riêng cho thanh đo (không dùng chung track của camera vì track đó sẽ bị đóng khi tạm dừng camera). */
 function startSettingsMicMeter(){
   stopSettingsMicMeter();
   const bar = document.getElementById('settings-mic-bar');
   if(!bar) return;
-  const token = settingsMicToken;
-  const open = audio => navigator.mediaDevices.getUserMedia({ audio, video:false });
-  open(state.audioDeviceId ? { deviceId:{ exact:state.audioDeviceId } } : true)
-    .catch(()=> open(true))
-    .then(s=>{
-      if(token !== settingsMicToken){ s.getTracks().forEach(t=>t.stop()); return; }   // đã rời mục Mic trong lúc chờ quyền/thiết bị
+  const track = state.stream?.getAudioTracks()?.find(t=>t.readyState==='live');
+  if(!track){
+    // xin mic tạm nếu chưa có
+    navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(s=>{
       state._settingsMicStream = s;
       runSettingsMic(s, bar);
     }).catch(()=>{});
+    return;
+  }
+  runSettingsMic(new MediaStream([track]), bar);
 }
 function runSettingsMic(stream, bar){
   try{
@@ -3931,7 +3901,6 @@ function runSettingsMic(stream, bar){
   }catch(e){}
 }
 function stopSettingsMicMeter(){
-  settingsMicToken++;
   if(settingsMicRaf){ clearTimeout(settingsMicRaf); settingsMicRaf=null; }
   try{ state._settingsMicCtx?.close(); }catch(e){}
   state._settingsMicCtx = null;
@@ -3956,22 +3925,15 @@ function drawSettingsPreview(){
   }
   settingsPreviewRaf=requestAnimationFrame(drawSettingsPreview);
 }
-let settingsPreviewToken = 0;
-let settingsResumeTask = null;
 async function activateSettingsPreview(){
-  const token = ++settingsPreviewToken;
-  settingsPreviewActive = true;
-  await resumeCamFromSettings();
-  if(token !== settingsPreviewToken) return;   // đã rời mục Camera trong lúc đang mở camera: deactivate sẽ đóng lại
-  stopSettingsPreview(); drawSettingsPreview(); updateCamInfoPanel();
+  settingsPreviewActive=true;
+  if(settingsCamPaused) await resumeCamFromSettings();
+  if(!settingsPreviewActive || !document.getElementById('panel-camera')?.classList.contains('active'))return;
+  stopSettingsPreview();drawSettingsPreview();updateCamInfoPanel();
 }
 function deactivateSettingsPreview(){
-  settingsPreviewToken++;
-  settingsPreviewActive = false;
-  stopSettingsPreview();
-  // Camera đang mở dở thì đóng ngay khi mở xong, nếu người dùng chưa quay lại mục Camera và vẫn đang ở Cài đặt
-  const closeIfIdle = ()=>{ if(!settingsPreviewActive && document.body.classList.contains('settings-open')) pauseCamForSettings(); };
-  if(settingsResumeTask) settingsResumeTask.then(closeIfIdle); else closeIfIdle();
+  settingsPreviewActive=false;stopSettingsPreview();
+  if(!settingsCamPaused) pauseCamForSettings();
 }
 function pauseCamForSettings(){
   if(settingsCamPaused) return;
@@ -3991,14 +3953,10 @@ function pauseCamForSettings(){
   state.stream=null;
   try{ video.srcObject=null; }catch(e){}
 }
-function resumeCamFromSettings(){
-  if(!settingsCamPaused) return Promise.resolve();
-  settingsResumeTask = settingsResumeTask || (async()=>{
-    try{ await startCamera(state.mode==='video',true); settingsCamPaused=false; }
-    catch(e){ console.warn('Không thể khôi phục camera sau Cài đặt:',e); noCamera.classList.remove('hidden'); }
-    finally{ settingsResumeTask = null; }
-  })();
-  return settingsResumeTask;
+async function resumeCamFromSettings(){
+  if(!settingsCamPaused) return;
+  try{ await startCamera(state.mode==='video',true); settingsCamPaused=false; }
+  catch(e){ console.warn('Không thể khôi phục camera sau Cài đặt:',e); noCamera.classList.remove('hidden'); }
 }
 /* Đặt lại mọi ô trong Cài đặt theo state (đã nạp từ bộ nhớ) để giao diện luôn khớp giá trị đã lưu */
 function syncSettingsUI(){
@@ -4053,11 +4011,11 @@ document.querySelectorAll('.settings-nav-item[data-panel]').forEach(btn=>{
     if(panel) panel.classList.add('active');
     const title = document.getElementById('settings-title');
     if(title) title.textContent = ({general:'Chung',micro:'Mic',devices:'Thiết bị',storage:'Dung lượng',camera:'Camera',advanced:'Tính năng nâng cao',about:'Giới thiệu'})[id] || 'Camera';
-    // Rời mục Camera/Mic trước (đóng camera, đóng mic), rồi mới bật thứ mục mới cần
-    if(id!=='camera' && settingsPreviewActive) deactivateSettingsPreview();
-    if(id==='micro') startSettingsMicMeter(); else stopSettingsMicMeter();
+    if(id==='micro') startSettingsMicMeter();
+    else stopSettingsMicMeter();
     if(id==='storage') refreshStorageInfo();
     if(id==='camera') activateSettingsPreview();
+    else if(settingsPreviewActive) deactivateSettingsPreview();
   });
 });
 
@@ -4210,23 +4168,8 @@ if(setPersistEl) setPersistEl.addEventListener('change', ()=>{
   }catch(e){}
   
 });
-/* Làm mới luồng: đóng hẳn rồi mở lại camera + micro (nhận lại quyền/thiết bị), xong thì đóng cả hai */
-document.getElementById('btn-restart-cam')?.addEventListener('click', async ()=>{
-  try{
-    settingsPreviewToken++; settingsPreviewActive = false; stopSettingsPreview(); stopSettingsMicMeter();
-    if(settingsResumeTask) await settingsResumeTask;
-    if(state.stream){
-      state.stream.getTracks().forEach(t=>{ try{t.stop()}catch(e){} });
-      state.stream = null;
-      state._fpsRunning = false;
-    }
-    await startCamera(true, true);
-    settingsCamPaused = false;
-    pauseCamForSettings();
-    refreshDeviceLists();
-    notifyApplied(true);
-  }catch(e){ notifyApplied(false); }
-});
+/* Làm mới luồng camera & micro: tải lại trang để mở lại từ đầu */
+document.getElementById('btn-restart-cam')?.addEventListener('click', ()=>location.reload());
 const btnFactory = document.getElementById('btn-factory-reset');
 if(btnFactory) btnFactory.addEventListener('click', async ()=>{
   if(!(await appConfirm('Mọi cài đặt và dữ liệu (kể cả Thư viện ảnh) sẽ được đặt lại về ban đầu.\nHãy kiểm tra lại dữ liệu của bạn trước khi tiếp tục.',{title:'Khôi phục cài đặt gốc?',okText:'Khôi phục',danger:true}))) return;
