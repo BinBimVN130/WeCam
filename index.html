@@ -2010,6 +2010,16 @@ function showNotice(id,text){
   requestAnimationFrame(()=>m.classList.add('show'));
 }
 function showPermModal(){ showNotice('perm-modal','Vui lòng cấp quyền truy cập đầu vào cho trang này.'); }
+/* Chỉ báo "cấp quyền" khi đúng là bị từ chối quyền; lỗi khác báo đúng loại lỗi để biết hướng xử lý */
+function showCameraError(e){
+  const name = e && e.name || 'Error';
+  if(name === 'NotAllowedError' || name === 'SecurityError') { showPermModal(); return; }
+  const hint = name === 'NotReadableError' ? 'Hãy đóng ứng dụng/tab khác đang dùng camera.'
+    : name === 'NotFoundError' || name === 'OverconstrainedError' ? 'Không tìm thấy camera phù hợp, hãy kiểm tra kết nối camera.'
+    : name === 'NotSupportedError' ? 'Trình duyệt này không hỗ trợ truy cập camera (cần mở bằng HTTPS hoặc localhost).'
+    : 'Hãy thử bấm "Làm mới luồng camera & micro" trong Cài đặt.';
+  showNotice('perm-modal', `Không mở được camera (${name}). ${hint}`);
+}
 
 function showToast(msg,ms=2500){
   clearTimeout(showToast._t);
@@ -2551,11 +2561,10 @@ async function startCamera(withAudio=false, forceRestart=false){
     } else {
       videoConstraint.facingMode = state.facingMode;
     }
-    let audioConstraint = false;
+    let audioConstraint = false, baseAud = {};
     if(withAudio){
       const nr = state.noiseReduce === true;
       const supportedAudio = navigator.mediaDevices?.getSupportedConstraints?.() || {};
-      const baseAud = {};
       if('echoCancellation' in supportedAudio) baseAud.echoCancellation = nr;
       if('noiseSuppression' in supportedAudio) baseAud.noiseSuppression = nr;
       if('autoGainControl' in supportedAudio) baseAud.autoGainControl = nr && !(parseFloat(state.micGain) > 1.01); // AGC tự động sẽ chống lại mức khuếch đại thủ công
@@ -2563,25 +2572,40 @@ async function startCamera(withAudio=false, forceRestart=false){
         ? { deviceId: { exact: state.audioDeviceId }, ...baseAud }
         : baseAud;
     }
-    try{
-      state.stream = await navigator.mediaDevices.getUserMedia({
-        video: videoConstraint,
-        audio: audioConstraint
-      });
-    }catch(e1){
-      // Fallback nhẹ hơn nếu constraint quá chặt
-      const soft = {
-        width: { ideal: pw },
-        height: { ideal: ph },
-        frameRate: { ideal: wantFps }
-      };
-      if(state.videoDeviceId) soft.deviceId = { exact: state.videoDeviceId };
-      else soft.facingMode = state.facingMode;
-      state.stream = await navigator.mediaDevices.getUserMedia({
-        video: soft,
-        audio: audioConstraint
-      });
+    // Thử lần lượt từ chặt tới lỏng; chỉ báo lỗi khi mọi cách đều thất bại.
+    //  1) cấu hình đầy đủ  2) nới độ phân giải/FPS  3) thiết bị đã lưu không còn → dùng thiết bị mặc định
+    //  4) micro không mở được → vẫn mở camera (không tiếng)
+    const defaultVideo = { facingMode: state.facingMode };
+    const soft = { width:{ ideal:pw }, height:{ ideal:ph }, frameRate:{ ideal:wantFps } };
+    if(state.videoDeviceId) soft.deviceId = { exact: state.videoDeviceId }; else soft.facingMode = state.facingMode;
+    const attempts = [
+      { video: videoConstraint, audio: audioConstraint },
+      { video: soft, audio: audioConstraint },
+      { video: defaultVideo, audio: audioConstraint ? baseAud : false, defaults: true },
+      { video: defaultVideo, audio: false, defaults: true, noMic: true }
+    ];
+    let lastErr = null, picked = null, sawStale = false;
+    for(let i = 0; i < attempts.length && !picked; i++){
+      try{
+        state.stream = await navigator.mediaDevices.getUserMedia({ video: attempts[i].video, audio: attempts[i].audio });
+        picked = attempts[i];
+      }catch(e){
+        lastErr = e;
+        if(e.name === 'OverconstrainedError' || e.name === 'NotFoundError') sawStale = true;
+        if(e.name === 'NotAllowedError' || e.name === 'SecurityError'){
+          if(audioConstraint && i < attempts.length - 2) i = attempts.length - 2;   // có thể chỉ micro bị chặn: thử riêng camera
+          else break;
+        }else if(e.name === 'NotReadableError' || e.name === 'AbortError'){
+          await new Promise(r=>setTimeout(r, 400));                                  // camera đang được giải phóng/bận thoáng qua
+        }
+      }
     }
+    if(!picked) throw lastErr;
+    if(picked.defaults && sawStale){   // thiết bị đã lưu không còn: bỏ để lần sau dùng mặc định
+      state.videoDeviceId = ''; state.audioDeviceId = '';
+      savePersistedSettings();
+    }
+    if(picked.noMic) showToast('Không mở được micro: quay video sẽ không có tiếng', 4000);
     const vtrack = state.stream.getVideoTracks()[0];
     try{ await applyVideoQuality(vtrack); }catch(e){}
     // Nếu vẫn thấp hơn mục tiêu → applyConstraints lần 2
@@ -2607,7 +2631,8 @@ async function startCamera(withAudio=false, forceRestart=false){
       video.addEventListener('loadedmetadata', onReady, {once:true});
       video.addEventListener('error', onError, {once:true});
     });
-    await video.play();
+    try{ await video.play(); }
+    catch(e){ if(e.name !== 'AbortError') throw e; await video.play(); }   // play() bị ngắt bởi lần nạp luồng khác: thử lại một lần
     await waitForVideoFrame(500);
     noCamera.classList.add('hidden');
     requestAnimationFrame(()=>{ adjustAspectRatio(); setTimeout(adjustAspectRatio, 150); });
@@ -2622,7 +2647,7 @@ async function startCamera(withAudio=false, forceRestart=false){
     state._fpsRunning = false;
     try{ video.pause(); video.srcObject=null; }catch(_){}
     noCamera.classList.remove('hidden');
-    showPermModal();
+    showCameraError(e);
     return false;
   }
 }
@@ -4573,7 +4598,7 @@ async function bootCameraSetup(){
   if(!navigator.mediaDevices?.getUserMedia){
     try{ window.AppLoading && window.AppLoading.finish(); }catch(e){}
     noCamera.classList.remove('hidden');
-    showPermModal();
+    showCameraError({ name:'NotSupportedError' });
     return;
   }
   try{
@@ -4581,7 +4606,7 @@ async function bootCameraSetup(){
   }catch(e){
     try{ window.AppLoading && window.AppLoading.finish(); }catch(_){}
     noCamera.classList.remove('hidden');
-    showPermModal();
+    showCameraError(e);
   }
 }
 bootCameraSetup();
