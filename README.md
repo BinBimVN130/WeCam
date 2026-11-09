@@ -2,7 +2,7 @@
 
 # WeCam
 
-[![Live Demo](https://img.shields.io/badge/Open%20app-ffaa00?style=for-the-badge)](https://binbimvn130.github.io/webs-cam-era/)
+[![Live Demo](https://img.shields.io/badge/Open%20app-ffaa00?style=for-the-badge)](https://binbimvn130.github.io/WeCam/)
 ![Version](https://img.shields.io/badge/version-3.0.0-22C55E?style=for-the-badge)
 ![AI Assisted](https://img.shields.io/badge/AI-assisted%20development-8A63D2?style=for-the-badge&logo=openai&logoColor=white)
 
@@ -27,12 +27,12 @@
 
 ## Lưu ý
 
-- FPS / độ phân giải / độ mượt phụ thuộc webcam và trình duyệt.
-- Khử tiếng ồn có thể không tương thích mọi thiết bị.
+- FPS / độ phân giải / độ mượt / thời lượng video / dung lượng lưu trữ / quét mã phụ thuộc webcam và trình duyệt.
+- Khử tiếng ồn và tối ưu ảnh đang trong quá trình thử nghiệm.
 - Việc cập nhật sẽ không làm mất dữ liệu nhưng bạn tải về trước cho an toàn.
-- Vui lòng cho phép truy cập camera và micro
- - Created and directed by BinBimVN130, with AI-assisted development.
+- Vui lòng cho phép truy cập camera và micro khi sử dụng.
 
+--
 
  Cách cài đặt ứng dụng này: Trình duyệt -> 3 gạch ( ≡ ) -> Lưu và chia sẻ -> Cài đặt trang dưới dạng ứng dụng... -> [Cài đặt]
 
@@ -44,7 +44,7 @@
 ## Liên hệ
 
 - Gmail: [binken12344@gmail.com](mailto:binken12344@gmail.com)
----
+  
 
 Ủng hộ: Nếu thấy hữu ích, hãy ủng hộ tôi một ly cafe =))) 
 
