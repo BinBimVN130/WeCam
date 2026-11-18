@@ -1798,7 +1798,7 @@
               <option value="png">PNG</option>
               <option value="webp">WebP</option>
               <option value="avif">AVIF</option>
-              <option value="raw">BMP (không nén)</option>
+              <option value="raw">RAW</option>
             </select>
           </div>
           <div class="settings-row">
@@ -2712,7 +2712,7 @@ async function savePhotoFromCanvas(cvs){
   showToast('Đang lưu tệp...', 60000);
   if(fmt === 'raw'){
     const b = canvasToBmpBlob(cvs);
-    await saveCaptured({ type:'photo', name:photoFileName('bmp'), blob:b, mime:'image/bmp', width:cvs.width, height:cvs.height, duration:0 }, 'ảnh');
+    saveCaptured({ type:'photo', name:photoFileName('bmp'), blob:b, mime:'image/bmp', width:cvs.width, height:cvs.height, duration:0 }, 'ảnh');
     return;
   }
   // Thứ tự thử theo định dạng user chọn; AVIF: không tin toDataURL — thử toBlob thật
@@ -2735,7 +2735,7 @@ async function savePhotoFromCanvas(cvs){
       if(usedFallback || (fmt === 'avif' && type !== 'image/avif')){
         showToast('Trình duyệt không hỗ trợ '+String(fmt).toUpperCase()+', đã lưu '+ext.toUpperCase(), 3200);
       }
-      await saveCaptured({ type:'photo', name:photoFileName(ext), blob:b, mime:type, width:cvs.width, height:cvs.height, duration:0 }, 'ảnh');
+      saveCaptured({ type:'photo', name:photoFileName(ext), blob:b, mime:type, width:cvs.width, height:cvs.height, duration:0 }, 'ảnh');
       return;
     }
     usedFallback = true;
@@ -2913,20 +2913,7 @@ async function applyStreamQuality(vtrack, pw, ph, wantFps){
     }
   }catch(e){}
 }
-function stopFpsCounter(){
-  state._fpsRunning = false;
-  state._fpsGeneration = (state._fpsGeneration || 0) + 1;
-  try{
-    if(state._fpsRvfc != null && typeof video.cancelVideoFrameCallback === 'function'){
-      video.cancelVideoFrameCallback(state._fpsRvfc);
-    }
-  }catch(e){}
-  state._fpsRvfc = null;
-}
 async function startCamera(withAudio=false, forceRestart=false){
-  const requestId = (state._cameraRequestId || 0) + 1;
-  state._cameraRequestId = requestId;
-  let acquiredStream = null;
   try{
     if(!forceRestart){
       if(state.stream && !withAudio){
@@ -2949,7 +2936,7 @@ async function startCamera(withAudio=false, forceRestart=false){
     if(state.stream){
       state.stream.getTracks().forEach(t=>{ try{t.stop()}catch(e){} });
       state.stream=null;
-      stopFpsCounter();
+      state._fpsRunning = false;
     }
     try{ video.srcObject = null; }catch(e){}
 
@@ -3006,15 +2993,9 @@ async function startCamera(withAudio=false, forceRestart=false){
     let lastErr = null, picked = null, sawStale = false;
     for(let i = 0; i < attempts.length && !picked; i++){
       try{
-        acquiredStream = await navigator.mediaDevices.getUserMedia({ video: attempts[i].video, audio: attempts[i].audio });
-        if(requestId !== state._cameraRequestId){
-          acquiredStream.getTracks().forEach(t=>{ try{t.stop()}catch(e){} });
-          return false;
-        }
-        state.stream = acquiredStream;
+        state.stream = await navigator.mediaDevices.getUserMedia({ video: attempts[i].video, audio: attempts[i].audio });
         picked = attempts[i];
       }catch(e){
-        if(requestId !== state._cameraRequestId) return false;
         lastErr = e;
         if(e.name === 'OverconstrainedError' || e.name === 'NotFoundError') sawStale = true;
         if(e.name === 'NotAllowedError' || e.name === 'SecurityError'){
@@ -3046,16 +3027,9 @@ async function startCamera(withAudio=false, forceRestart=false){
       video.addEventListener('loadedmetadata', onReady, {once:true});
       video.addEventListener('error', onError, {once:true});
     });
-    if(requestId !== state._cameraRequestId) return false;
     try{ await video.play(); }
-    catch(e){
-      if(e.name !== 'AbortError') throw e;
-      if(requestId !== state._cameraRequestId) return false;
-      await video.play(); // Một lần nạp luồng mới có thể ngắt play() cũ.
-    }
-    if(requestId !== state._cameraRequestId) return false;
+    catch(e){ if(e.name !== 'AbortError') throw e; await video.play(); }   // play() bị ngắt bởi lần nạp luồng khác: thử lại một lần
     await waitForVideoFrame(500);
-    if(requestId !== state._cameraRequestId) return false;
     noCamera.classList.add('hidden');
     requestAnimationFrame(()=>{ adjustAspectRatio(); setTimeout(adjustAspectRatio, 150); });
     startFpsCounter();
@@ -3064,15 +3038,9 @@ async function startCamera(withAudio=false, forceRestart=false){
     if(typeof updateCamInfoPanel === 'function') updateCamInfoPanel();
     return true;
   }catch(e){
-    if(requestId !== state._cameraRequestId){
-      if(acquiredStream && acquiredStream !== state.stream){
-        acquiredStream.getTracks().forEach(t=>{ try{t.stop()}catch(_){} });
-      }
-      return false;
-    }
     console.error('Không thể khởi tạo camera:', e);
     if(state.stream){ state.stream.getTracks().forEach(t=>{ try{t.stop()}catch(_){} }); state.stream=null; }
-    stopFpsCounter();
+    state._fpsRunning = false;
     try{ video.pause(); video.srcObject=null; }catch(_){}
     noCamera.classList.remove('hidden');
     showCameraError(e);
@@ -3081,17 +3049,17 @@ async function startCamera(withAudio=false, forceRestart=false){
 }
 
 function startFpsCounter(){
+  // Tránh đăng ký nhiều vòng đếm → FPS ảo (70...)
   if(state._fpsRunning) return;
   state._fpsRunning = true;
-  const generation = (state._fpsGeneration || 0) + 1;
-  state._fpsGeneration = generation;
   state.frameCount = 0;
   state.lastFpsTime = performance.now();
   state._lastMediaTime = -1;
 
   if(typeof video.requestVideoFrameCallback === 'function'){
     const onFrame = (_now, meta) => {
-      if(!state._fpsRunning || state._fpsGeneration !== generation) return;
+      if(!state._fpsRunning) return;
+      // Chỉ đếm khi mediaTime đổi (frame mới từ camera)
       const mt = meta && typeof meta.mediaTime === 'number' ? meta.mediaTime : null;
       if(mt === null || mt !== state._lastMediaTime){
         if(mt !== null) state._lastMediaTime = mt;
@@ -3103,12 +3071,12 @@ function startFpsCounter(){
         state.frameCount = 0;
         state.lastFpsTime = now;
       }
-      state._fpsRvfc = video.requestVideoFrameCallback(onFrame);
+      video.requestVideoFrameCallback(onFrame);
     };
-    state._fpsRvfc = video.requestVideoFrameCallback(onFrame);
-  }else{
+    video.requestVideoFrameCallback(onFrame);
+  } else {
     const updateFromTrack = () => {
-      if(!state._fpsRunning || state._fpsGeneration !== generation) return;
+      if(!state._fpsRunning) return;
       try{
         const track = state.stream?.getVideoTracks()?.[0];
         const fr = track?.getSettings?.()?.frameRate;
@@ -3426,148 +3394,117 @@ function stopQRScan(){
 }
 
 async function capturePhoto(){
-  if(!state.stream || state.isCounting || state._capturing || !video.videoWidth) return;
-  state._capturing = true;
-  let boosted = false;
-  let enteredFs = false;
-  let flashVisible = false;
-  try{
-    if(!state.saveToDevice){
-      try{ await warnStorageIfFull(); }catch(e){}
-    }
-    // Hẹn giờ chỉ áp dụng cho chụp ảnh.
-    if(state.mode === 'photo' && state.timerSec > 0){
-      state.isCounting = true;
-      countdownEl.classList.add('show');
-      for(let i=state.timerSec; i>0; i--){
-        if(state.mode !== 'photo') return;
-        countdownEl.textContent = i;
-        playBeep(950, .08);
-        await new Promise(r=>setTimeout(r, 1000));
+  if(!state.stream||state.isCounting||!video.videoWidth) return;
+  if(!state.saveToDevice){ try{ await warnStorageIfFull(); }catch(e){} }
+  // Hẹn giờ CHỈ khi chụp ảnh — đếm xong mới chụp
+  if(state.mode==='photo' && state.timerSec>0){
+    state.isCounting=true;
+    countdownEl.classList.add('show');
+    for(let i=state.timerSec;i>0;i--){
+      if(state.mode!=='photo'){ // hủy nếu đổi chế độ giữa chừng
+        countdownEl.classList.remove('show');
+        state.isCounting=false;
+        return;
       }
+      countdownEl.textContent=i;
+      playBeep(950,.08);
+      await new Promise(r=>setTimeout(r,1000));
     }
-    if(state.mode !== 'photo') return;
-    try{ await video.play(); }catch(e){}
-    boosted = await boostCaptureResolution();
-    if(boosted) await waitForVideoFrame(900);
-    await waitForVideoFrame(450);
-
-    let vw = video.videoWidth, vh = video.videoHeight;
-    if(!vw || !vh){
-      showToast('Camera chưa sẵn sàng');
-      return;
-    }
-    const sz = sizeForAspect(vw, vh);
-    let w = sz.w, h = sz.h;
-    canvas.width = w;
-    canvas.height = h;
-
-    if(state.flashOn){
-      try{
-        if(!document.fullscreenElement && !document.webkitFullscreenElement){
-          const el = document.documentElement;
-          if(el.requestFullscreen){
-            await el.requestFullscreen();
-            enteredFs = !!document.fullscreenElement;
-          }else if(el.webkitRequestFullscreen){
-            el.webkitRequestFullscreen();
-            enteredFs = true;
-          }
-          if(enteredFs) await new Promise(r=>setTimeout(r, 120));
-        }
-      }catch(e){}
-      fullscreenFlash.style.background = state.flashColor;
-      fullscreenFlash.style.opacity = '1';
-      flashVisible = true;
-      await new Promise(r=>setTimeout(r, 1500));
-      await waitForVideoFrame(400);
-    }
-
-    let usedIc = false;
-    if((state.zoom || 1) <= 1.02 && Math.abs(state.panX || 0) < 3 && Math.abs(state.panY || 0) < 3){
-      try{
-        const track = state.stream?.getVideoTracks?.()[0];
-        if(track && typeof ImageCapture !== 'undefined'){
-          const ic = new ImageCapture(track);
-          const blob = await ic.takePhoto();
-          if(blob?.size){
-            const bmp = await createImageBitmap(blob);
-            try{
-              const bw = bmp.width, bh = bmp.height;
-              const crop = getAspectCrop(bw, bh);
-              const out = sizeForAspect(bw, bh);
-              w = out.w; h = out.h;
-              canvas.width = w; canvas.height = h;
-              ctx.save();
-              const near1 = Math.abs(w / crop.sw - 1) < 0.03 && Math.abs(h / crop.sh - 1) < 0.03;
-              if(near1) ctx.imageSmoothingEnabled = false;
-              else { ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; }
-              const cx = w / 2, cy = h / 2;
-              ctx.translate(cx, cy);
-              ctx.scale(state.flipH ? -1 : 1, state.flipV ? -1 : 1);
-              ctx.translate(-cx, -cy);
-              const f = state._filterStr || 'none';
-              if(f !== 'none') ctx.filter = f;
-              ctx.drawImage(bmp, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, w, h);
-              if(f !== 'none') ctx.filter = 'none';
-              ctx.restore();
-              const fo = activeFilterOverlay();
-              if(fo) paintOverlay(ctx, w, h, Object.assign({}, fo, {alpha:overlayAlpha(fo)}));
-              const temp = Math.max(-1, Math.min(1, Number(state.temp) || 0));
-              if(Math.abs(temp) > 0.005){
-                paintOverlay(ctx, w, h, {stops:[temp < 0 ? '#55b9ff' : '#ffad62'], angle:0, blend:'soft-light', alpha:Math.abs(temp) * 0.42});
-              }
-              usedIc = true;
-            }finally{
-              try{ bmp.close?.(); }catch(e){}
-            }
-          }
-        }
-      }catch(e){ usedIc = false; }
-    }
-    if(!usedIc) drawToCanvas(ctx, w, h, 'high');
-
-    // RAW ở đây thực chất là BMP không nén, không phải RAW/DNG cảm biến.
-    if(state.photoFmt !== 'raw'){
-      if(state.smartHdr){
-        const dec = analyzeSmartHdrNeed(canvas);
-        if(dec.need) applySmartHdrToCanvas(canvas, dec.strength);
-      }else if(state.hdr){
-        applySoftwareHDR(canvas);
-      }
-    }
-
-    if(!state.flashOn){
-      shutterFlash.style.opacity = '.85';
-      playShutterSound();
-      setTimeout(()=>shutterFlash.style.opacity = '0', 60);
-    }else{
-      playShutterSound();
-      await new Promise(r=>setTimeout(r, 2000));
-      fullscreenFlash.style.opacity = '0';
-      flashVisible = false;
-    }
-    // Chờ encode/lưu xong để không cho lần chụp kế tiếp ghi đè canvas dùng chung.
-    await savePhotoFromCanvas(canvas);
-  }catch(e){
-    console.error('Lỗi chụp ảnh:', e);
-    showToast('Không thể chụp hoặc lưu ảnh. Hãy thử lại.');
-  }finally{
-    state.isCounting = false;
     countdownEl.classList.remove('show');
-    if(flashVisible) fullscreenFlash.style.opacity = '0';
-    if(boosted){
-      try{ await restorePreviewResolution(); }catch(e){}
+    state.isCounting=false;
+  }
+  try{ await video.play(); }catch(e){}
+  const boosted = await boostCaptureResolution();
+  if(boosted) await waitForVideoFrame(900);
+  try{ await waitForVideoFrame(450); }catch(e){}
+  let vw=video.videoWidth,vh=video.videoHeight;
+  if(!vw||!vh){ showToast('Camera chưa sẵn sàng'); if(boosted) await restorePreviewResolution(); return; }
+  const sz = sizeForAspect(vw, vh);
+  let w=sz.w, h=sz.h;
+  canvas.width=w;canvas.height=h;
+  let enteredFs = false;
+  if(state.flashOn){
+    try{
+      if(!document.fullscreenElement && !document.webkitFullscreenElement){
+        const el = document.documentElement;
+        if(el.requestFullscreen) await el.requestFullscreen();
+        else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        enteredFs = true;
+        await new Promise(r=>setTimeout(r,120));
+      }
+    }catch(e){}
+    fullscreenFlash.style.background=state.flashColor;
+    fullscreenFlash.style.opacity='1';
+    await new Promise(r=>setTimeout(r,1500));
+    try{ await waitForVideoFrame(400); }catch(e){}
+  }
+  let usedIc = false;
+  if((state.zoom||1) <= 1.02 && Math.abs(state.panX||0) < 3 && Math.abs(state.panY||0) < 3){
+    try{
+      const track = state.stream && state.stream.getVideoTracks && state.stream.getVideoTracks()[0];
+      if(track && typeof ImageCapture !== 'undefined'){
+        const ic = new ImageCapture(track);
+        const blob = await ic.takePhoto();
+        if(blob && blob.size > 0){
+          const bmp = await createImageBitmap(blob);
+          const bw = bmp.width, bh = bmp.height;
+          const crop = getAspectCrop(bw, bh);
+          const out = sizeForAspect(bw, bh);
+          w = out.w; h = out.h;
+          canvas.width = w; canvas.height = h;
+          ctx.save();
+          const near1 = Math.abs(w / crop.sw - 1) < 0.03 && Math.abs(h / crop.sh - 1) < 0.03;
+          if(near1){ ctx.imageSmoothingEnabled = false; }
+          else { ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; }
+          const cx=w/2, cy=h/2;
+          ctx.translate(cx,cy);
+          ctx.scale(state.flipH?-1:1, state.flipV?-1:1);
+          ctx.translate(-cx,-cy);
+          const f = state._filterStr || 'none';
+          if(f !== 'none') ctx.filter = f;
+          ctx.drawImage(bmp, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, w, h);
+          if(f !== 'none') ctx.filter = 'none';
+          ctx.restore();
+          const fo = activeFilterOverlay();
+          if(fo) paintOverlay(ctx, w, h, Object.assign({}, fo, {alpha: overlayAlpha(fo)}));
+          const temp = Math.max(-1, Math.min(1, Number(state.temp)||0));
+          if(Math.abs(temp) > 0.005) paintOverlay(ctx, w, h, {stops:[temp < 0 ? '#55b9ff' : '#ffad62'], angle:0, blend:'soft-light', alpha:Math.abs(temp)*0.42});
+          try{ if(bmp.close) bmp.close(); }catch(e){}
+          usedIc = true;
+        }
+      }
+    }catch(e){ usedIc = false; }
+  }
+  if(!usedIc) drawToCanvas(ctx,w,h,'high');
+  // RAW: không xử lý thêm. HDR thông minh chỉ khi chụp ảnh thường.
+  if(state.photoFmt !== 'raw'){
+    if(state.smartHdr){
+      const dec = analyzeSmartHdrNeed(canvas);
+      if(dec.need){ applySmartHdrToCanvas(canvas, dec.strength); /* silent or light toast */ }
+    } else if(state.hdr){
+      applySoftwareHDR(canvas);
     }
-    if(enteredFs){
-      try{
-        if(document.exitFullscreen) await document.exitFullscreen();
-        else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
-      }catch(e){}
-    }
-    state._capturing = false;
+  }
+  if(!state.flashOn){
+    shutterFlash.style.opacity='.85';playShutterSound();
+    setTimeout(()=>shutterFlash.style.opacity='0',60);
+  }else{
+    playShutterSound();
+    await new Promise(r=>setTimeout(r,2000));
+    fullscreenFlash.style.opacity='0';
+  }
+  savePhotoFromCanvas(canvas);
+
+  // Chỉ trả lại cấu hình khi trước đó đã tăng độ phân giải để chụp; tránh đàm phán lại camera sau mỗi lần chụp (gây khựng/tụt FPS xem trước).
+  if(boosted) restorePreviewResolution();
+  if(enteredFs){
+    try{
+      if(document.exitFullscreen) await document.exitFullscreen();
+      else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }catch(e){}
   }
 }
+
 
 function cancelRecDraw(){
   try{ if(state._recRvfc != null && typeof video.cancelVideoFrameCallback === 'function') video.cancelVideoFrameCallback(state._recRvfc); }catch(e){}
@@ -3996,7 +3933,7 @@ async function startRecording(){
       const snap = await getStorageSnapshot();
       if(snap.hard){
         const go = await appConfirm('Thư viện đã đầy. Video sẽ được tải về máy khi dừng quay (không lưu trên web). Tiếp tục?',{title:'Thư viện đầy',okText:'Tiếp tục quay',cancelText:'Hủy',icon:'!'});
-        if(!go){ resetRecordingAfterError(); showToast('Đã hủy quay video'); return; }
+        if(!go) return;
       } else if(snap.soft){
         try{ warnStorageIfFull(); }catch(e){}
       }
@@ -4729,7 +4666,6 @@ function deactivateSettingsPreview(){
 }
 function pauseCamForSettings(){
   if(settingsCamPaused) return;
-  state._cameraRequestId = (state._cameraRequestId || 0) + 1;
   settingsCamPaused = true;
   try{
     const frame=document.getElementById('settings-camera-frame');
@@ -4740,7 +4676,7 @@ function pauseCamForSettings(){
   }catch(e){}
   try{ stopQRScan(); }catch(e){}
   try{ stopMicMeter(); }catch(e){}
-  stopFpsCounter();
+  state._fpsRunning=false;
   try{ video.pause(); }catch(e){}
   try{ state.stream?.getTracks()?.forEach(t=>t.stop()); }catch(e){}
   state.stream=null;
@@ -5312,7 +5248,7 @@ if(setVideoDevice) setVideoDevice.addEventListener('change', async ()=>{
   const hadAudio = state.stream?.getAudioTracks().some(t=>t.readyState==='live');
   if(state.stream){
     state.stream.getTracks().forEach(t=>{ try{t.stop()}catch(e){} });
-    state.stream=null; stopFpsCounter();
+    state.stream=null; state._fpsRunning=false;
   }
   await startCamera(!!hadAudio && state.mode==='video');
   savePersistedSettings();
@@ -5323,7 +5259,7 @@ if(setAudioDevice) setAudioDevice.addEventListener('change', async ()=>{
   if(state.mode==='video'){
     if(state.stream){
       state.stream.getTracks().forEach(t=>{ try{t.stop()}catch(e){} });
-      state.stream=null; stopFpsCounter();
+      state.stream=null; state._fpsRunning=false;
     }
     await startCamera(true);
   }
@@ -5344,10 +5280,12 @@ async function runCameraSetupSequence(){
   const setStatus=(t,pct)=>{ try{ window.AppLoading && window.AppLoading.set(pct, t); }catch(e){} };
   setStatus('Đang mở camera...', 25);
   try{
-    // Chỉ xin quyền camera khi khởi động. Micro sẽ được yêu cầu khi người dùng vào chế độ quay video. startCamera hiện hình ngay khi có khung đầu tiên,
+    // Mở camera một lần, xin quyền camera + micro cùng lúc. startCamera hiện hình ngay khi có khung đầu tiên,
     // việc áp chất lượng chạy song song. FPS thực tế do bộ đếm FPS trực tiếp đo sau khi giao diện chính đã hiện.
-    if(!await startCamera(false, true)) throw new Error('Không mở được camera');
+    if(!await startCamera(true, true)) throw new Error('Không mở được camera');
     setStatus('Đang hiển thị...', 85);
+    // Micro chỉ cần để xin quyền sớm; micro thật sẽ mở lại khi vào chế độ quay video.
+    state.stream.getAudioTracks().forEach(t=>{ try{ t.stop(); }catch(e){} state.stream.removeTrack(t); });
     applyVideoTransform();
     if(aspectBtn) aspectBtn.textContent = state.forceAspect || '16:9';
     adjustAspectRatio();
@@ -5702,11 +5640,10 @@ function stopLibMediaElements(){
   });
 }
 function pauseCamForLibrary(){
-  state._cameraRequestId = (state._cameraRequestId || 0) + 1;
   libCamPaused = true;
   try{ stopQRScan(); }catch(e){}
   try{ stopMicMeter(); }catch(e){}
-  stopFpsCounter();
+  state._fpsRunning = false;
   try{ video.pause(); }catch(e){}
   try{
     if(state.stream){
