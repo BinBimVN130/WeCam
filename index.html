@@ -113,6 +113,20 @@
 
     #shutter-flash{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;z-index:40;transition:opacity .05s}
     #fullscreen-flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:200;transition:opacity .4s}
+    #cam-grid{
+      position:absolute;inset:0;pointer-events:none;z-index:6;display:none;border-radius:inherit;
+      /* 2 dọc + 2 ngang — background-size/position ổn định mọi tỉ lệ (16:9, 4:3, 1:1, 9:16) */
+      background-color: transparent;
+      background-image:
+        linear-gradient(rgba(255,255,255,.42), rgba(255,255,255,.42)),
+        linear-gradient(rgba(255,255,255,.42), rgba(255,255,255,.42)),
+        linear-gradient(rgba(255,255,255,.42), rgba(255,255,255,.42)),
+        linear-gradient(rgba(255,255,255,.42), rgba(255,255,255,.42));
+      background-size: 1px 100%, 1px 100%, 100% 1px, 100% 1px;
+      background-position: 33.333% 0, 66.666% 0, 0 33.333%, 0 66.666%;
+      background-repeat: no-repeat;
+    }
+    #cam-grid.on{display:block}
 
     /* Zoom - cố định vị trí theo stage, không theo frame */
     .zoom-control{
@@ -214,6 +228,17 @@
     body.settings-open #settings-overlay{pointer-events:auto!important}
     .settings-nav{overflow-y:auto}
     .settings-body{overflow-y:auto}
+    .settings-body,.settings-nav{
+      scrollbar-width:thin;
+      scrollbar-color:rgba(255,255,255,.28) transparent;
+    }
+    .settings-body::-webkit-scrollbar,.settings-nav::-webkit-scrollbar{width:6px}
+    .settings-body::-webkit-scrollbar-track,.settings-nav::-webkit-scrollbar-track{background:transparent;margin:6px 0}
+    .settings-body::-webkit-scrollbar-thumb,.settings-nav::-webkit-scrollbar-thumb{
+      background:rgba(255,255,255,.22);border-radius:8px;
+    }
+    .settings-body::-webkit-scrollbar-thumb:hover,.settings-nav::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.38)}
+    .settings-body::-webkit-scrollbar-thumb:active,.settings-nav::-webkit-scrollbar-thumb:active{background:rgba(255,170,0,.55)}
     .settings-nav{
       width:230px;flex-shrink:0;padding:16px 12px;
       border-right:1px solid rgba(255,255,255,.1);background:#111113;
@@ -300,7 +325,18 @@
     .storage-clean{margin-top:14px;padding:9px 20px;border:0;border-radius:10px;background:#ffaa00;color:#000;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:filter .15s,transform .1s}
     .storage-clean:hover{filter:brightness(1.08)}
     .storage-clean:active{transform:scale(.97)}
-    .settings-sep{height:1px;background:rgba(255,255,255,.1);margin:18px 0}
+    .settings-sep{height:1px;background:rgba(255,255,255,.1);margin:12px 0}
+    .settings-row-stack{flex-direction:column;align-items:stretch;gap:8px}
+    .settings-row-stack .settings-row-main{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%}
+    .cam-info-warn{font-size:12px;line-height:1.4;color:#ffaa00;padding:8px 10px;border-radius:10px;background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.22)}
+    .smart-banner{margin:0 0 12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+    .smart-banner-inner{display:flex;align-items:center;gap:10px}
+    .smart-banner-inner .smart-banner-ico{flex-shrink:0;width:20px;height:20px;color:rgba(255,255,255,.85)}
+    .smart-banner-inner .smart-banner-text{flex:1;min-width:0;font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.78)}
+    .smart-banner-inner .smart-banner-off{flex-shrink:0;padding:6px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+    .smart-banner-inner .smart-banner-off:hover{background:rgba(255,255,255,.16)}
+    .mic-input-line{padding:10px 4px 4px;font-size:13px;color:rgba(255,255,255,.7)}
+    .mic-input-line strong{color:#fff;font-weight:500}
     .storage-sub{font-size:19px;font-weight:700;letter-spacing:-.01em;margin:0 0 12px}
     .storage-files{display:flex;flex-direction:column;gap:10px}
     .storage-empty{font-size:13px;color:rgba(255,255,255,.5);padding:6px 2px}
@@ -860,11 +896,13 @@
     .ld-name-pill .dt{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;white-space:nowrap}
     .ld-actions{display:flex;gap:8px}
     .ld-actions button{
-      width:36px;height:36px;border-radius:50%;border:none;
+      width:36px;height:36px;border-radius:50%;
+      border:1.5px solid rgba(255,255,255,.35);
       background:rgba(255,255,255,.1);color:#fff;cursor:pointer;
       display:flex;align-items:center;justify-content:center;
     }
-    .ld-actions button.danger{color:#ff453a}
+    .ld-actions button.danger{color:#ff453a;border-color:rgba(255,69,58,.45)}
+    .ld-actions button.ld-process-btn{border:1.5px solid rgba(255,255,255,.35)}
     #photo-tools-menu{position:fixed;z-index:460;min-width:200px;padding:6px;display:flex;flex-direction:column;gap:2px;border-radius:14px;background:rgba(30,30,32,.96);border:1px solid rgba(255,255,255,.14);box-shadow:0 12px 36px rgba(0,0,0,.5);opacity:0;transform:translateY(-6px) scale(.98);transform-origin:top right;transition:opacity .16s ease,transform .16s ease}
     #photo-tools-menu.show{opacity:1;transform:none}
     #photo-tools-menu button{display:flex;align-items:center;gap:10px;padding:10px 12px;border:0;border-radius:10px;background:transparent;color:#fff;font:inherit;font-size:13.5px;font-weight:500;text-align:left;cursor:pointer}
@@ -1027,11 +1065,13 @@
     .lib-modal-actions .btn-ok{background:#ffaa00;color:#000}
 
     #toast{
-      position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-10px);
-      background:rgba(30,30,32,.95);color:#fff;padding:12px 20px;border-radius:14px;
-      font-size:14px;z-index:300;opacity:0;transition:width .22s ease,height .22s ease,opacity .18s ease,transform .18s ease;
-      pointer-events:none;max-width:88%;text-align:center;
-      box-shadow:0 8px 28px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);
+      position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);left:50%;
+      transform:translateX(-50%) translateY(-12px);
+      background:rgba(30,30,32,.96);color:#fff;padding:12px 20px;border-radius:14px;
+      font-size:14px;z-index:1000050;opacity:0;
+      transition:opacity .18s ease,transform .18s ease;
+      pointer-events:none;max-width:min(92vw,420px);text-align:center;
+      box-shadow:0 8px 28px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.12);
     }
     #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
@@ -1071,17 +1111,22 @@
       width:64px;height:64px;border-radius:50%;
       border:3.5px solid #fff;background:transparent;
       cursor:pointer;position:relative;
-      transition:transform .1s ease;margin:2px 0;
+      transition:transform .12s cubic-bezier(.2,.8,.2,1);margin:2px 0;
+      -webkit-tap-highlight-color:transparent;
     }
     #shutter::after{
       content:"";position:absolute;inset:5px;border-radius:50%;
-      background:#fff;transition:background-color .15s linear,border-radius .15s ease;
+      background:#fff;
+      transform:scale(1);transform-origin:center center;
+      transition:background-color .18s ease,border-radius .22s cubic-bezier(.2,.8,.2,1),transform .22s cubic-bezier(.2,.8,.2,1);
+      will-change:transform,border-radius;
+      pointer-events:none;
     }
-    #shutter:active{transform:scale(.9)}
+    #shutter:active{transform:scale(.92)}
     #shutter.video-mode{border-color:#fff}
-    #shutter.video-mode::after{inset:8px;border-radius:50%;background:#ff3b30}
+    #shutter.video-mode::after{background:#ff3b30;border-radius:50%;transform:scale(.86)}
     #shutter.recording{border-color:#fff}
-    #shutter.recording::after{inset:16px;border-radius:5px;background:#ff3b30}
+    #shutter.recording::after{background:#ff3b30;border-radius:6px;transform:scale(.48)}
     #shutter.dark-mode{border-color:#1c1c1e}
     #shutter.dark-mode::after{background:#1c1c1e}
     #shutter.dark-mode.video-mode{border-color:#1c1c1e}
@@ -1286,7 +1331,8 @@
       <canvas id="canvas"></canvas>
       <canvas id="rec-canvas"></canvas>
       <div id="shutter-flash"></div>
-      <div id="no-camera">
+      <div id="cam-grid" aria-hidden="true"></div>
+    <div id="no-camera">
         <div class="nc-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
@@ -1338,9 +1384,6 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
       </button>
     </div>
-    <button class="ctrl-btn" id="hdr-btn" title="HDR" data-tip-force aria-pressed="false" style="position:relative;margin-top:8px">
-      <span style="font-size:11px;font-weight:700;letter-spacing:-.4px">HDR</span>
-    </button>
 
     <button class="ctrl-btn" id="timer-btn" title="Hẹn giờ">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -1666,6 +1709,12 @@
           </svg>
           Thiết bị
         </button>
+        <button type="button" class="settings-nav-item" data-panel="advanced">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+          </svg>
+          Nâng cao
+        </button>
         <button type="button" class="settings-nav-item" data-panel="storage">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg>
           Dung lượng
@@ -1697,16 +1746,6 @@
         <div class="settings-panel" id="panel-micro">
           <div class="settings-row">
             <div>
-              <div class="lab">Khử tiếng ồn (BETA)</div>
-              <div class="hint">Tính năng này đang trong giai đoạn thử nghiệm, có thể xảy ra lỗi hoặc không có tác dụng (Cân nhắc kĩ trước khi bật)</div>
-            </div>
-            <label class="switch">
-              <input type="checkbox" id="set-noise-reduce">
-              <span class="switch-slider"></span>
-            </label>
-          </div>
-          <div class="settings-row">
-            <div>
               <div class="lab">Khuếch đại micro</div>
               <div class="hint">Chỉ áp dụng khi quay video</div>
             </div>
@@ -1721,12 +1760,14 @@
               <option value="50">50×</option>
             </select>
           </div>
-          <div class="settings-row" style="align-items:center;gap:12px">
+          <div class="settings-section-label">Đo mức micro</div>
+          <div class="settings-row" style="align-items:center;gap:12px;border-bottom:none;padding-bottom:8px">
             <span aria-hidden="true" style="flex-shrink:0;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(52,199,89,.14);color:#34c759;box-shadow:inset 0 0 0 1px rgba(52,199,89,.28)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor" fill-opacity=".28"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0"/><path d="M12 18v3M9 21h6"/></svg></span>
             <div style="flex:1;height:14px;border-radius:7px;background:rgba(255,255,255,.1);overflow:hidden">
               <div id="settings-mic-bar" style="height:100%;width:0%;border-radius:7px;background:#34c759;transition:width .08s linear"></div>
             </div>
           </div>
+          <div class="mic-input-line">Đầu vào: <strong id="mic-input-label">—</strong></div>
         </div>
         <div class="settings-panel" id="panel-devices">
           <div class="settings-section-label">Đầu vào</div>
@@ -1757,7 +1798,7 @@
               <option value="png">PNG</option>
               <option value="webp">WebP</option>
               <option value="avif">AVIF</option>
-              <option value="raw">RAW</option>
+              <option value="raw">BMP (không nén)</option>
             </select>
           </div>
           <div class="settings-row">
@@ -1768,6 +1809,11 @@
               <option value="webm">WebM</option>
               <option value="mp4">MP4</option>
             </select>
+          </div>
+          <div class="settings-section-label">Tệp</div>
+          <div class="settings-row" style="border-bottom:none">
+            <div><div class="lab">Lưu vào bộ nhớ ngoài</div><div class="hint">Chụp/Quay sẽ lưu vào bộ nhớ ngoài, không lưu ở thư viện</div></div>
+            <label class="switch"><input type="checkbox" id="set-save-device"><span class="switch-slider"></span></label>
           </div>
         </div>
         <div class="settings-panel" id="panel-storage">
@@ -1782,40 +1828,51 @@
           <div class="storage-files" id="storage-files"></div>
         </div>
         <div class="settings-panel" id="panel-camera">
-          <div class="settings-row">
-            <div><div class="lab">Chuyển độ phân giải thông minh (BETA)</div><div class="hint">Tự động cấu hình thấp nhất khi quay video, cấu hình cao cho chụp ảnh. <a href="#" id="smart-learn-more" style="color:#0a84ff;text-decoration:underline">Tìm hiểu thêm</a></div></div>
-            <label class="switch"><input type="checkbox" id="set-smart-resolution"><span class="switch-slider"></span></label>
-          </div>
-          <div class="settings-row" id="smart-manual-res-row">
-            <div>
-              <div class="lab">Độ phân giải</div>
-              <div class="hint preview-res-note">Áp dụng cho khung hình xem trước.<br>*Lưu ý: Chọn độ phân giải thấp trên thiết bị cũ để có FPS cao khi chụp/quay/quét QR.</div>
+          <div id="smart-resolution-banner" class="smart-banner" style="display:none">
+            <div class="smart-banner-inner">
+              <svg class="smart-banner-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              <div class="smart-banner-text">Không thể điều chỉnh thông số khi bật tính năng Chuyển độ phân giải thông minh</div>
+              <button type="button" class="smart-banner-off" id="smart-resolution-off">Tắt</button>
             </div>
-            <select id="set-preview-res">
-              <option value="640x480">480p</option>
-              <option value="1280x720">720p</option>
-              <option value="1920x1080">1080p</option>
-              <option value="3840x2160">2160p</option>
-            </select>
           </div>
-          <div id="cam-info-warn" style="display:none;font-size:12px;color:#ffaa00;padding:0 4px 10px"></div>
-          <div id="smart-manual-fps-row" class="settings-row" style="border-bottom:none">
+          <div class="settings-row settings-row-stack" id="smart-manual-res-row">
+            <div class="settings-row-main">
+              <div>
+                <div class="lab">Độ phân giải</div>
+                <div class="hint preview-res-note">Áp dụng cho khung hình xem trước.<br>*Lưu ý: Chọn độ phân giải thấp trên thiết bị cũ để có FPS cao khi chụp/quay/quét QR.</div>
+              </div>
+              <select id="set-preview-res">
+                <option value="640x480">480p</option>
+                <option value="1280x720">720p</option>
+                <option value="1920x1080">1080p</option>
+                <option value="3840x2160">2160p</option>
+              </select>
+            </div>
+            <div id="cam-info-warn" class="cam-info-warn" style="display:none"></div>
+          </div>
+          <div id="smart-manual-fps-row" class="settings-row">
             <div><div class="lab">FPS khung hình</div></div>
             <select id="set-preview-fps">
               <option value="24">24 FPS</option><option value="30">30 FPS</option><option value="50">50 FPS</option><option value="60">60 FPS</option><option value="0">Không giới hạn</option>
             </select>
           </div>
-          <div id="smart-resolution-note" style="display:none;align-items:flex-start;gap:7px;padding:2px 4px 12px;font-size:12px;line-height:1.5;color:rgba(255,255,255,.72)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg><span>Không thể điều chỉnh thông số thủ công khi bật tính năng này.</span></div>
-          <div class="settings-sep"></div>
+          <div class="settings-section-label" data-i18n="cam.flip">Lật hình</div>
           <div class="settings-row">
-            <div><div class="lab">Lật ngang</div></div>
+            <div><div class="lab" data-i18n="cam.flipH">Lật ngang</div></div>
             <label class="switch"><input type="checkbox" id="set-flip-h"><span class="switch-slider"></span></label>
           </div>
           <div class="settings-row">
-            <div><div class="lab">Lật đứng</div></div>
+            <div><div class="lab" data-i18n="cam.flipV">Lật đứng</div></div>
             <label class="switch"><input type="checkbox" id="set-flip-v"><span class="switch-slider"></span></label>
           </div>
-          <div class="settings-section-label">Xem trước & Thông tin</div>
+          <div class="settings-section-label" data-i18n="cam.layout">Bố cục</div>
+          <div class="settings-row">
+            <div>
+              <div class="lab" data-i18n="cam.grid">Lưới 3x3</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="set-grid"><span class="switch-slider"></span></label>
+          </div>
+          <div class="settings-section-label" data-i18n="cam.preview">Xem trước & Thông tin</div>
           <div class="settings-camera-info-row" style="display:flex;align-items:stretch;gap:16px;min-width:0">
             <div style="flex:1;min-width:0;aspect-ratio:16/9;background:#000;border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center">
               <canvas id="settings-camera-frame" style="width:100%;height:100%;object-fit:contain"></canvas>
@@ -1845,41 +1902,76 @@
         </div>
 
         <div class="settings-panel active" id="panel-general">
-          <div class="settings-section-label">Giao diện</div>
+          <div class="settings-section-label" data-i18n="gen.ui">Giao diện</div>
           <div class="settings-row">
-            <div><div class="lab">Hiện thông tin nâng cao</div><div class="hint">Hiện FPS, kích thước khung hình, độ phân giải và FPS đã chọn.</div></div>
-            <label class="switch"><input type="checkbox" id="set-advanced-info"><span class="switch-slider"></span></label>
+            <div>
+              <div class="lab" data-i18n="gen.lang">Ngôn ngữ</div>
+            </div>
+            <select id="set-lang">
+              <option value="vi">Tiếng Việt</option>
+              <option value="en">English</option>
+            </select>
           </div>
           <div class="settings-row">
             <div>
-              <div class="lab">Ngôn ngữ</div>
+              <div class="lab" data-i18n="gen.font">Font chữ</div>
             </div>
-            <select id="set-lang" disabled>
-              <option value="vi">Tiếng Việt</option>
+            <select id="set-font">
+              <option value="system">Hệ thống</option>
+              <option value="inter">Inter</option>
             </select>
           </div>
-          <div class="settings-section-label" style="padding-top:14px">Tính năng nâng cao</div>
           <div class="settings-row">
-            <div><div class="lab">Lưu lại các thay đổi</div></div>
+            <div><div class="lab" data-i18n="gen.reload">Tải lại trang</div><div class="hint" data-i18n="gen.reloadHint">Làm mới toàn bộ trang và luồng camera/micro</div></div>
+            <button type="button" id="btn-restart-cam" data-i18n="gen.reloadBtn" style="padding:8px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">Tải lại</button>
+          </div>
+          <div class="settings-section-label" data-i18n="gen.danger" style="color:#ff6b63;padding-top:14px">VÙNG NGUY HIỂM</div>
+          <div class="settings-row" style="border-bottom:none;padding-top:8px">
+            <div>
+              <div class="lab" data-i18n="gen.reset">Khôi phục cài đặt gốc</div>
+            </div>
+            <button type="button" id="btn-factory-reset" data-i18n="gen.resetBtn" style="padding:8px 14px;border-radius:10px;border:1px solid rgba(255,59,48,.55);background:rgba(255,59,48,.18);color:#ff6b63;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">Khôi phục</button>
+          </div>
+        </div>
+        <div class="settings-panel" id="panel-advanced">
+          <div class="settings-row">
+            <div><div class="lab" data-i18n="adv.info">Hiện thông tin nâng cao</div><div class="hint" data-i18n="adv.infoHint">Hiện FPS, kích thước khung hình, độ phân giải và FPS đã chọn.</div></div>
+            <label class="switch"><input type="checkbox" id="set-advanced-info"><span class="switch-slider"></span></label>
+          </div>
+          <div class="settings-row">
+            <div><div class="lab" data-i18n="adv.persist">Lưu lại các thay đổi</div><div class="hint" data-i18n="adv.persistHint">Ghi nhớ tùy chọn đã chọn khi mở lại trang</div></div>
             <label class="switch">
               <input type="checkbox" id="set-persist" checked>
               <span class="switch-slider"></span>
             </label>
           </div>
+          <div class="settings-section-label" data-i18n="adv.exp">Thử nghiệm</div>
           <div class="settings-row">
-            <div><div class="lab">Lưu tệp về máy</div><div class="hint">Chụp/Quay sẽ lưu tệp về máy, không lưu ở thư viện</div></div>
-            <label class="switch"><input type="checkbox" id="set-save-device"><span class="switch-slider"></span></label>
-          </div>
-          <div class="settings-row">
-            <div><div class="lab">Làm mới luồng camera & micro</div></div>
-            <button type="button" id="btn-restart-cam" style="padding:8px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">Làm mới</button>
-          </div>
-          <div class="settings-section-label" style="color:#ff6b63;padding-top:14px">VÙNG NGUY HIỂM</div>
-          <div class="settings-row" style="border-bottom:none;padding-top:8px">
             <div>
-              <div class="lab">Khôi phục cài đặt gốc</div>
+              <div class="lab" data-i18n="adv.smartRes">Chuyển độ phân giải thông minh (BETA)</div>
+              <div class="hint">Tự động cấu hình thấp nhất khi quay video, cấu hình cao cho chụp ảnh. <a href="#" id="smart-learn-more" style="color:#0a84ff;text-decoration:underline">Tìm hiểu thêm</a></div>
             </div>
-            <button type="button" id="btn-factory-reset" style="padding:8px 14px;border-radius:10px;border:1px solid rgba(255,59,48,.55);background:rgba(255,59,48,.18);color:#ff6b63;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">Khôi phục</button>
+            <label class="switch"><input type="checkbox" id="set-smart-resolution"><span class="switch-slider"></span></label>
+          </div>
+          <div class="settings-row">
+            <div>
+              <div class="lab" data-i18n="adv.noise">Khử tiếng ồn (BETA)</div>
+              <div class="hint" data-i18n="adv.noiseHint">Tính năng này đang trong giai đoạn thử nghiệm, có thể xảy ra lỗi hoặc không có tác dụng (Cân nhắc kĩ trước khi bật)</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="set-noise-reduce">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+          <div class="settings-row" style="border-bottom:none">
+            <div>
+              <div class="lab" data-i18n="adv.smartHdr">HDR Thông minh (BETA)</div>
+              <div class="hint" data-i18n="adv.smartHdrHint">Chỉ áp dụng với Ảnh</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="set-smart-hdr">
+              <span class="switch-slider"></span>
+            </label>
           </div>
         </div>
       </div>
@@ -1902,25 +1994,45 @@
 </div>
 
 <script>
+const IS_MOBILE = (function(){
+  try{
+    const ua = navigator.userAgent || '';
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)) return true;
+    if(navigator.maxTouchPoints > 1 && Math.min(screen.width||999, screen.height||999) < 900) return true;
+    return false;
+  }catch(e){ return false; }
+})();
 const LOW_END = (function(){
   try{
     const ua = navigator.userAgent || '';
     const oldWin = /Windows NT (5\.[12]|6\.[0-3])/.test(ua); // XP, Vista, 7, 8, 8.1
     const cores = navigator.hardwareConcurrency || 4;
     const mem = navigator.deviceMemory || 4;
-    return oldWin || cores <= 2 || mem <= 2;
-  }catch(e){ return false; }
+    return oldWin || cores <= 2 || mem <= 2 || IS_MOBILE;
+  }catch(e){ return IS_MOBILE; }
+})();
+/* low | mid | high — AI upscale thật chỉ cân nhắc trên mid/high; low luôn nội suy nhẹ */
+const DEVICE_TIER = (function(){
+  if(LOW_END) return 'low';
+  try{
+    const cores = navigator.hardwareConcurrency || 4;
+    const mem = navigator.deviceMemory || 4;
+    if(cores >= 8 && mem >= 8) return 'high';
+    if(cores >= 4 && mem >= 4) return 'mid';
+    return 'mid';
+  }catch(e){ return 'mid'; }
 })();
 if(LOW_END) document.documentElement.classList.add('lite');
+document.documentElement.dataset.tier = DEVICE_TIER;
 const FILTER_AMOUNT_DEFAULT = 0.5;   // nồng độ bộ lọc mặc định: 50%
 const state = {
   stream:null, mode:'photo', isRecording:false, mediaRecorder:null, recordedChunks:[],
   flipH:false, flipV:false, flashOn:false, flashColor:'#ffffff',
-  timerSec:0, isCounting:false, facingMode:'user', videoDeviceId:null, audioDeviceId:null, forceAspect:'16:9', previewRes:'1280x720', captureRes:'1280x720', previewFps:30, smartResolution:false, advancedInfo:false, micGain:1, noiseReduce:false, photoFmt:'png', videoFmt:'webm', persistSettings:true,
+  timerSec:0, isCounting:false, facingMode:'user', videoDeviceId:null, audioDeviceId:null, forceAspect:'16:9', previewRes:'1280x720', captureRes:'1280x720', previewFps:30, smartResolution:false, advancedInfo:false, micGain:1, noiseReduce:false, photoFmt:'png', videoFmt:'webm', persistSettings:true, font:'inter',
   recAnimId:null, recDrawTimer:null, qrScanning:false, qrAnimId:null,
   zoom:1, panX:0, panY:0, isPanning:false,
   panStartX:0, panStartY:0, panOriginX:0, panOriginY:0,
-  ev:0, sat:1, temp:0, filter:'none', filterAmount:FILTER_AMOUNT_DEFAULT, saveToDevice:false, hdr:false,
+  ev:0, sat:1, temp:0, filter:'none', filterAmount:FILTER_AMOUNT_DEFAULT, saveToDevice:false, hdr:false, smartHdr:false, showGrid:false, lang:'vi',
   frameCount:0, lastFpsTime:performance.now()
 };
 
@@ -1992,7 +2104,7 @@ function showNotice(id,text){
   m.innerHTML='<div class="notice-box"><div class="notice-icon" aria-hidden="true">!</div><div class="notice-body"><p></p><button type="button">OK</button></div></div>';
   m.querySelector('p').textContent=text;
   m.querySelector('button').addEventListener('click',()=>{ m.classList.remove('show'); setTimeout(()=>m.remove(),220); },{once:true});
-  document.getElementById('app').appendChild(m);
+  document.body.appendChild(m);
   requestAnimationFrame(()=>m.classList.add('show'));
 }
 function showPermModal(){ showNotice('perm-modal','Vui lòng cấp quyền truy cập đầu vào cho trang này.'); }
@@ -2003,28 +2115,159 @@ function showCameraError(e){
   const hint = name === 'NotReadableError' ? 'Hãy đóng ứng dụng/tab khác đang dùng camera.'
     : name === 'NotFoundError' || name === 'OverconstrainedError' ? 'Không tìm thấy camera phù hợp, hãy kiểm tra kết nối camera.'
     : name === 'NotSupportedError' ? 'Trình duyệt này không hỗ trợ truy cập camera (cần mở bằng HTTPS hoặc localhost).'
-    : 'Hãy thử bấm "Làm mới luồng camera & micro" trong Cài đặt.';
+    : 'Hãy thử bấm "Tải lại trang" trong Cài đặt.';
   showNotice('perm-modal', `Không mở được camera (${name}). ${hint}`);
+}
+
+/* ===== i18n (vi / en) — chuỗi tĩnh + data-i18n; không dùng máy dịch ===== */
+const I18N = {
+vi:{
+  'nav.general':'Chung','nav.devices':'Thiết bị','nav.advanced':'Nâng cao','nav.storage':'Dung lượng','nav.camera':'Camera','nav.micro':'Mic','nav.about':'Giới thiệu',
+  'gen.ui':'Giao diện','gen.lang':'Ngôn ngữ','gen.font':'Font chữ','gen.reload':'Tải lại trang','gen.reloadHint':'Làm mới toàn bộ trang và luồng camera/micro','gen.reloadBtn':'Tải lại',
+  'gen.danger':'VÙNG NGUY HIỂM','gen.reset':'Khôi phục cài đặt gốc','gen.resetBtn':'Khôi phục',
+  'adv.info':'Hiện thông tin nâng cao','adv.infoHint':'Hiện FPS, kích thước khung hình, độ phân giải và FPS đã chọn.',
+  'adv.persist':'Lưu lại các thay đổi','adv.persistHint':'Ghi nhớ tùy chọn đã chọn khi mở lại trang',
+  'adv.exp':'Thử nghiệm','adv.smartRes':'Chuyển độ phân giải thông minh (BETA)',
+  'adv.smartResHint':'Tự động cấu hình thấp nhất khi quay video, cấu hình cao cho chụp ảnh.',
+  'adv.noise':'Khử tiếng ồn (BETA)','adv.noiseHint':'Tính năng này đang trong giai đoạn thử nghiệm, có thể xảy ra lỗi hoặc không có tác dụng (Cân nhắc kĩ trước khi bật)',
+  'adv.smartHdr':'HDR Thông minh (BETA)','adv.smartHdrHint':'Chỉ áp dụng với Ảnh',
+  'cam.flip':'Lật hình','cam.flipH':'Lật ngang','cam.flipV':'Lật đứng','cam.layout':'Bố cục','cam.grid':'Lưới 3x3',
+  'cam.preview':'Xem trước & Thông tin','dev.saveExt':'Lưu vào bộ nhớ ngoài','dev.saveExtHint':'Chụp/Quay sẽ lưu vào bộ nhớ ngoài, không lưu ở thư viện',
+  'mode.photo':'Chụp ảnh','mode.video':'Quay video','mode.qr':'Quét QR',
+  'toast.savedLib':'Đã lưu vào Thư viện','toast.savedDev':'Đã lưu vào bộ nhớ ngoài','toast.hdrOn':'HDR Thông minh: đã xử lý ảnh','toast.hdrSkip':'HDR Thông minh: cảnh đã cân bằng — bỏ qua',
+  'toast.lang':'Đã chuyển ngôn ngữ','toast.applied':'Đã áp dụng',
+  'timer.off':'Tắt','timer.3':'3 giây','timer.5':'5 giây','timer.10':'10 giây','timer.title':'Hẹn giờ',
+  'qr.title':'Kết quả quét QR','settings.title':'Cài đặt','lib.title':'Thư viện',
+  'filter.none':'Không','common.close':'Đóng','common.ok':'OK','common.cancel':'Hủy'
+},
+en:{
+  'nav.general':'General','nav.devices':'Devices','nav.advanced':'Advanced','nav.storage':'Storage','nav.camera':'Camera','nav.micro':'Mic','nav.about':'About',
+  'gen.ui':'Interface','gen.lang':'Language','gen.font':'Font','gen.reload':'Reload page','gen.reloadHint':'Refresh the page and camera/microphone streams','gen.reloadBtn':'Reload',
+  'gen.danger':'DANGER ZONE','gen.reset':'Restore defaults','gen.resetBtn':'Reset',
+  'adv.info':'Show advanced info','adv.infoHint':'Show FPS, frame size, resolution and selected FPS.',
+  'adv.persist':'Remember settings','adv.persistHint':'Keep your options when you reopen the page',
+  'adv.exp':'Experimental','adv.smartRes':'Smart resolution switching (BETA)',
+  'adv.smartResHint':'Use a low profile while recording and a high profile for photos.',
+  'adv.noise':'Noise reduction (BETA)','adv.noiseHint':'Experimental. May fail or have no effect on some devices. Enable with care.',
+  'adv.smartHdr':'Smart HDR (BETA)','adv.smartHdrHint':'Photos only',
+  'cam.flip':'Flip','cam.flipH':'Flip horizontal','cam.flipV':'Flip vertical','cam.layout':'Layout','cam.grid':'3×3 grid',
+  'cam.preview':'Preview & info','dev.saveExt':'Save to device storage','dev.saveExtHint':'Capture/record saves to your device instead of the in-app library',
+  'mode.photo':'Photo','mode.video':'Video','mode.qr':'Scan QR',
+  'toast.savedLib':'Saved to Library','toast.savedDev':'Saved to device storage','toast.hdrOn':'Smart HDR: photo enhanced','toast.hdrSkip':'Smart HDR: scene balanced — skipped',
+  'toast.lang':'Language updated','toast.applied':'Applied',
+  'timer.off':'Off','timer.3':'3 sec','timer.5':'5 sec','timer.10':'10 sec','timer.title':'Timer',
+  'qr.title':'QR result','settings.title':'Settings','lib.title':'Library',
+  'filter.none':'None','common.close':'Close','common.ok':'OK','common.cancel':'Cancel'
+}
+};
+function t(key, fallback){
+  const lang = (state && state.lang) || 'vi';
+  const dict = I18N[lang] || I18N.vi;
+  if(dict[key] != null) return dict[key];
+  if(I18N.vi[key] != null) return I18N.vi[key];
+  return fallback != null ? fallback : key;
+}
+function applyI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    if(!k) return;
+    const val = t(k);
+    if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') return;
+    el.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el=>{
+    const k = el.getAttribute('data-i18n-title');
+    if(k) el.setAttribute('title', t(k));
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const k = el.getAttribute('data-i18n-placeholder');
+    if(k) el.setAttribute('placeholder', t(k));
+  });
+  // Settings nav labels (text node after svg)
+  document.querySelectorAll('.settings-nav-item[data-panel]').forEach(btn=>{
+    const id = btn.getAttribute('data-panel');
+    const key = ({general:'nav.general',devices:'nav.devices',advanced:'nav.advanced',storage:'nav.storage',camera:'nav.camera',micro:'nav.micro',about:'nav.about'})[id];
+    if(!key) return;
+    const label = t(key);
+    // Keep SVG, replace trailing text
+    const nodes = [...btn.childNodes];
+    nodes.forEach(n=>{ if(n.nodeType === 3 && n.textContent.trim()) n.textContent = '\n          ' + label + '\n        '; });
+  });
+  // Mode buttons titles
+  document.querySelectorAll('.mode-btn[data-mode]').forEach(btn=>{
+    const m = btn.getAttribute('data-mode');
+    const key = m==='photo'?'mode.photo':m==='video'?'mode.video':m==='qr'?'mode.qr':null;
+    if(key){ btn.title = t(key); btn.setAttribute('data-tip', t(key)); }
+  });
+  // Timer options
+  document.querySelectorAll('#timer-menu .timer-opt').forEach(btn=>{
+    const sec = btn.getAttribute('data-sec');
+    if(sec==='0') btn.textContent = t('timer.off');
+    else if(sec==='3') btn.textContent = t('timer.3');
+    else if(sec==='5') btn.textContent = t('timer.5');
+    else if(sec==='10') btn.textContent = t('timer.10');
+  });
+  const th = document.querySelector('#timer-menu .panel-head');
+  if(th){
+    const close = th.querySelector('.close-x');
+    th.childNodes.forEach(n=>{ if(n.nodeType===3) n.textContent = t('timer.title') + ' '; });
+    if(close) th.appendChild(close);
+  }
+  const qrH = document.querySelector('#qr-popup h3');
+  if(qrH) qrH.textContent = t('qr.title');
+  const setTitle = document.querySelector('.settings-shell-head strong');
+  if(setTitle) setTitle.textContent = t('settings.title');
+  try{ syncSettingsTitle && syncSettingsTitle(); }catch(e){}
+  document.documentElement.lang = (state.lang === 'en') ? 'en' : 'vi';
 }
 
 function showToast(msg,ms=2500){
   clearTimeout(showToast._t);
   document.getElementById('toast')?.remove();
   const t=document.createElement('div'); t.id='toast'; t.textContent=msg;
-  document.getElementById('app').appendChild(t);
+  // Luôn gắn vào body + z-index rất cao → luôn nổi trên cùng (kể cả khi mở Cài đặt/Thư viện)
+  document.body.appendChild(t);
   requestAnimationFrame(()=>t.classList.add('show'));
   showToast._t=setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),200); },ms);
 }
-function playBeep(f=880,d=.1){
+let _sharedAudioCtx=null;
+function getSharedAudioCtx(){
   try{
-    const ac=new(window.AudioContext||window.webkitAudioContext)();
-    const o=ac.createOscillator(),g=ac.createGain();
-    o.connect(g);g.connect(ac.destination);o.frequency.value=f;o.type='sine';
-    g.gain.setValueAtTime(.2,ac.currentTime);g.gain.exponentialRampToValueAtTime(.01,ac.currentTime+d);
-    o.start();o.stop(ac.currentTime+d);
+    if(!_sharedAudioCtx) _sharedAudioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    if(_sharedAudioCtx.state==='suspended') _sharedAudioCtx.resume();
+    return _sharedAudioCtx;
+  }catch(e){ return null; }
+}
+function playTone({freq=1000,dur=0.08,type='sine',gain=0.14,freqEnd=null,delay=0}={}){
+  try{
+    const ac=getSharedAudioCtx(); if(!ac) return;
+    const t0=ac.currentTime+Math.max(0,delay);
+    const o=ac.createOscillator(), g=ac.createGain();
+    o.type=type;
+    o.frequency.setValueAtTime(freq,t0);
+    if(freqEnd) o.frequency.exponentialRampToValueAtTime(Math.max(40,freqEnd), t0+dur);
+    g.gain.setValueAtTime(0.0001,t0);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.001,gain), t0+0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+    o.connect(g); g.connect(ac.destination);
+    o.start(t0); o.stop(t0+dur+0.02);
   }catch(e){}
 }
-function playShutterSound(){playBeep(1400,.05);setTimeout(()=>playBeep(1000,.04),45)}
+function playBeep(f=880,d=.1){ playTone({freq:f,dur:d,type:'sine',gain:0.12}); }
+/* Âm chụp gần iPhone: hai tiếng click cơ ngắn */
+function playShutterSound(){
+  playTone({freq:2550,dur:0.022,type:'triangle',gain:0.11});
+  playTone({freq:1750,dur:0.032,type:'triangle',gain:0.09,delay:0.028});
+}
+/* Bắt đầu quay: chirp ngắn */
+function playRecStartSound(){
+  playTone({freq:980,dur:0.05,type:'sine',gain:0.1});
+  playTone({freq:1320,dur:0.06,type:'sine',gain:0.07,delay:0.04});
+}
+/* Dừng quay */
+function playRecStopSound(){
+  playTone({freq:880,dur:0.07,type:'sine',gain:0.09,freqEnd:520});
+}
 
 function closeAllMenus(){
   colorPalette.classList.remove('show');
@@ -2087,7 +2330,9 @@ const FILTER_PRESETS = {
   golden:{name:'Giờ vàng', thumb:'background:linear-gradient(135deg,#ffd27a,#ff8a3d)', fx:{sepia:0.26, saturate:1.45, brightness:1.1, contrast:1.065}, overlay:{stops:['#ffc466','#ff7a3c','#ffa05a'], angle:160, blend:'soft-light', alpha:0.75}},
   film:{name:'Phim cũ', thumb:'background:linear-gradient(135deg,#d9c3a0,#7a6a58);filter:sepia(.3)', fx:{sepia:0.32, contrast:1.16, saturate:0.8, brightness:1.016}, overlay:{stops:['#f2dfc6'], angle:0, blend:'soft-light', alpha:0.5}},
   y2k:{name:'Y2K', thumb:'background:linear-gradient(135deg,#00e5ff,#ff5ac8)', fx:{contrast:1.22, saturate:1.45, brightness:1.13}, overlay:{stops:['#00e5ff','#ff5ac8'], angle:135, blend:'soft-light', alpha:0.62}},
-  cinema:{name:'Điện ảnh', thumb:'background:linear-gradient(180deg,#1aa6b7,#ff8a3d)', fx:{contrast:1.32, saturate:0.84, brightness:0.94}, overlay:{stops:['#1aa6b7','#ff8a3d'], angle:180, blend:'soft-light', alpha:0.68}}
+  cinema:{name:'Điện ảnh', thumb:'background:linear-gradient(180deg,#1aa6b7,#ff8a3d)', fx:{contrast:1.32, saturate:0.84, brightness:0.94}, overlay:{stops:['#1aa6b7','#ff8a3d'], angle:180, blend:'soft-light', alpha:0.68}},
+  soft:{name:'Soft', thumb:'background:linear-gradient(135deg,#ffe8d6,#f7c1c0)', fx:{contrast:0.94, saturate:1.12, brightness:1.08}, overlay:{stops:['#ffe8d6','#f7c1c0','#fff6f0'], angle:160, blend:'soft-light', alpha:0.55}},
+  moody:{name:'Moody', thumb:'background:linear-gradient(160deg,#0f2027,#2c5364)', fx:{contrast:1.24, saturate:0.72, brightness:0.92, 'hue-rotate':-8}, overlay:{stops:['#0f2027','#203a43','#2c5364'], angle:160, blend:'soft-light', alpha:0.5}}
 };
 const FX_ZERO_BASE = {sepia:true, grayscale:true, 'hue-rotate':true};
 const FX_LIMITS = { brightness:[0,3], contrast:[0,3], saturate:[0,4], sepia:[0,1], grayscale:[0,1] };
@@ -2189,7 +2434,20 @@ document.getElementById('filter-amount')?.addEventListener('input', e=>{
   syncFilterAmountUI();
   scheduleApplyFilters();
 });
+function applyGridOverlay(){
+  const g = document.getElementById('cam-grid');
+  if(!g) return;
+  g.classList.toggle('on', !!state.showGrid && state.mode !== 'qr');
+}
+/* Bộ lọc cũ đã gỡ / đổi tên */
+function normalizeFilterKey(k){
+  if(k === 'igsoft') return 'soft';
+  if(k === 'xmoody') return 'moody';
+  if(k === 'ttpop' || k === 'fbwarm') return 'none';
+  return k || 'none';
+}
 function applyFilters(){
+  applyGridOverlay();
   const br = Math.max(0.55, Math.min(1.5, 1 + state.ev * 0.25));
   const sat = Math.max(0, Math.min(2, Number(state.sat) || 0));
   // Nhiệt độ màu dùng lớp phủ độc lập, tránh hue-rotate làm lệch màu da khi kéo về lạnh.
@@ -2221,12 +2479,88 @@ function scheduleApplyFilters(){
   _adjRaf = requestAnimationFrame(()=>{ _adjRaf = 0; applyFilters(); });
 }
 
-hdrBtn?.addEventListener('click',()=>{
-  state.hdr=!state.hdr;
-  applyFilters();
-  showToast(state.hdr?'HDR đã bật':'HDR đã tắt');
-  savePersistedSettings();
-});
+// HDR: nút màn hình chính đã gỡ; state.hdr luôn tắt
+state.hdr = false;
+try{ applyI18n(); }catch(e){}
+
+/** Phân tích histogram nhanh trên canvas nhỏ — quyết định có cần HDR không */
+function analyzeSmartHdrNeed(sourceCanvas){
+  try{
+    const sw = Math.min(64, sourceCanvas.width), sh = Math.max(1, Math.round(sw * sourceCanvas.height / sourceCanvas.width));
+    const c = document.createElement('canvas'); c.width = sw; c.height = sh;
+    const ctx = c.getContext('2d', {willReadFrequently:true});
+    if(!ctx) return {need:false, strength:0};
+    ctx.drawImage(sourceCanvas, 0, 0, sw, sh);
+    const data = ctx.getImageData(0, 0, sw, sh).data;
+    let n = 0, sum = 0, sum2 = 0, dark = 0, bright = 0;
+    let cSum = 0, cN = 0, eSum = 0, eN = 0;
+    const x0 = Math.floor(sw*0.3), x1 = Math.floor(sw*0.7), y0 = Math.floor(sh*0.3), y1 = Math.floor(sh*0.7);
+    for(let y=0;y<sh;y++){
+      for(let x=0;x<sw;x++){
+        const i = (y*sw+x)*4;
+        const L = 0.2126*data[i] + 0.7152*data[i+1] + 0.0722*data[i+2];
+        sum += L; sum2 += L*L; n++;
+        if(L < 40) dark++;
+        if(L > 220) bright++;
+        if(x>=x0&&x<x1&&y>=y0&&y<y1){ cSum+=L; cN++; } else { eSum+=L; eN++; }
+      }
+    }
+    if(!n) return {need:false, strength:0};
+    const mean = sum/n;
+    const variance = Math.max(0, sum2/n - mean*mean);
+    const std = Math.sqrt(variance);
+    const darkR = dark/n, brightR = bright/n;
+    const center = cN?cSum/cN:mean, edge = eN?eSum/eN:mean;
+    const backlight = edge - center > 28;
+    // Cần HDR: tương phản cao + có cả vùng tối và sáng, hoặc ngược sáng rõ
+    const highDR = std > 48 && darkR > 0.08 && brightR > 0.06;
+    const need = backlight || highDR || (darkR > 0.18 && brightR > 0.05);
+    let strength = 0.35;
+    if(backlight) strength = 0.55;
+    if(highDR) strength = Math.max(strength, Math.min(0.75, 0.35 + (std-48)/80));
+    if(darkR > 0.25) strength = Math.min(0.8, strength + 0.1);
+    return {need, strength, mean, std, darkR, brightR, backlight};
+  }catch(e){ return {need:false, strength:0}; }
+}
+/** Tone-map nhẹ kiểu HDR: mở vùng tối, giữ highlight — chỉ canvas, không đụng preview */
+function applySmartHdrToCanvas(targetCanvas, strength){
+  strength = Math.max(0.15, Math.min(0.85, strength || 0.45));
+  let layer = null;
+  try{
+    const maxSide = (typeof LOW_END !== 'undefined' && LOW_END) ? 420 : 640;
+    const scale = Math.min(1, maxSide / Math.max(targetCanvas.width, targetCanvas.height));
+    const w = Math.max(1, Math.round(targetCanvas.width * scale));
+    const h = Math.max(1, Math.round(targetCanvas.height * scale));
+    layer = document.createElement('canvas'); layer.width = w; layer.height = h;
+    const lctx = layer.getContext('2d'); if(!lctx) return;
+    lctx.imageSmoothingQuality = 'high';
+    lctx.drawImage(targetCanvas, 0, 0, w, h);
+    const out = targetCanvas.getContext('2d'); if(!out) return;
+    out.imageSmoothingEnabled = true; out.imageSmoothingQuality = 'high';
+    // 1) Nâng shadow (soft-light + brightness)
+    out.save();
+    out.globalCompositeOperation = 'soft-light';
+    out.globalAlpha = 0.22 + strength * 0.28;
+    out.filter = 'brightness(' + (1.25 + strength * 0.35).toFixed(3) + ') contrast(0.92)';
+    out.drawImage(layer, 0, 0, targetCanvas.width, targetCanvas.height);
+    out.restore();
+    // 2) Giữ highlight (multiply nhẹ)
+    out.save();
+    out.globalCompositeOperation = 'multiply';
+    out.globalAlpha = 0.06 + strength * 0.1;
+    out.filter = 'brightness(0.78)';
+    out.drawImage(layer, 0, 0, targetCanvas.width, targetCanvas.height);
+    out.restore();
+    // 3) Local contrast nhẹ
+    out.save();
+    out.globalCompositeOperation = 'overlay';
+    out.globalAlpha = 0.08 + strength * 0.12;
+    out.filter = 'contrast(1.15)';
+    out.drawImage(layer, 0, 0, targetCanvas.width, targetCanvas.height);
+    out.restore();
+    out.filter = 'none';
+  }catch(err){ console.warn('Smart HDR', err); }
+}
 
 function applySoftwareHDR(targetCanvas){
   // Bù sáng ngược sáng giả lập: tạo lớp ảnh nhỏ để nâng vùng tối và giữ vùng sáng tương đối.
@@ -2288,25 +2622,70 @@ function canvasSupportsType(type){
   try{
     const c = document.createElement('canvas');
     c.width = 2; c.height = 2;
-    return c.toDataURL(type).indexOf('data:'+type) === 0;
+    // toDataURL đôi khi báo sai với AVIF; ưu tiên toBlob async khi cần chắc chắn
+    const url = c.toDataURL(type);
+    return typeof url === 'string' && url.indexOf('data:'+type) === 0 && url.length > 30;
   }catch(e){ return false; }
 }
-/* Lưu tệp vừa chụp/quay: về máy (nếu bật "Lưu tệp về máy") hoặc vào thư viện; thư viện đầy/lỗi ghi thì tải về máy để không mất tệp.
+/** MMDDYYYY — ví dụ 11182026 (18/11/2026) */
+function mediaDateStamp(d){
+  d = d || new Date();
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  const yyyy = String(d.getFullYear());
+  return mm + dd + yyyy;
+}
+function photoFileName(ext, opt){
+  const stamp = mediaDateStamp(opt && opt.date);
+  const suffix = (opt && opt.suffix) ? opt.suffix : '';
+  return 'IMG_' + stamp + suffix + '.' + String(ext||'jpg').replace(/^\./,'');
+}
+function videoFileName(ext, opt){
+  const stamp = mediaDateStamp(opt && opt.date);
+  const suffix = (opt && opt.suffix) ? opt.suffix : '';
+  return 'VID_' + stamp + suffix + '.' + String(ext||'webm').replace(/^\./,'');
+}
+/** toBlob Promise + kiểm tra size; dùng cho AVIF/WebP */
+function canvasToBlobAsync(cvs, type, quality){
+  return new Promise(resolve=>{
+    try{
+      const done = b => resolve(b && b.size > 0 ? b : null);
+      if(type === 'image/png' || quality == null) cvs.toBlob(done, type);
+      else cvs.toBlob(done, type, quality);
+    }catch(e){ resolve(null); }
+  });
+}
+/* Lưu tệp vừa chụp/quay: về máy (nếu bật "Lưu vào bộ nhớ ngoài") hoặc vào thư viện; thư viện đầy/lỗi ghi thì tải về máy để không mất tệp.
    Trả về nơi đã lưu: 'device' | 'library' | 'fallback'. */
 async function saveCaptured(rec, label){
   if(state.saveToDevice){
     downloadBlob(rec.blob, rec.name);
-    showToast('Đã lưu vào Máy');
+    showToast(t('toast.savedDev','Đã lưu vào bộ nhớ ngoài'));
     return 'device';
   }
+  // Chặn ghi khi đã đầy (estimate ≥ 98% hoặc đã vượt quota báo cáo)
+  try{
+    const snap = await getStorageSnapshot();
+    const need = (rec.blob && rec.blob.size) || 0;
+    const wouldExceed = snap.quota > 0 && (snap.effectiveUsed + need) > snap.quota * 0.98;
+    if(snap.hard || wouldExceed){
+      downloadBlob(rec.blob, rec.name);
+      showToast('Thư viện đã đầy — đã tải '+label+' về máy', 4000);
+      try{ warnStorageIfFull(); }catch(_){}
+      return 'fallback';
+    }
+  }catch(_){}
   try{
     await libAddItem({ ...rec, createdAt:Date.now(), size:rec.blob.size });
-    showToast('Đã lưu vào Thư viện');
+    showToast(t('toast.savedLib','Đã lưu vào Thư viện'));
     return 'library';
   }catch(e){
     console.warn('Lưu vào thư viện thất bại', e);
+    const quotaErr = e && (e.name === 'QuotaExceededError' || /quota/i.test(String(e.message||e)));
     downloadBlob(rec.blob, rec.name);
-    showToast(`Không lưu được vào Thư viện (có thể đã đầy), ${label} đã được tải về máy`, 4000);
+    showToast(quotaErr
+      ? ('Thư viện đầy (lỗi hạn mức) — đã tải '+label+' về máy')
+      : ('Không lưu được vào Thư viện, '+label+' đã được tải về máy'), 4000);
     return 'fallback';
   }
 }
@@ -2328,34 +2707,40 @@ function canvasToBmpBlob(cvs){
   }
   return new Blob([buf],{type:'image/bmp'});
 }
-function savePhotoFromCanvas(cvs){
+async function savePhotoFromCanvas(cvs){
   const fmt = state.photoFmt || 'png';
   showToast('Đang lưu tệp...', 60000);
   if(fmt === 'raw'){
     const b = canvasToBmpBlob(cvs);
-    saveCaptured({ type:'photo', name:`Ảnh_RAW_${Date.now()}.bmp`, blob:b, mime:'image/bmp', width:cvs.width, height:cvs.height, duration:0 }, 'ảnh');
+    await saveCaptured({ type:'photo', name:photoFileName('bmp'), blob:b, mime:'image/bmp', width:cvs.width, height:cvs.height, duration:0 }, 'ảnh');
     return;
   }
+  // Thứ tự thử theo định dạng user chọn; AVIF: không tin toDataURL — thử toBlob thật
   const tryList = fmt === 'png' ? ['image/png']
     : fmt === 'webp' ? ['image/webp','image/png']
-    : ['image/avif','image/webp','image/png'];
+    : fmt === 'avif' ? ['image/avif','image/webp','image/png']
+    : ['image/png'];
   const quality = 0.96;
-  const tryNext = (i) => {
-    if(i >= tryList.length){ showToast('Không lưu được ảnh'); return; }
+  let usedFallback = false;
+  for(let i=0;i<tryList.length;i++){
     const type = tryList[i];
     const ext = type === 'image/png' ? 'png' : (type === 'image/webp' ? 'webp' : 'avif');
-    if(type !== 'image/png' && !canvasSupportsType(type)){
-      tryNext(i+1); return;
+    // PNG luôn thử; AVIF/WebP: thử encode thật (toDataURL hay báo sai)
+    if(type !== 'image/png' && type !== 'image/avif' && !canvasSupportsType(type)){
+      usedFallback = true;
+      continue;
     }
-    try{
-      cvs.toBlob(async b=>{
-        if(b && b.size > 0){
-          saveCaptured({ type:'photo', name:`Ảnh_${Date.now()}.${ext}`, blob:b, mime:type, width:cvs.width, height:cvs.height, duration:0 }, 'ảnh');
-        } else tryNext(i+1);
-      }, type, type === 'image/png' ? undefined : quality);
-    }catch(e){ tryNext(i+1); }
-  };
-  tryNext(0);
+    const b = await canvasToBlobAsync(cvs, type, type === 'image/png' ? null : quality);
+    if(b){
+      if(usedFallback || (fmt === 'avif' && type !== 'image/avif')){
+        showToast('Trình duyệt không hỗ trợ '+String(fmt).toUpperCase()+', đã lưu '+ext.toUpperCase(), 3200);
+      }
+      await saveCaptured({ type:'photo', name:photoFileName(ext), blob:b, mime:type, width:cvs.width, height:cvs.height, duration:0 }, 'ảnh');
+      return;
+    }
+    usedFallback = true;
+  }
+  showToast('Không lưu được ảnh');
 }
 
 
@@ -2381,9 +2766,13 @@ function loadPersistedSettings(){
     if(d.micGain != null) state.micGain = d.micGain;
     if(d.noiseReduce != null) state.noiseReduce = !!d.noiseReduce;
     if(d.hdr != null) state.hdr = !!d.hdr;
+    if(d.showGrid != null) state.showGrid = !!d.showGrid;
+    if(d.smartHdr != null) state.smartHdr = !!d.smartHdr;
+    if(d.lang === 'en' || d.lang === 'vi') state.lang = d.lang;
     if(d.saveToDevice != null) state.saveToDevice = !!d.saveToDevice;
     if(d.forceAspect) state.forceAspect = d.forceAspect;
-    applyFont('inter');
+    if(d.font) state.font = d.font;
+    applyFont(state.font || 'inter');
   }catch(e){}
 }
 function savePersistedSettings(){
@@ -2403,9 +2792,12 @@ function savePersistedSettings(){
       micGain: state.micGain,
       noiseReduce: state.noiseReduce,
       hdr: state.hdr,
+      showGrid: !!state.showGrid,
+      smartHdr: !!state.smartHdr,
+      lang: state.lang === 'en' ? 'en' : 'vi',
       saveToDevice: state.saveToDevice,
       forceAspect: state.forceAspect,
-      font: 'inter'
+      font: state.font || 'inter'
     };
     localStorage.setItem(PERSIST_KEY, JSON.stringify(d));
     localStorage.setItem('webcam-persist-on', '1');
@@ -2521,7 +2913,20 @@ async function applyStreamQuality(vtrack, pw, ph, wantFps){
     }
   }catch(e){}
 }
+function stopFpsCounter(){
+  state._fpsRunning = false;
+  state._fpsGeneration = (state._fpsGeneration || 0) + 1;
+  try{
+    if(state._fpsRvfc != null && typeof video.cancelVideoFrameCallback === 'function'){
+      video.cancelVideoFrameCallback(state._fpsRvfc);
+    }
+  }catch(e){}
+  state._fpsRvfc = null;
+}
 async function startCamera(withAudio=false, forceRestart=false){
+  const requestId = (state._cameraRequestId || 0) + 1;
+  state._cameraRequestId = requestId;
+  let acquiredStream = null;
   try{
     if(!forceRestart){
       if(state.stream && !withAudio){
@@ -2544,7 +2949,7 @@ async function startCamera(withAudio=false, forceRestart=false){
     if(state.stream){
       state.stream.getTracks().forEach(t=>{ try{t.stop()}catch(e){} });
       state.stream=null;
-      state._fpsRunning = false;
+      stopFpsCounter();
     }
     try{ video.srcObject = null; }catch(e){}
 
@@ -2566,6 +2971,10 @@ async function startCamera(withAudio=false, forceRestart=false){
       frameRate: { ideal: wantFps },
       advanced
     };
+    try{
+      const sc = navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints ? navigator.mediaDevices.getSupportedConstraints() : {};
+      if(sc.resizeMode) videoConstraint.resizeMode = 'none';
+    }catch(e){}
     if(state.videoDeviceId){
       videoConstraint.deviceId = { exact: state.videoDeviceId };
     } else {
@@ -2597,9 +3006,15 @@ async function startCamera(withAudio=false, forceRestart=false){
     let lastErr = null, picked = null, sawStale = false;
     for(let i = 0; i < attempts.length && !picked; i++){
       try{
-        state.stream = await navigator.mediaDevices.getUserMedia({ video: attempts[i].video, audio: attempts[i].audio });
+        acquiredStream = await navigator.mediaDevices.getUserMedia({ video: attempts[i].video, audio: attempts[i].audio });
+        if(requestId !== state._cameraRequestId){
+          acquiredStream.getTracks().forEach(t=>{ try{t.stop()}catch(e){} });
+          return false;
+        }
+        state.stream = acquiredStream;
         picked = attempts[i];
       }catch(e){
+        if(requestId !== state._cameraRequestId) return false;
         lastErr = e;
         if(e.name === 'OverconstrainedError' || e.name === 'NotFoundError') sawStale = true;
         if(e.name === 'NotAllowedError' || e.name === 'SecurityError'){
@@ -2631,9 +3046,16 @@ async function startCamera(withAudio=false, forceRestart=false){
       video.addEventListener('loadedmetadata', onReady, {once:true});
       video.addEventListener('error', onError, {once:true});
     });
+    if(requestId !== state._cameraRequestId) return false;
     try{ await video.play(); }
-    catch(e){ if(e.name !== 'AbortError') throw e; await video.play(); }   // play() bị ngắt bởi lần nạp luồng khác: thử lại một lần
+    catch(e){
+      if(e.name !== 'AbortError') throw e;
+      if(requestId !== state._cameraRequestId) return false;
+      await video.play(); // Một lần nạp luồng mới có thể ngắt play() cũ.
+    }
+    if(requestId !== state._cameraRequestId) return false;
     await waitForVideoFrame(500);
+    if(requestId !== state._cameraRequestId) return false;
     noCamera.classList.add('hidden');
     requestAnimationFrame(()=>{ adjustAspectRatio(); setTimeout(adjustAspectRatio, 150); });
     startFpsCounter();
@@ -2642,9 +3064,15 @@ async function startCamera(withAudio=false, forceRestart=false){
     if(typeof updateCamInfoPanel === 'function') updateCamInfoPanel();
     return true;
   }catch(e){
+    if(requestId !== state._cameraRequestId){
+      if(acquiredStream && acquiredStream !== state.stream){
+        acquiredStream.getTracks().forEach(t=>{ try{t.stop()}catch(_){} });
+      }
+      return false;
+    }
     console.error('Không thể khởi tạo camera:', e);
     if(state.stream){ state.stream.getTracks().forEach(t=>{ try{t.stop()}catch(_){} }); state.stream=null; }
-    state._fpsRunning = false;
+    stopFpsCounter();
     try{ video.pause(); video.srcObject=null; }catch(_){}
     noCamera.classList.remove('hidden');
     showCameraError(e);
@@ -2653,17 +3081,17 @@ async function startCamera(withAudio=false, forceRestart=false){
 }
 
 function startFpsCounter(){
-  // Tránh đăng ký nhiều vòng đếm → FPS ảo (70...)
   if(state._fpsRunning) return;
   state._fpsRunning = true;
+  const generation = (state._fpsGeneration || 0) + 1;
+  state._fpsGeneration = generation;
   state.frameCount = 0;
   state.lastFpsTime = performance.now();
   state._lastMediaTime = -1;
 
   if(typeof video.requestVideoFrameCallback === 'function'){
     const onFrame = (_now, meta) => {
-      if(!state._fpsRunning) return;
-      // Chỉ đếm khi mediaTime đổi (frame mới từ camera)
+      if(!state._fpsRunning || state._fpsGeneration !== generation) return;
       const mt = meta && typeof meta.mediaTime === 'number' ? meta.mediaTime : null;
       if(mt === null || mt !== state._lastMediaTime){
         if(mt !== null) state._lastMediaTime = mt;
@@ -2675,12 +3103,12 @@ function startFpsCounter(){
         state.frameCount = 0;
         state.lastFpsTime = now;
       }
-      video.requestVideoFrameCallback(onFrame);
+      state._fpsRvfc = video.requestVideoFrameCallback(onFrame);
     };
-    video.requestVideoFrameCallback(onFrame);
-  } else {
+    state._fpsRvfc = video.requestVideoFrameCallback(onFrame);
+  }else{
     const updateFromTrack = () => {
-      if(!state._fpsRunning) return;
+      if(!state._fpsRunning || state._fpsGeneration !== generation) return;
       try{
         const track = state.stream?.getVideoTracks()?.[0];
         const fr = track?.getSettings?.()?.frameRate;
@@ -2736,13 +3164,18 @@ function drawToCanvas(targetCtx,tw,th,quality){
   sx = Math.max(crop.sx, Math.min(crop.sx + crop.sw - viewW, sx));
   sy = Math.max(crop.sy, Math.min(crop.sy + crop.sh - viewH, sy));
   targetCtx.save();
-  targetCtx.imageSmoothingEnabled = true;
-  targetCtx.imageSmoothingQuality = hi ? 'high' : (LOW_END ? 'low' : 'medium');
+  // 1:1 pixel → tắt smoothing (nét hơn); khi scale dùng high (chụp) / medium-low (máy yếu)
+  const near1 = Math.abs(tw / viewW - 1) < 0.03 && Math.abs(th / viewH - 1) < 0.03;
+  if(near1){
+    targetCtx.imageSmoothingEnabled = false;
+  } else {
+    targetCtx.imageSmoothingEnabled = true;
+    targetCtx.imageSmoothingQuality = hi ? 'high' : (LOW_END ? 'low' : 'medium');
+  }
   const cx=tw/2, cy=th/2;
   targetCtx.translate(cx, cy);
   targetCtx.scale(state.flipH ? -1 : 1, state.flipV ? -1 : 1);
   targetCtx.translate(-cx, -cy);
-  // Tránh SVG convolution trên mỗi frame quay vì dễ gây tụt FPS; bộ lọc sharp dùng contrast nhẹ.
   const f = state._filterStr || 'none';
   if(f !== 'none') targetCtx.filter = f;
   targetCtx.drawImage(video, sx, sy, viewW, viewH, 0, 0, tw, th);
@@ -2755,34 +3188,73 @@ function drawToCanvas(targetCtx,tw,th,quality){
   if(Math.abs(temp) > 0.005) paintOverlay(targetCtx, tw, th, {stops:[temp < 0 ? '#55b9ff' : '#ffad62'], angle:0, blend:'soft-light', alpha:Math.abs(temp) * 0.42});
 }
 
-/* BarcodeDetector (bản gốc của trình duyệt) đọc thẳng từ khung hình đầy đủ nên nhanh và nhận được QR nhỏ; jsQR chỉ là phương án dự phòng */
+/* ===== Quét QR tối ưu: xa/gần + ảnh thư viện =====
+   - BarcodeDetector (nếu có): nhanh, đọc full frame
+   - jsQR dự phòng: đa tỉ lệ + crop giữa + lật màu
+   - Ảnh tĩnh: thêm scale lớn/nhỏ, pad trắng, lưới vùng */
 function getQrDetector(){
   if(state._qrDet === undefined){
     try{ state._qrDet = 'BarcodeDetector' in window ? new BarcodeDetector({formats:['qr_code']}) : null; }catch(e){ state._qrDet = null; }
   }
   return state._qrDet;
 }
-/* pad = true (ảnh tải lên): đổ nền trắng và chừa lề trắng quanh ảnh. Canvas không có kênh alpha sẽ biến nền trong suốt của PNG thành đen
-   (mất mã), và QR kín sát mép ảnh thì thiếu vùng viền cần thiết để nhận dạng. */
-function jsQrDecode(source, sw, sh, maxSide, tryInvert, pad){
+function ensureQrCanvas(){
   if(!state._qrCanvas){
     state._qrCanvas = document.createElement('canvas');
     state._qrCtx = state._qrCanvas.getContext('2d', {willReadFrequently:true, alpha:false});
   }
+  return {qc:state._qrCanvas, qx:state._qrCtx};
+}
+/* source: video/canvas/ImageBitmap; sx,sy,sw,sh = vùng nguồn; maxSide giới hạn cạnh dài khi scale */
+function jsQrDecodeRegion(source, sx, sy, sw, sh, maxSide, tryInvert, pad){
+  if(typeof jsQR !== 'function' || sw < 8 || sh < 8) return '';
+  const {qc, qx} = ensureQrCanvas();
   const k = Math.min(1, maxSide / Math.max(sw, sh));
-  const tw = Math.max(1, Math.round(sw * k)), th = Math.max(1, Math.round(sh * k));
-  const m = pad ? Math.round(Math.max(tw, th) * 0.1) : 0;
+  let tw = Math.max(1, Math.round(sw * k)), th = Math.max(1, Math.round(sh * k));
+  // Cạnh chẵn giúp một số pipeline ổn định hơn
+  if(tw & 1) tw++; if(th & 1) th++;
+  const m = pad ? Math.max(12, Math.round(Math.max(tw, th) * 0.08)) : 0;
   const cw = tw + 2 * m, ch = th + 2 * m;
-  const qc = state._qrCanvas, qx = state._qrCtx;
   if(qc.width !== cw || qc.height !== ch){ qc.width = cw; qc.height = ch; }
   if(pad){ qx.fillStyle = '#fff'; qx.fillRect(0, 0, cw, ch); }
-  qx.drawImage(source, m, m, tw, th);
-  const img = qx.getImageData(0, 0, cw, ch);
-  // jsQR có thể ném lỗi với ảnh trơn một màu: coi như không thấy mã để còn thử cách khác
+  else { qx.fillStyle = '#000'; qx.fillRect(0, 0, cw, ch); }
+  try{ qx.drawImage(source, sx, sy, sw, sh, m, m, tw, th); }
+  catch(e){ return ''; }
+  let img;
+  try{ img = qx.getImageData(0, 0, cw, ch); }catch(e){ return ''; }
   const read = inv => { try{ return jsQR(img.data, cw, ch, {inversionAttempts:inv})?.data || ''; }catch(e){ return ''; } };
-  return read('dontInvert') || (tryInvert ? read('onlyInvert') : '');
+  return read('dontInvert') || (tryInvert ? read('attemptBoth') : '');
 }
-/* Hiện menu thông tin mã QR (dùng chung cho quét bằng camera và quét từ ảnh) */
+function jsQrDecode(source, sw, sh, maxSide, tryInvert, pad){
+  return jsQrDecodeRegion(source, 0, 0, sw, sh, maxSide, tryInvert, pad);
+}
+/* Thử full + crop giữa (QR xa = nhỏ giữa khung) + crop lớn hơn (QR gần) */
+function jsQrDecodeMulti(source, sw, sh, tryInvert){
+  if(typeof jsQR !== 'function') return '';
+  const sides = LOW_END ? [720, 480] : [1100, 720, 480];
+  // Full frame các tỉ lệ
+  for(const side of sides){
+    const t = jsQrDecodeRegion(source, 0, 0, sw, sh, side, tryInvert, false);
+    if(t) return t;
+  }
+  // Crop giữa 55% — QR ở xa thường nằm giữa
+  const c1 = 0.55;
+  let cw = Math.round(sw * c1), ch = Math.round(sh * c1);
+  let cx = Math.floor((sw - cw) / 2), cy = Math.floor((sh - ch) / 2);
+  for(const side of sides){
+    const t = jsQrDecodeRegion(source, cx, cy, cw, ch, side, tryInvert, false);
+    if(t) return t;
+  }
+  // Crop giữa 35% — QR rất nhỏ / xa
+  const c2 = 0.35;
+  cw = Math.round(sw * c2); ch = Math.round(sh * c2);
+  cx = Math.floor((sw - cw) / 2); cy = Math.floor((sh - ch) / 2);
+  for(const side of [LOW_END ? 480 : 640, 400]){
+    const t = jsQrDecodeRegion(source, cx, cy, cw, ch, side, tryInvert, false);
+    if(t) return t;
+  }
+  return '';
+}
 function showQrResult(text){
   qrResult.value = text;
   qrPopup.style.display = 'flex';
@@ -2794,28 +3266,38 @@ function showQrResult(text){
 function startQRScan(){
   if(state.qrScanning || !video.videoWidth || state.mode !== 'qr') return;
   state.qrScanning = true;
-  let lastScan = 0, busy = false, candidate = '', candidateHits = 0, misses = 0;
+  let lastScan = 0, busy = false, candidate = '', candidateHits = 0, tick = 0;
   const loop = async () => {
     if(!state.qrScanning || state.mode !== 'qr') return;
     const det = getQrDetector();
-    const scanMs = det ? 90 : (LOW_END ? 300 : 180);
+    // Nhanh hơn trước: BarcodeDetector ~70ms, jsQR ~120–160ms
+    const scanMs = det ? (LOW_END ? 100 : 70) : (LOW_END ? 200 : 120);
     try {
       const now = performance.now();
       if(!busy && video.readyState >= 2 && video.videoWidth > 0 && now - lastScan >= scanMs){
         lastScan = now;
         busy = true;
+        tick++;
         let found = '';
+        const vw = video.videoWidth, vh = video.videoHeight;
         if(det){
-          try{ found = (await det.detect(video)).find(c => c.rawValue)?.rawValue || ''; }
-          catch(e){ if(e.name === 'NotSupportedError' || e.name === 'SecurityError') state._qrDet = null; }
+          try{
+            const codes = await det.detect(video);
+            found = codes.find(c => c.rawValue)?.rawValue || '';
+          }catch(e){
+            if(e.name === 'NotSupportedError' || e.name === 'SecurityError') state._qrDet = null;
+          }
+          // Detector miss: xen kẽ jsQR multi (xa/gần) mỗi 2 vòng
+          if(!found && typeof jsQR === 'function' && (tick % 2 === 0)){
+            found = jsQrDecodeMulti(video, vw, vh, tick % 4 === 0);
+          }
         } else if(typeof jsQR === 'function'){
-          // Thu nhỏ vừa đủ chi tiết; thử mã âm bản ở mỗi vòng thứ 3 để đỡ tốn CPU
-          found = jsQrDecode(video, video.videoWidth, video.videoHeight, LOW_END ? 640 : 960, ++misses % 3 === 0);
+          found = jsQrDecodeMulti(video, vw, vh, tick % 2 === 0);
         }
         if(found){
           if(found === candidate) candidateHits++;
           else { candidate = found; candidateHits = 1; }
-          // Bộ đọc gốc đáng tin nên 1 lần là đủ; jsQR cần xác nhận 2 lần để tránh kết quả chập chờn.
+          // BarcodeDetector tin 1 lần; jsQR cần 2 lần trùng
           if(candidateHits >= (det ? 1 : 2)){
             stopQRScan();
             showQrResult(found);
@@ -2835,24 +3317,69 @@ function startQRScan(){
   };
   loop();
 }
-/* Quét QR từ ảnh tải lên: thử bộ đọc gốc, rồi jsQR ở vài kích thước (QR lớn/nhỏ khác nhau) */
+/* Quét QR từ ảnh (upload / thư viện): đa tỉ lệ + pad + crop giữa + lưới 4 góc */
 async function decodeQrFromImage(file){
-  const bmp = await createImageBitmap(file);
+  let bmp;
+  try{
+    bmp = await createImageBitmap(file);
+  }catch(e){
+    // Fallback qua <img> nếu createImageBitmap lỗi
+    bmp = await new Promise((resolve, reject)=>{
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = ()=>{ URL.revokeObjectURL(url); resolve(img); };
+      img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('IMG_LOAD')); };
+      img.src = url;
+    });
+  }
+  const w = bmp.width || bmp.naturalWidth || 0;
+  const h = bmp.height || bmp.naturalHeight || 0;
+  if(!w || !h){ try{ bmp.close?.(); }catch(e){} return ''; }
   try{
     const det = getQrDetector();
     if(det){
-      try{ const hit = (await det.detect(bmp)).find(c => c.rawValue); if(hit) return hit.rawValue; }catch(e){}
+      try{
+        const hit = (await det.detect(bmp)).find(c => c.rawValue);
+        if(hit) return hit.rawValue;
+      }catch(e){}
     }
     if(typeof jsQR !== 'function' && !det) throw new Error('QR_LIB_MISSING');
-    if(typeof jsQR === 'function'){
-      for(const side of [1600, 900, 500]){
-        const t = jsQrDecode(bmp, bmp.width, bmp.height, side, true, true);
+    if(typeof jsQR !== 'function') return '';
+
+    // 1) Full + pad trắng, nhiều độ phân giải (QR lớn/nhỏ)
+    const sides = [Math.min(2000, Math.max(w, h)), 1400, 900, 560, 360].filter((v,i,a)=>a.indexOf(v)===i);
+    for(const side of sides){
+      const t = jsQrDecodeRegion(bmp, 0, 0, w, h, side, true, true);
+      if(t) return t;
+    }
+    // 2) Crop giữa 50% / 30% (mã nhỏ giữa ảnh)
+    for(const ratio of [0.5, 0.3]){
+      const cw = Math.round(w * ratio), ch = Math.round(h * ratio);
+      const cx = Math.floor((w - cw) / 2), cy = Math.floor((h - ch) / 2);
+      for(const side of [900, 560]){
+        const t = jsQrDecodeRegion(bmp, cx, cy, cw, ch, side, true, true);
         if(t) return t;
       }
     }
+    // 3) Lưới 2×2 chồng lấn 15% — QR góc ảnh
+    const ox = Math.floor(w * 0.08), oy = Math.floor(h * 0.08);
+    const gw = Math.floor(w * 0.58), gh = Math.floor(h * 0.58);
+    const cells = [
+      [0, 0], [w - gw, 0], [0, h - gh], [w - gw, h - gh],
+      [ox, oy]
+    ];
+    for(const [x,y] of cells){
+      const sx = Math.max(0, x), sy = Math.max(0, y);
+      const sw = Math.min(gw, w - sx), sh = Math.min(gh, h - sy);
+      const t = jsQrDecodeRegion(bmp, sx, sy, sw, sh, 720, true, true);
+      if(t) return t;
+    }
     return '';
-  }finally{ bmp.close?.(); }
+  }finally{
+    try{ bmp.close?.(); }catch(e){}
+  }
 }
+
 /* Popup "đang xử lý" nhỏ; trả về hàm đóng (xóa hẳn khỏi trang) */
 function showBusyPopup(text){
   const m = document.createElement('div'); m.className = 'busy-modal';
@@ -2899,70 +3426,148 @@ function stopQRScan(){
 }
 
 async function capturePhoto(){
-  if(!state.stream||state.isCounting||!video.videoWidth) return;
-  if(!state.saveToDevice) warnStorageIfFull();
-  // Hẹn giờ CHỈ khi chụp ảnh — đếm xong mới chụp
-  if(state.mode==='photo' && state.timerSec>0){
-    state.isCounting=true;
-    countdownEl.classList.add('show');
-    for(let i=state.timerSec;i>0;i--){
-      if(state.mode!=='photo'){ // hủy nếu đổi chế độ giữa chừng
-        countdownEl.classList.remove('show');
-        state.isCounting=false;
-        return;
-      }
-      countdownEl.textContent=i;
-      playBeep(950,.08);
-      await new Promise(r=>setTimeout(r,1000));
-    }
-    countdownEl.classList.remove('show');
-    state.isCounting=false;
-  }
-  try{ await video.play(); }catch(e){}
-  const boosted = await boostCaptureResolution();
-  if(boosted) await waitForVideoFrame(800);
-  let vw=video.videoWidth,vh=video.videoHeight;
-  if(!vw||!vh){ showToast('Camera chưa sẵn sàng'); if(boosted) await restorePreviewResolution(); return; }
-  const sz = sizeForAspect(vw, vh);
-  let w=sz.w, h=sz.h;
-  canvas.width=w;canvas.height=h;
+  if(!state.stream || state.isCounting || state._capturing || !video.videoWidth) return;
+  state._capturing = true;
+  let boosted = false;
   let enteredFs = false;
-  if(state.flashOn){
-    try{
-      if(!document.fullscreenElement && !document.webkitFullscreenElement){
-        const el = document.documentElement;
-        if(el.requestFullscreen) await el.requestFullscreen();
-        else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-        enteredFs = true;
-        await new Promise(r=>setTimeout(r,120));
+  let flashVisible = false;
+  try{
+    if(!state.saveToDevice){
+      try{ await warnStorageIfFull(); }catch(e){}
+    }
+    // Hẹn giờ chỉ áp dụng cho chụp ảnh.
+    if(state.mode === 'photo' && state.timerSec > 0){
+      state.isCounting = true;
+      countdownEl.classList.add('show');
+      for(let i=state.timerSec; i>0; i--){
+        if(state.mode !== 'photo') return;
+        countdownEl.textContent = i;
+        playBeep(950, .08);
+        await new Promise(r=>setTimeout(r, 1000));
       }
-    }catch(e){}
-    fullscreenFlash.style.background=state.flashColor;
-    fullscreenFlash.style.opacity='1';
-    await new Promise(r=>setTimeout(r,1500));
-  }
-  drawToCanvas(ctx,w,h);
-  if(state.photoFmt !== 'raw') applySoftwareHDR(canvas);   // RAW: không xử lý thêm
-  if(!state.flashOn){
-    shutterFlash.style.opacity='.85';playShutterSound();
-    setTimeout(()=>shutterFlash.style.opacity='0',60);
-  }else{
-    playShutterSound();
-    await new Promise(r=>setTimeout(r,2000));
-    fullscreenFlash.style.opacity='0';
-  }
-  savePhotoFromCanvas(canvas);
+    }
+    if(state.mode !== 'photo') return;
+    try{ await video.play(); }catch(e){}
+    boosted = await boostCaptureResolution();
+    if(boosted) await waitForVideoFrame(900);
+    await waitForVideoFrame(450);
 
-  // Chỉ trả lại cấu hình khi trước đó đã tăng độ phân giải để chụp; tránh đàm phán lại camera sau mỗi lần chụp (gây khựng/tụt FPS xem trước).
-  if(boosted) restorePreviewResolution();
-  if(enteredFs){
-    try{
-      if(document.exitFullscreen) await document.exitFullscreen();
-      else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
-    }catch(e){}
+    let vw = video.videoWidth, vh = video.videoHeight;
+    if(!vw || !vh){
+      showToast('Camera chưa sẵn sàng');
+      return;
+    }
+    const sz = sizeForAspect(vw, vh);
+    let w = sz.w, h = sz.h;
+    canvas.width = w;
+    canvas.height = h;
+
+    if(state.flashOn){
+      try{
+        if(!document.fullscreenElement && !document.webkitFullscreenElement){
+          const el = document.documentElement;
+          if(el.requestFullscreen){
+            await el.requestFullscreen();
+            enteredFs = !!document.fullscreenElement;
+          }else if(el.webkitRequestFullscreen){
+            el.webkitRequestFullscreen();
+            enteredFs = true;
+          }
+          if(enteredFs) await new Promise(r=>setTimeout(r, 120));
+        }
+      }catch(e){}
+      fullscreenFlash.style.background = state.flashColor;
+      fullscreenFlash.style.opacity = '1';
+      flashVisible = true;
+      await new Promise(r=>setTimeout(r, 1500));
+      await waitForVideoFrame(400);
+    }
+
+    let usedIc = false;
+    if((state.zoom || 1) <= 1.02 && Math.abs(state.panX || 0) < 3 && Math.abs(state.panY || 0) < 3){
+      try{
+        const track = state.stream?.getVideoTracks?.()[0];
+        if(track && typeof ImageCapture !== 'undefined'){
+          const ic = new ImageCapture(track);
+          const blob = await ic.takePhoto();
+          if(blob?.size){
+            const bmp = await createImageBitmap(blob);
+            try{
+              const bw = bmp.width, bh = bmp.height;
+              const crop = getAspectCrop(bw, bh);
+              const out = sizeForAspect(bw, bh);
+              w = out.w; h = out.h;
+              canvas.width = w; canvas.height = h;
+              ctx.save();
+              const near1 = Math.abs(w / crop.sw - 1) < 0.03 && Math.abs(h / crop.sh - 1) < 0.03;
+              if(near1) ctx.imageSmoothingEnabled = false;
+              else { ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; }
+              const cx = w / 2, cy = h / 2;
+              ctx.translate(cx, cy);
+              ctx.scale(state.flipH ? -1 : 1, state.flipV ? -1 : 1);
+              ctx.translate(-cx, -cy);
+              const f = state._filterStr || 'none';
+              if(f !== 'none') ctx.filter = f;
+              ctx.drawImage(bmp, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, w, h);
+              if(f !== 'none') ctx.filter = 'none';
+              ctx.restore();
+              const fo = activeFilterOverlay();
+              if(fo) paintOverlay(ctx, w, h, Object.assign({}, fo, {alpha:overlayAlpha(fo)}));
+              const temp = Math.max(-1, Math.min(1, Number(state.temp) || 0));
+              if(Math.abs(temp) > 0.005){
+                paintOverlay(ctx, w, h, {stops:[temp < 0 ? '#55b9ff' : '#ffad62'], angle:0, blend:'soft-light', alpha:Math.abs(temp) * 0.42});
+              }
+              usedIc = true;
+            }finally{
+              try{ bmp.close?.(); }catch(e){}
+            }
+          }
+        }
+      }catch(e){ usedIc = false; }
+    }
+    if(!usedIc) drawToCanvas(ctx, w, h, 'high');
+
+    // RAW ở đây thực chất là BMP không nén, không phải RAW/DNG cảm biến.
+    if(state.photoFmt !== 'raw'){
+      if(state.smartHdr){
+        const dec = analyzeSmartHdrNeed(canvas);
+        if(dec.need) applySmartHdrToCanvas(canvas, dec.strength);
+      }else if(state.hdr){
+        applySoftwareHDR(canvas);
+      }
+    }
+
+    if(!state.flashOn){
+      shutterFlash.style.opacity = '.85';
+      playShutterSound();
+      setTimeout(()=>shutterFlash.style.opacity = '0', 60);
+    }else{
+      playShutterSound();
+      await new Promise(r=>setTimeout(r, 2000));
+      fullscreenFlash.style.opacity = '0';
+      flashVisible = false;
+    }
+    // Chờ encode/lưu xong để không cho lần chụp kế tiếp ghi đè canvas dùng chung.
+    await savePhotoFromCanvas(canvas);
+  }catch(e){
+    console.error('Lỗi chụp ảnh:', e);
+    showToast('Không thể chụp hoặc lưu ảnh. Hãy thử lại.');
+  }finally{
+    state.isCounting = false;
+    countdownEl.classList.remove('show');
+    if(flashVisible) fullscreenFlash.style.opacity = '0';
+    if(boosted){
+      try{ await restorePreviewResolution(); }catch(e){}
+    }
+    if(enteredFs){
+      try{
+        if(document.exitFullscreen) await document.exitFullscreen();
+        else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+      }catch(e){}
+    }
+    state._capturing = false;
   }
 }
-
 
 function cancelRecDraw(){
   try{ if(state._recRvfc != null && typeof video.cancelVideoFrameCallback === 'function') video.cancelVideoFrameCallback(state._recRvfc); }catch(e){}
@@ -3004,27 +3609,65 @@ function resetRecordingAfterError(){
   document.getElementById('app').classList.remove('recording-active');
 }
 
-setTimeout(()=>{ try{ warnStorageIfFull(); }catch(e){} }, 2500);
-/* Cảnh báo sắp hết dung lượng lưu trữ (> 95%) */
+setTimeout(async ()=>{
+  try{ await ensureStorageBudget('boot'); }catch(e){}
+  try{ await warnStorageIfFull(); }catch(e){}
+}, 1800);
+/* Dung lượng origin (IndexedDB): estimate() chỉ mang tính tham khảo — nhiều trình duyệt (Brave Android)
+   vẫn cho ghi vượt “quota” báo cáo. App tự chặn ghi thư viện khi gần/đầy và chuyển sang tải về máy. */
 let _storWarnOpen = false;
-async function getStorageRatio(){
+async function getLibraryBytes(){
+  try{
+    const items = await libGetAll();
+    return items.reduce((t,i)=>t+(Number(i.size)||i.blob?.size||0),0);
+  }catch(_){ return 0; }
+}
+async function getStorageSnapshot(){
+  let usage=0, quota=0;
   try{
     const e = await navigator.storage?.estimate?.();
-    if(e && e.quota > 0) return (e.usage || 0) / e.quota;
+    usage = Number(e?.usage)||0;
+    quota = Number(e?.quota)||0;
   }catch(_){}
-  return 0;
+  const libUsed = await getLibraryBytes();
+  // Dùng max(usage, libUsed): usage đôi khi trễ / không gồm hết blob
+  const effectiveUsed = Math.max(usage, libUsed);
+  const ratio = quota > 0 ? effectiveUsed / quota : 0;
+  return {
+    usage, quota, libUsed, effectiveUsed, ratio,
+    soft: quota > 0 && ratio >= 0.90,   // cảnh báo
+    hard: quota > 0 && ratio >= 0.98    // chặn ghi thư viện
+  };
 }
-async function warnStorageIfFull(){
-  if(_storWarnOpen) return true;
-  if(!((await getStorageRatio()) > 0.95)) return false;
-  if(_storWarnOpen) return true;
+async function getStorageRatio(){
+  const s = await getStorageSnapshot();
+  return s.ratio;
+}
+/** true = đang đầy/sắp đầy (đã hiện hộp thoại). Không tự xóa tệp. */
+async function warnStorageIfFull(opt){
+  opt = opt || {};
+  if(window.__skipStorageWarn) return false;
+  const snap = await getStorageSnapshot();
+  if(!snap.soft && !snap.hard) return false;
+  try{ await ensureStorageBudget('near-full'); }catch(e){}
+  const snap2 = await getStorageSnapshot();
+  if(!snap2.soft && !snap2.hard) return false;
+  if(_storWarnOpen) return snap2.hard;
   _storWarnOpen = true;
   let go = false;
   try{
-    go = await appConfirm('Dung lượng lưu trữ tệp của trang này sắp hết, vui lòng dọn dẹp tệp',{title:'Sắp hết dung lượng',okText:'Dọn dẹp',cancelText:'Đóng'});
+    const usedTxt = fmtBytes(snap2.effectiveUsed);
+    const quotaTxt = snap2.quota ? fmtBytes(snap2.quota) : '—';
+    const msg = snap2.hard
+      ? `Thư viện đã đầy hoặc vượt hạn mức trình duyệt (${usedTxt} / ${quotaTxt}). Tệp mới sẽ được tải về máy thay vì lưu trên web. Hãy dọn dẹp để tiếp tục lưu trong Thư viện.`
+      : `Dung lượng sắp hết (${usedTxt} / ${quotaTxt}). Nên dọn dẹp tệp lớn để tránh mất chỗ lưu.`;
+    go = await appConfirm(msg,{
+      title: snap2.hard ? 'Thư viện đã đầy' : 'Sắp hết dung lượng',
+      okText:'Dọn dẹp', cancelText:'Đóng', icon:'!'
+    });
   }finally{ _storWarnOpen = false; }
   if(go) cleanupLibrary();
-  return true;
+  return snap2.hard;
 }
 async function cleanupLibrary(){
   window.__skipStorageWarn = true;
@@ -3132,30 +3775,36 @@ function createMicProcessor(track, gainVal, noiseReduce){
 }
 
 /* Quay video dài: dữ liệu quay nằm trong bộ nhớ cho tới khi lưu, nên phải dừng sớm trước khi trình duyệt hết bộ nhớ/dung lượng.
-   Dừng khi: (1) đoạn quay đạt giới hạn kích thước theo RAM thiết bị, (2) dung lượng còn lại của trang không đủ để lưu đoạn này (bỏ qua khi bật "Lưu tệp về máy"),
+   Dừng khi: (1) đoạn quay đạt giới hạn kích thước theo RAM thiết bị, (2) dung lượng còn lại của trang không đủ để lưu đoạn này (bỏ qua khi bật "Lưu vào bộ nhớ ngoài"),
    (3) bộ quay báo lỗi. Đoạn đã quay luôn được lưu trọn vẹn rồi mới hiện cảnh báo. */
-const REC_CAP_BYTES = Math.min(1024 ** 3, Math.max(256 * 1024 ** 2, (navigator.deviceMemory || 4) * 256 * 1024 ** 2));
+// Giới hạn 1 đoạn trong RAM. Gần đầy → lưu đoạn rồi (nếu còn chỗ) tự quay tiếp.
+const REC_CAP_BYTES = IS_MOBILE
+  ? Math.min(100 * 1024 ** 2, Math.max(40 * 1024 ** 2, ((navigator.deviceMemory || 2) * 28) * 1024 ** 2))
+  : Math.min(512 * 1024 ** 2, Math.max(128 * 1024 ** 2, (navigator.deviceMemory || 4) * 96 * 1024 ** 2));
 let recQuotaBusy = false, recQuotaAt = 0;
 function stopRecordingForLimit(reason){
   if(!state.isRecording || state._recStopReason) return;
   state._recStopReason = reason;
+  // size/storage: cố gắng nối đoạn nếu còn dung lượng
+  if(reason === 'size' || reason === 'storage') state._recContinue = true;
+  else state._recContinue = false;
   stopRecording();
 }
 function checkRecordingLimits(){
   if(!state.isRecording || state._recStopReason) return;
-  if(state.recBytes >= REC_CAP_BYTES){ stopRecordingForLimit('size'); return; }
+  // Dừng sớm ở ~85% cap để còn RAM lưu blob + mở đoạn mới
+  if(state.recBytes >= REC_CAP_BYTES * 0.85){ stopRecordingForLimit('size'); return; }
   const now = performance.now();
-  if(state.saveToDevice || recQuotaBusy || now - recQuotaAt < 5000 || !navigator.storage?.estimate) return;
+  if(state.saveToDevice || recQuotaBusy || now - recQuotaAt < 4000 || !navigator.storage?.estimate) return;
   recQuotaBusy = true; recQuotaAt = now;
   navigator.storage.estimate().then(est=>{
     if(!est?.quota || !state.isRecording) return;
     const free = est.quota - (est.usage || 0);
-    if(state.recBytes * 1.1 + 64 * 1024 ** 2 > free) stopRecordingForLimit('storage');
+    if(state.recBytes * 1.15 + 48 * 1024 ** 2 > free) stopRecordingForLimit('storage');
   }).catch(()=>{}).finally(()=>{ recQuotaBusy = false; });
 }
-/* Sau khi đoạn quay bị dừng vì giới hạn: video đã được lưu trọn vẹn (vào thư viện, hoặc về máy nếu bật "Lưu tệp về máy") */
 function notifyRecordingStopped(){
-  appConfirm('Cảnh báo: Video đã được dừng quay và được lưu để tránh xảy ra lỗi.', { title:'Đã dừng quay', okText:'Đóng', hideCancel:true });
+  appConfirm('Video đã được dừng và lưu để tránh tràn bộ nhớ / đầy dung lượng.', { title:'Đã dừng quay', okText:'Đóng', hideCancel:true });
 }
 
 /* Sửa WebM do MediaRecorder tạo ra: ghi Duration vào Info để hiện thời lượng và tua được. */
@@ -3235,10 +3884,20 @@ async function startRecording(){
     try{ countdownEl.classList.remove('show'); }catch(e){}
   }
   const vw0=video.videoWidth,vh0=video.videoHeight;
-  // Quay tối đa Full HD: 4K trong canvas làm nghẽn bộ mã hóa và tạo file rất lớn.
-  const sz0=sizeForAspect(Math.min(vw0,LOW_END?1280:1920),Math.min(vh0,LOW_END?720:1080));
+  // Khớp độ phân giải xem trước (tới 4K trên máy tính). Mobile/máy yếu: tối đa 720p để ổn định.
+  const [prefW, prefH] = (state.previewRes || '1280x720').split('x').map(n=>parseInt(n,10)||0);
+  let maxW, maxH;
+  if(IS_MOBILE || LOW_END){ maxW = 1280; maxH = 720; }
+  else {
+    maxW = Math.min(vw0, prefW > 0 ? prefW : 1920, 3840);
+    maxH = Math.min(vh0, prefH > 0 ? prefH : 1080, 2160);
+  }
+  const sz0=sizeForAspect(maxW, maxH);
   const w=sz0.w & ~1,h=sz0.h & ~1; // kích thước chẵn, tương thích H.264
   recCanvas.width=w;recCanvas.height=h;
+  // UI + âm thanh trước, nặng sau → nút không bị lag cảm giác
+  try{ playRecStartSound(); }catch(e){}
+  shutter.classList.add('recording');
   // Bật cờ TRƯỚC vòng vẽ — nếu để sau, frame đầu thoát sớm và không bao giờ vẽ lại
   state.isRecording=true;
   // Giữ FPS quay theo mức người dùng chọn, giới hạn 60 để tránh tải bất thường.
@@ -3278,12 +3937,12 @@ async function startRecording(){
     lastDraw = now;
     frameReady = false;
     try{
-      drawToCanvas(recCtx,w,h,'fast');
+      drawToCanvas(recCtx,w,h, LOW_END ? 'fast' : 'high');
       if(canvasVideoTrack && typeof canvasVideoTrack.requestFrame === 'function') canvasVideoTrack.requestFrame();
     }catch(e){}
   };
   // Vẽ ngay frame đầu, sau đó dùng interval thay vì callback phụ thuộc render.
-  try{ drawToCanvas(recCtx,w,h,'fast'); }catch(e){}
+  try{ drawToCanvas(recCtx,w,h, LOW_END ? 'fast' : 'high'); }catch(e){}
   try{ if(canvasVideoTrack && typeof canvasVideoTrack.requestFrame === 'function') canvasVideoTrack.requestFrame(); }catch(e){}
   state.recDrawTimer = setInterval(drawRecordingFrame, Math.max(4, Math.floor(minGap / 3)));
   const audioTracks=state.stream.getAudioTracks().filter(t=>t.readyState==='live');
@@ -3332,6 +3991,17 @@ async function startRecording(){
     ];
   }
   let mime = '';
+  if(!state.saveToDevice){
+    try{
+      const snap = await getStorageSnapshot();
+      if(snap.hard){
+        const go = await appConfirm('Thư viện đã đầy. Video sẽ được tải về máy khi dừng quay (không lưu trên web). Tiếp tục?',{title:'Thư viện đầy',okText:'Tiếp tục quay',cancelText:'Hủy',icon:'!'});
+        if(!go){ resetRecordingAfterError(); showToast('Đã hủy quay video'); return; }
+      } else if(snap.soft){
+        try{ warnStorageIfFull(); }catch(e){}
+      }
+    }catch(e){}
+  }
   if(typeof MediaRecorder === 'undefined'){ resetRecordingAfterError(); showToast('Trình duyệt không hỗ trợ quay video'); return; }
   for(const t of mimeCandidates){
     try{ if(typeof MediaRecorder.isTypeSupported !== 'function' || MediaRecorder.isTypeSupported(t)){ mime = t; break; } }catch(e){}
@@ -3344,8 +4014,11 @@ async function startRecording(){
   if(mime.includes('vp9')) bpp = 0.12;
   else if(mime.includes('avc1') || mime.includes('mp4')) bpp = 0.16;
   let vBit = Math.round(px * fps * bpp);
-  const minBit = px >= 1920*1000 ? 5000000 : (px >= 1280*700 ? 2500000 : 1200000);
-  const maxBit = px >= 1920*1000 ? 16000000 : (px >= 1280*700 ? 10000000 : 5000000);
+  let minBit = px >= 3000*1600 ? 8000000 : (px >= 1920*1000 ? 5000000 : (px >= 1280*700 ? 2500000 : 1200000));
+  let maxBit = px >= 3000*1600 ? 24000000 : (px >= 1920*1000 ? 16000000 : (px >= 1280*700 ? 10000000 : 5000000));
+  if(IS_MOBILE){ minBit = Math.min(minBit, 1500000); maxBit = Math.min(maxBit, 4000000); vBit = Math.round(vBit * 0.55); }
+  else if(LOW_END){ minBit = Math.min(minBit, 1200000); maxBit = Math.min(maxBit, 5000000); vBit = Math.round(vBit * 0.65); }
+  else if(px >= 3000*1600){ vBit = Math.round(vBit * 0.85); } // 4K: bitrate vừa phải, giảm OOM
   vBit = Math.max(minBit, Math.min(maxBit, vBit));
   const aBit = 128000; // đủ trong suốt cho giọng nói/âm thanh webcam, nhẹ hơn 192k
   try{
@@ -3400,18 +4073,39 @@ async function startRecording(){
       showToast('Video trống — thử quay lại');
       return;
     }
-    const vname = `Video_${Date.now()}.${ext}`;
+    const vname = videoFileName(ext);
     const durMs = state._recStartTs ? Math.max(0, performance.now() - state._recStartTs) : ((typeof recSeconds === 'number' ? recSeconds : 0) * 1000);
     state._recStartTs = 0;
     const dur = durMs / 1000;
     const vw1 = recCanvas.width, vh1 = recCanvas.height;
-    showToast('Đang lưu tệp...', 120000);
+    const wantContinue = !!state._recContinue && (stopReason === 'size' || stopReason === 'storage');
+    state._recContinue = false;
+    if(!wantContinue){ try{ playRecStopSound(); }catch(e){} }
+    showToast(wantContinue ? 'Đang lưu đoạn, chuẩn bị quay tiếp...' : 'Đang lưu tệp...', 120000);
     (async()=>{
       let blob = rawBlob, fixed = false;
       // WebM từ MediaRecorder thiếu thời lượng → không tua được. Ghi thêm Duration trước khi lưu.
       if(ext === 'webm'){ const nb = await fixWebmSeekable(rawBlob, durMs); if(nb && nb !== rawBlob){ blob = nb; fixed = true; } }
       await saveCaptured({ type:'video', name:vname, blob, mime:mime||'video/webm', width:vw1, height:vh1, duration:dur, seekFixed:fixed }, 'video');
-      if(stopReason) notifyRecordingStopped();
+      if(wantContinue){
+        // Chỉ nối đoạn nếu còn dung lượng ước tính
+        let canGo = true;
+        try{
+          if(navigator.storage?.estimate){
+            const est = await navigator.storage.estimate();
+            const free = (est.quota||0) - (est.usage||0);
+            if(free < 80 * 1024 * 1024) canGo = false;
+          }
+        }catch(e){}
+        if(canGo && state.stream && state.mode === 'video'){
+          showToast('Đã lưu đoạn · tiếp tục quay', 2200);
+          setTimeout(()=>{ try{ startRecording(); }catch(e){ console.warn(e); } }, 350);
+        } else {
+          notifyRecordingStopped();
+        }
+      } else if(stopReason){
+        notifyRecordingStopped();
+      }
     })();
   };
   try{
@@ -3423,7 +4117,7 @@ async function startRecording(){
     showToast('Không thể bắt đầu quay video');
     return;
   }
-  shutter.classList.add('recording');
+  if(!shutter.classList.contains('recording')) shutter.classList.add('recording');
   recTimerEl.classList.add('recording');recTimerEl.style.display='block';startRecTimer();
   document.getElementById('app').classList.add('recording-active');
   closeAllMenus();
@@ -3443,6 +4137,7 @@ function stopRecording(){
       state.mediaRecorder.stop();
     }
   }catch(e){ console.warn('Không thể dừng quay:', e); resetRecordingAfterError(); }
+  // Class recording bỏ trong onstop sau khi lưu; bỏ sớm để animation mượt khi user bấm dừng
   shutter.classList.remove('recording');
   recTimerEl.classList.remove('recording');recTimerEl.style.display='none';stopRecTimer();
   document.getElementById('app').classList.remove('recording-active');
@@ -3696,8 +4391,13 @@ document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',()=
 shutter.addEventListener('click',()=>{
   if(state.mode==='video'){
     // Hẹn giờ không áp dụng khi quay video
-    if(state.isRecording) stopRecording();
-    else startRecording();
+    if(state.isRecording){
+      state._recContinue = false; // user chủ động dừng → không nối đoạn
+      stopRecording();
+    } else {
+      // Animation class được gắn sớm trong startRecording
+      startRecording();
+    }
   } else if(state.mode==='photo'){
     capturePhoto();
   }
@@ -3895,7 +4595,7 @@ if(filterBtn && filterPanel){
     if(!it) return;
     filterPanel.querySelector('.filter-item.selected')?.classList.remove('selected');
     it.classList.add('selected');
-    state.filter = it.dataset.filter || 'none';
+    state.filter = normalizeFilterKey(it.dataset.filter || 'none');
     syncFilterAmountUI();
     applyFilters();
   });
@@ -3939,9 +4639,16 @@ const setPreviewRes = document.getElementById('set-preview-res');
 const setPreviewFps = document.getElementById('set-preview-fps');
 
 function applyFont(id){
-  document.documentElement.setAttribute('data-font', 'inter');
-  document.documentElement.style.setProperty('--app-font', 'Inter, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif');
-  try{ localStorage.setItem('webcam-font', 'inter'); }catch(e){}
+  const key = (id === 'system') ? 'system' : 'inter';
+  state.font = key;
+  document.documentElement.setAttribute('data-font', key);
+  const stack = key === 'system'
+    ? 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+    : 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+  document.documentElement.style.setProperty('--app-font', stack);
+  try{ localStorage.setItem('webcam-font', key); }catch(e){}
+  const sel = document.getElementById('set-font');
+  if(sel && sel.value !== key) sel.value = key;
 }
 
 /* Settings mic meter */
@@ -4022,6 +4729,7 @@ function deactivateSettingsPreview(){
 }
 function pauseCamForSettings(){
   if(settingsCamPaused) return;
+  state._cameraRequestId = (state._cameraRequestId || 0) + 1;
   settingsCamPaused = true;
   try{
     const frame=document.getElementById('settings-camera-frame');
@@ -4032,7 +4740,7 @@ function pauseCamForSettings(){
   }catch(e){}
   try{ stopQRScan(); }catch(e){}
   try{ stopMicMeter(); }catch(e){}
-  state._fpsRunning=false;
+  stopFpsCounter();
   try{ video.pause(); }catch(e){}
   try{ state.stream?.getTracks()?.forEach(t=>t.stop()); }catch(e){}
   state.stream=null;
@@ -4050,8 +4758,12 @@ function syncSettingsUI(){
   put('set-video-fmt','value',state.videoFmt);
   put('set-noise-reduce','checked',!!state.noiseReduce);
   put('set-persist','checked',!!state.persistSettings);
+  put('set-font','value', state.font === 'system' ? 'system' : 'inter');
   put('set-save-device','checked',!!state.saveToDevice);
   put('set-flip-h','checked',!!state.flipH);
+  put('set-grid','checked',!!state.showGrid);
+  put('set-smart-hdr','checked',!!state.smartHdr);
+  put('set-lang','value', state.lang === 'en' ? 'en' : 'vi');
   put('set-flip-v','checked',!!state.flipV);
   put('set-advanced-info','checked',!!state.advancedInfo);
   put('set-preview-res','value',state.previewRes || '1280x720');
@@ -4098,7 +4810,7 @@ document.querySelectorAll('.settings-nav-item[data-panel]').forEach(btn=>{
     const panel = document.getElementById('panel-'+id);
     if(panel) panel.classList.add('active');
     const title = document.getElementById('settings-title');
-    if(title) title.textContent = ({general:'Chung',micro:'Mic',devices:'Thiết bị',storage:'Dung lượng',camera:'Camera',advanced:'Tính năng nâng cao',about:'Giới thiệu'})[id] || 'Camera';
+    if(title) title.textContent = ({general:t('nav.general'),micro:t('nav.micro'),devices:t('nav.devices'),storage:t('nav.storage'),camera:t('nav.camera'),advanced:t('nav.advanced'),about:t('nav.about')})[id] || t('nav.camera');
     if(id==='micro') startSettingsMicMeter();
     else stopSettingsMicMeter();
     if(id==='storage') refreshStorageInfo();
@@ -4141,15 +4853,17 @@ function syncSmartResolutionUI(){
   [setPreviewRes,setPreviewFps].forEach(el=>{ if(el) el.disabled = !!state.smartResolution; });
   const resRow=document.getElementById('smart-manual-res-row');
   const fpsRow=document.getElementById('smart-manual-fps-row');
-  const note=document.getElementById('smart-resolution-note');
+  const banner=document.getElementById('smart-resolution-banner');
+  const warn=document.getElementById('cam-info-warn');
   if(resRow) resRow.style.display=state.smartResolution?'none':'';
   if(fpsRow) fpsRow.style.display=state.smartResolution?'none':'';
-  if(note) note.style.display=state.smartResolution?'flex':'none';
+  if(banner) banner.style.display=state.smartResolution?'block':'none';
   if(state.smartResolution){
     const res = state.mode==='video' ? '640x480' : '3840x2160';
     state.previewRes=res; state.captureRes=res; state.previewFps=0;
     if(setPreviewRes) setPreviewRes.value=res;
     if(setPreviewFps) setPreviewFps.value='0';
+    if(warn) warn.style.display='none';
   }
 }
 async function applyPreviewSettings(){
@@ -4183,18 +4897,36 @@ async function applyPreviewSettings(){
 if(setPreviewRes) setPreviewRes.addEventListener('change', ()=> applyPreviewSettings().catch(()=>notifyApplied(false)));
 if(setPreviewFps) setPreviewFps.addEventListener('change', ()=> applyPreviewSettings().catch(()=>notifyApplied(false)));
 const smartResolutionToggle = document.getElementById('set-smart-resolution');
-if(smartResolutionToggle) smartResolutionToggle.addEventListener('change', async ()=>{
-  state.smartResolution = smartResolutionToggle.checked;
+async function setSmartResolution(on){
+  state.smartResolution = !!on;
   syncSmartResolutionUI();
   if(state.smartResolution){ state.previewRes = state.mode==='video' ? '640x480' : '3840x2160'; state.previewFps=0; }
   savePersistedSettings();
-  await startCamera(state.mode==='video', true);
+  try{ await startCamera(state.mode==='video', true); }catch(e){}
   updateCamInfoPanel();
-});
+}
+if(smartResolutionToggle) smartResolutionToggle.addEventListener('change', ()=> setSmartResolution(smartResolutionToggle.checked));
+document.getElementById('smart-resolution-off')?.addEventListener('click', ()=> setSmartResolution(false));
 const advancedInfoToggle = document.getElementById('set-advanced-info');
 if(advancedInfoToggle) advancedInfoToggle.addEventListener('change', ()=>{
   state.advancedInfo = advancedInfoToggle.checked;
   applyAdvancedInfoVisibility(); savePersistedSettings();
+});
+document.getElementById('set-grid')?.addEventListener('change', e=>{
+  state.showGrid = !!e.target.checked;
+  applyGridOverlay();
+  savePersistedSettings();
+});
+document.getElementById('set-smart-hdr')?.addEventListener('change', e=>{
+  state.smartHdr = !!e.target.checked;
+  savePersistedSettings();
+  showToast(t('toast.applied'), 1600);
+});
+document.getElementById('set-lang')?.addEventListener('change', e=>{
+  state.lang = e.target.value === 'en' ? 'en' : 'vi';
+  applyI18n();
+  savePersistedSettings();
+  showToast(t('toast.lang'), 1600);
 });
 
 document.getElementById('set-save-device')?.addEventListener('change', e=>{
@@ -4240,7 +4972,12 @@ if(setPersistEl) setPersistEl.addEventListener('change', ()=>{
   }catch(e){}
   
 });
-/* Làm mới luồng camera & micro: tải lại trang để mở lại từ đầu */
+document.getElementById('set-font')?.addEventListener('change', e=>{
+  applyFont(e.target.value);
+  savePersistedSettings();
+  try{ showToast('Đã áp dụng'); }catch(err){}
+});
+/* Tải lại trang */
 document.getElementById('btn-restart-cam')?.addEventListener('click', ()=>location.reload());
 const btnFactory = document.getElementById('btn-factory-reset');
 if(btnFactory) btnFactory.addEventListener('click', async ()=>{
@@ -4353,9 +5090,11 @@ async function restorePreviewResolution(){
     const tr=tip.getBoundingClientRect();
     const leftToolbar=el.closest('.left-controls');
     const rightToolbar=el.closest('.right-controls');
+    const aboutBtn=el.closest('.about-actions') || el.classList.contains('about-sq');
     let x,y=r.top+r.height/2-tr.height/2;
     if(leftToolbar){x=r.right+9;if(x+tr.width>innerWidth-4)x=r.left-tr.width-9;}
     else if(rightToolbar){x=r.left-tr.width-9;if(x<4)x=r.right+9;}
+    else if(aboutBtn){x=r.left+r.width/2-tr.width/2;y=r.bottom+8;if(y+tr.height>innerHeight-4)y=r.top-tr.height-8;}
     else {x=r.left+r.width/2-tr.width/2;y=r.top-tr.height-8;if(y<4)y=r.bottom+8;}
     x=Math.max(4,Math.min(innerWidth-tr.width-4,x));
     y=Math.max(4,Math.min(innerHeight-tr.height-4,y));
@@ -4448,13 +5187,24 @@ async function refreshStorageInfo(){
   let items=[]; try{ items = await libGetAll(); }catch(e){}
   const photos = items.filter(i=>i.type==='photo').length;
   const videos = items.filter(i=>i.type==='video').length;
-  const used = items.reduce((t,i)=>t+(i.size||i.blob?.size||0),0);
-  let quota=0; try{ const est = await navigator.storage?.estimate?.(); quota = est?.quota||0; }catch(e){}
-  const ratio = quota>0 ? Math.min(1, used/quota) : 0;
-  const pc = ratio*100;
-  pctEl.textContent = 'Đã dùng ' + (used<=0 ? '0' : pc>=10 ? String(Math.round(pc)) : pc>=1 ? pc.toFixed(1) : pc.toFixed(2)) + '%';
-  fill.style.width = used>0 ? Math.max(pc,0.8)+'%' : '0%';
-  detail.textContent = photos+' ảnh, '+videos+' video | Đã dùng '+fmtBytes(used)+(quota? ' trên '+fmtBytes(quota):'');
+  const snap = await getStorageSnapshot();
+  const used = snap.libUsed;
+  const quota = snap.quota;
+  const rawPct = quota>0 ? (snap.effectiveUsed/quota)*100 : 0;
+  const barPct = Math.min(100, rawPct);
+  if(rawPct > 100.5){
+    pctEl.textContent = 'Vượt mức ' + fmtBytes(snap.effectiveUsed) + ' / ' + fmtBytes(quota) + ' (' + Math.round(rawPct) + '%)';
+    pctEl.style.color = '#ff6b63';
+  } else if(rawPct >= 90){
+    pctEl.textContent = 'Đã dùng ' + (rawPct>=10?Math.round(rawPct):rawPct.toFixed(1)) + '%';
+    pctEl.style.color = '#ffaa00';
+  } else {
+    pctEl.textContent = 'Đã dùng ' + (used<=0 ? '0' : rawPct>=10 ? String(Math.round(rawPct)) : rawPct>=1 ? rawPct.toFixed(1) : rawPct.toFixed(2)) + '%';
+    pctEl.style.color = '';
+  }
+  fill.style.width = used>0 ? Math.max(barPct,0.8)+'%' : '0%';
+  fill.style.background = rawPct>=98 ? '#ff6b63' : '#ffaa00';
+  detail.textContent = photos+' ảnh, '+videos+' video | Thư viện '+fmtBytes(used)+(quota? ' · Hạn mức trình duyệt '+fmtBytes(quota):'')+(rawPct>100?' · Đang vượt mức — hãy dọn dẹp':'');
   renderStorageBigFiles(items);
 }
 let _storThumbUrls = [];
@@ -4562,7 +5312,7 @@ if(setVideoDevice) setVideoDevice.addEventListener('change', async ()=>{
   const hadAudio = state.stream?.getAudioTracks().some(t=>t.readyState==='live');
   if(state.stream){
     state.stream.getTracks().forEach(t=>{ try{t.stop()}catch(e){} });
-    state.stream=null; state._fpsRunning=false;
+    state.stream=null; stopFpsCounter();
   }
   await startCamera(!!hadAudio && state.mode==='video');
   savePersistedSettings();
@@ -4573,7 +5323,7 @@ if(setAudioDevice) setAudioDevice.addEventListener('change', async ()=>{
   if(state.mode==='video'){
     if(state.stream){
       state.stream.getTracks().forEach(t=>{ try{t.stop()}catch(e){} });
-      state.stream=null; state._fpsRunning=false;
+      state.stream=null; stopFpsCounter();
     }
     await startCamera(true);
   }
@@ -4582,6 +5332,7 @@ if(setAudioDevice) setAudioDevice.addEventListener('change', async ()=>{
 });
 
 loadPersistedSettings();
+try{ applyI18n(); }catch(e){}
 syncSettingsUI();
 applyFilters();
 updateModePill();
@@ -4593,12 +5344,10 @@ async function runCameraSetupSequence(){
   const setStatus=(t,pct)=>{ try{ window.AppLoading && window.AppLoading.set(pct, t); }catch(e){} };
   setStatus('Đang mở camera...', 25);
   try{
-    // Mở camera một lần, xin quyền camera + micro cùng lúc. startCamera hiện hình ngay khi có khung đầu tiên,
+    // Chỉ xin quyền camera khi khởi động. Micro sẽ được yêu cầu khi người dùng vào chế độ quay video. startCamera hiện hình ngay khi có khung đầu tiên,
     // việc áp chất lượng chạy song song. FPS thực tế do bộ đếm FPS trực tiếp đo sau khi giao diện chính đã hiện.
-    if(!await startCamera(true, true)) throw new Error('Không mở được camera');
+    if(!await startCamera(false, true)) throw new Error('Không mở được camera');
     setStatus('Đang hiển thị...', 85);
-    // Micro chỉ cần để xin quyền sớm; micro thật sẽ mở lại khi vào chế độ quay video.
-    state.stream.getAudioTracks().forEach(t=>{ try{ t.stop(); }catch(e){} state.stream.removeTrack(t); });
     applyVideoTransform();
     if(aspectBtn) aspectBtn.textContent = state.forceAspect || '16:9';
     adjustAspectRatio();
@@ -4766,22 +5515,46 @@ async function updateAlbumThumb(){
   }catch(e){}
 }
 
-/* Xin chế độ lưu trữ bền vững một lần để trình duyệt không tự xóa thư viện khi thiếu bộ nhớ */
+/* Xin lưu trữ bền + cập nhật hạn mức khi vào trang / gần đầy */
 let _persistAsked = false;
-async function requestPersistentStorage(){
-  if(_persistAsked || !navigator.storage?.persist) return;
-  _persistAsked = true;
-  try{ if(!(await navigator.storage.persisted())) await navigator.storage.persist(); }catch(e){}
+async function requestPersistentStorage(forcePrompt){
+  if(!navigator.storage?.persist) return false;
+  try{
+    const already = await navigator.storage.persisted().catch(()=>false);
+    if(already && !forcePrompt) return true;
+    if(_persistAsked && !forcePrompt) return !!already;
+    _persistAsked = true;
+    const ok = await navigator.storage.persist();
+    try{ await refreshStorageInfo(); }catch(e){}
+    return !!ok;
+  }catch(e){ return false; }
+}
+async function ensureStorageBudget(reason){
+  try{
+    const snap = await getStorageSnapshot();
+    const needAsk = reason === 'boot' || snap.soft || snap.hard;
+    if(!needAsk) return snap;
+    await requestPersistentStorage(true);
+    await new Promise(r=>setTimeout(r, 150));
+    return await getStorageSnapshot();
+  }catch(e){ return null; }
 }
 async function libAddItem(item, thumb){
   const db = await libOpenDb();
   return new Promise((resolve, reject)=>{
     const tx = db.transaction([LIB_STORE, LIB_THUMBS], 'readwrite');
     const req = tx.objectStore(LIB_STORE).add(item);
-    req.onsuccess = ()=>{ if(thumb) tx.objectStore(LIB_THUMBS).put(thumb, req.result); };
+    req.onsuccess = ()=>{ if(thumb) try{ tx.objectStore(LIB_THUMBS).put(thumb, req.result); }catch(e){} };
     tx.oncomplete = ()=> { if(thumb) setLibThumb(req.result, thumb); updateAlbumThumb(); requestPersistentStorage(); resolve(req.result); };
-    tx.onerror = ()=> reject(tx.error || new Error('Lỗi ghi thư viện'));
-    tx.onabort = ()=> reject(tx.error || new Error('Giao dịch lưu thư viện bị hủy'));
+    tx.onerror = ()=>{
+      const err = tx.error || req.error || new Error('Lỗi ghi thư viện');
+      if(err && err.name === 'QuotaExceededError') reject(err);
+      else reject(err);
+    };
+    tx.onabort = ()=>{
+      const err = tx.error || new Error('Giao dịch lưu thư viện bị hủy');
+      reject(err);
+    };
   });
 }
 /* Định dạng thư viện hỗ trợ (dựa theo loại tệp, nếu thiếu thì theo đuôi tệp) */
@@ -4801,10 +5574,8 @@ async function libImportFiles(files, onProgress){
       step(0);
       const meta = isVideo ? await libReadVideoMetadata(file) : { duration:0, width:0, height:0 };
       const createdAt = Date.now();
-      const d = new Date(createdAt);
-      const datePart = String(d.getDate()).padStart(2,'0') + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + d.getFullYear();
-      const ext = (file.name.match(/\.[a-z0-9]{1,8}$/i) || [''])[0];
-      const item = { type:isVideo?'video':'photo', name:(isVideo?'VID_':'IMG_') + datePart + ext, blob:file, mime, width:meta.width, height:meta.height, duration:meta.duration, createdAt, size:file.size };
+      const extRaw = (file.name.match(/\.[a-z0-9]{1,8}$/i) || [''])[0].replace(/^\./,'') || (isVideo?'webm':'jpg');
+      const item = { type:isVideo?'video':'photo', name:(isVideo?videoFileName(extRaw):photoFileName(extRaw)), blob:file, mime, width:meta.width, height:meta.height, duration:meta.duration, createdAt, size:file.size };
       const thumb = await Promise.race([makeLibThumb(item).catch(()=>null), new Promise(r=>setTimeout(()=>r(null), 3000))]);
       step(0.5);
       await libAddItem(item, thumb);
@@ -4931,10 +5702,11 @@ function stopLibMediaElements(){
   });
 }
 function pauseCamForLibrary(){
+  state._cameraRequestId = (state._cameraRequestId || 0) + 1;
   libCamPaused = true;
   try{ stopQRScan(); }catch(e){}
   try{ stopMicMeter(); }catch(e){}
-  state._fpsRunning = false;
+  stopFpsCounter();
   try{ video.pause(); }catch(e){}
   try{
     if(state.stream){
@@ -5454,7 +6226,7 @@ async function processCurrentPhoto(mode){
   if(title) title.textContent='Đang tối ưu ảnh…';
   modal.classList.add('show');
   setPhotoProcessProgress(2,'Đang đọc ảnh');
-  let bitmap=null, canvas=null, sampleCanvas=null;
+  let bitmap=null, canvas=null, sampleCanvas=null, workCanvas=null;
   try{
     await yieldToBrowser();
     if('createImageBitmap' in window) bitmap=await createImageBitmap(item.blob);
@@ -5465,9 +6237,9 @@ async function processCurrentPhoto(mode){
     }
     const sourceW=bitmap.width||bitmap.naturalWidth, sourceH=bitmap.height||bitmap.naturalHeight;
     if(!sourceW||!sourceH) throw new Error('Không đọc được kích thước ảnh');
-    setPhotoProcessProgress(12,'Đang phân tích ánh sáng'); await yieldToBrowser();
+    setPhotoProcessProgress(10,'Đang phân tích ảnh'); await yieldToBrowser();
 
-    // Phân tích trên ảnh thu nhỏ 256px bằng histogram (nhẹ, phù hợp máy RAM thấp).
+    // --- Phân tích trên ảnh 256px: histogram + độ nét + nhiễu ---
     const sampleScale=Math.min(1,256/Math.max(sourceW,sourceH));
     sampleCanvas=document.createElement('canvas');
     sampleCanvas.width=Math.max(1,Math.round(sourceW*sampleScale));
@@ -5475,10 +6247,15 @@ async function processCurrentPhoto(mode){
     const sampleCtx=sampleCanvas.getContext('2d',{willReadFrequently:true});
     if(!sampleCtx) throw new Error('Trình duyệt không hỗ trợ phân tích ảnh');
     sampleCtx.drawImage(bitmap,0,0,sampleCanvas.width,sampleCanvas.height);
-    const px=sampleCtx.getImageData(0,0,sampleCanvas.width,sampleCanvas.height).data;
+    const sw=sampleCanvas.width, sh=sampleCanvas.height;
+    const px=sampleCtx.getImageData(0,0,sw,sh).data;
     const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
     const hist=new Uint32Array(256);
-    let n=0, sr=0, sg=0, sb=0, satSum=0;
+    let n=0, sr=0, sg=0, sb=0, satSum=0, edgeAcc=0, edgeN=0, noiseAcc=0, noiseN=0;
+    const lumAt=(x,y)=>{
+      const i=(y*sw+x)*4;
+      return (px[i]*54+px[i+1]*183+px[i+2]*19)>>8;
+    };
     for(let i=0;i<px.length;i+=4){
       const r=px[i],g=px[i+1],b=px[i+2];
       hist[(r*54+g*183+b*19)>>8]++; n++;
@@ -5486,16 +6263,53 @@ async function processCurrentPhoto(mode){
       const hi=Math.max(r,g,b), lo=Math.min(r,g,b);
       satSum += hi ? (hi-lo)/hi : 0;
     }
+    // Laplacian thô + nhiễu local (mỗi 2px để nhẹ)
+    for(let y=1;y<sh-1;y+=2){
+      for(let x=1;x<sw-1;x+=2){
+        const c=lumAt(x,y);
+        const lap=Math.abs(4*c - lumAt(x-1,y) - lumAt(x+1,y) - lumAt(x,y-1) - lumAt(x,y+1));
+        edgeAcc+=lap; edgeN++;
+        const n1=lumAt(x+1,y), n2=lumAt(x,y+1);
+        noiseAcc+=Math.abs(c-n1)+Math.abs(c-n2); noiseN+=2;
+      }
+    }
     n=Math.max(1,n);
     const pct=q=>{ let acc=0; const t=n*q; for(let i=0;i<256;i++){ acc+=hist[i]; if(acc>=t) return i; } return 255; };
     const p1=pct(.01), p50=pct(.5), p99=pct(.99);
     const avgSat=satSum/n;
-    // Sáng: kéo trung vị về ~118, giảm nhẹ độ mạnh để không cháy; tương phản: giãn dải tông đang dùng.
-    let brightness=clamp(Math.pow(118/clamp(p50,40,215),0.55),0.92,1.28);
-    const contrast=clamp(Math.pow(215/Math.max(60,p99-p1),0.5),1.0,1.22);
-    // Bão hòa: cứu ảnh nhạt màu, không đụng ảnh đã rực.
-    const saturation=avgSat<.16?1.14:avgSat<.28?1.08:avgSat>.55?1.0:1.04;
-    // Cân bằng trắng nhẹ kiểu gray-world (40% độ mạnh, tối đa ±6%/kênh), bỏ qua cảnh nhiều màu rực.
+    const sharpness=edgeN?edgeAcc/edgeN:0; // thấp = mờ
+    const noiseLevel=noiseN?noiseAcc/noiseN:0; // cao = hạt
+    // Vùng giữa vs viền — phát hiện ngược sáng / chủ thể tối
+    let centerSum=0, centerN=0, edgeSum=0, edgeLumN=0;
+    const x0=Math.floor(sw*0.3), x1=Math.floor(sw*0.7), y0=Math.floor(sh*0.3), y1=Math.floor(sh*0.7);
+    for(let y=0;y<sh;y+=2){
+      for(let x=0;x<sw;x+=2){
+        const L=lumAt(x,y);
+        if(x>=x0&&x<x1&&y>=y0&&y<y1){ centerSum+=L; centerN++; }
+        else { edgeSum+=L; edgeLumN++; }
+      }
+    }
+    const centerAvg=centerN?centerSum/centerN:p50;
+    const borderAvg=edgeLumN?edgeSum/edgeLumN:p50;
+    const backlight = borderAvg - centerAvg > 28; // nền sáng hơn giữa → ngược sáng
+    const lowKey = p50 < 72; // ảnh tối
+    const highKey = p50 > 175; // ảnh quá sáng
+    const crushedShadows = p1 < 12 && (p50-p1) > 40;
+    const blownHighlights = p99 > 248 && (p99-p50) < 40;
+    // Tham số chỉnh theo phân tích
+    let brightness=clamp(Math.pow(118/clamp(p50,40,215),0.55),0.90,1.32);
+    if(backlight) brightness=clamp(brightness*1.12,0.95,1.38); // nâng chủ thể tối
+    if(lowKey) brightness=clamp(brightness*1.08,0.95,1.36);
+    if(highKey) brightness=clamp(brightness*0.94,0.88,1.1);
+    let contrast=clamp(Math.pow(215/Math.max(60,p99-p1),0.5),1.0,1.28);
+    if(crushedShadows||blownHighlights) contrast=clamp(contrast*0.92,1.0,1.18); // giữ chi tiết hai đầu
+    if(backlight) contrast=clamp(contrast*1.06,1.0,1.3);
+    const saturation=avgSat<.14?1.18:avgSat<.26?1.10:avgSat>.58?0.98:1.05;
+    // Ảnh mờ → sharpen mạnh hơn; ảnh đã nét → nhẹ
+    const sharpenAmt = sharpness < 18 ? 0.55 : sharpness < 35 ? 0.38 : 0.22;
+    // Nhiễu cao → giảm hạt nhẹ (blur rất nhẹ trước sharpen)
+    const denoise = noiseLevel > 14 && sharpness < 40;
+    // Cân bằng trắng gray-world nhẹ
     const mr=sr/n||1, mg=sg/n||1, mb=sb/n||1, gray=(mr+mg+mb)/3;
     let wb=[1,1,1];
     if(avgSat<.5){
@@ -5504,31 +6318,123 @@ async function processCurrentPhoto(mode){
     const wbMax=Math.max(wb[0],wb[1],wb[2]);
     const wbNorm=wb.map(v=>v/wbMax);
     const wbActive=(wbMax/Math.min(wb[0],wb[1],wb[2]))>1.02;
-    if(wbActive) brightness=clamp(brightness*(3/(wbNorm[0]+wbNorm[1]+wbNorm[2])),0.92,1.32);
+    if(wbActive) brightness=clamp(brightness*(3/(wbNorm[0]+wbNorm[1]+wbNorm[2])),0.90,1.34);
 
-    setPhotoProcessProgress(32,'Đang cân bằng sáng và màu'); await yieldToBrowser();
-    const maxPixels=LOW_END?8e6:12e6;
-    const scale=Math.min(1,Math.sqrt(maxPixels/(sourceW*sourceH)));
-    const outW=Math.max(1,Math.round(sourceW*scale)), outH=Math.max(1,Math.round(sourceH*scale));
+    setPhotoProcessProgress(28,'Đang cân bằng sáng và màu'); await yieldToBrowser();
+
+    // Giới hạn pixel an toàn (máy yếu thấp hơn)
+    const maxPixels = DEVICE_TIER==='low' ? 6e6 : (DEVICE_TIER==='high' ? 16e6 : 10e6);
+    // Phóng 1.5× nhưng không vượt maxPixels
+    let upscale = 1.5;
+    if(sourceW*sourceH*upscale*upscale > maxPixels){
+      upscale = Math.sqrt(maxPixels/(sourceW*sourceH));
+      upscale = Math.max(1, Math.min(1.5, upscale));
+    }
+    const outW=Math.max(1,Math.round(sourceW*upscale));
+    const outH=Math.max(1,Math.round(sourceH*upscale));
+
+    // Bước 1: vẽ + filter màu ở kích thước nguồn (hoặc nhỏ hơn nếu nguồn quá lớn)
+    const baseScale=Math.min(1, Math.sqrt((maxPixels/2.25)/(sourceW*sourceH)));
+    const baseW=Math.max(1,Math.round(sourceW*baseScale));
+    const baseH=Math.max(1,Math.round(sourceH*baseScale));
+    workCanvas=document.createElement('canvas'); workCanvas.width=baseW; workCanvas.height=baseH;
+    const wctx=workCanvas.getContext('2d',{alpha:false});
+    if(!wctx) throw new Error('Trình duyệt không hỗ trợ xử lý ảnh');
+    wctx.imageSmoothingEnabled=true;
+    try{wctx.imageSmoothingQuality='high';}catch(e){}
+    const filterValue=`brightness(${brightness.toFixed(3)}) contrast(${contrast.toFixed(3)}) saturate(${saturation.toFixed(3)})`;
+    try{ if('filter' in wctx) wctx.filter=filterValue; }catch(e){}
+    wctx.drawImage(bitmap,0,0,baseW,baseH);
+    try{wctx.filter='none';}catch(e){}
+    if(wbActive){
+      wctx.save(); wctx.globalCompositeOperation='multiply';
+      wctx.fillStyle='rgb('+wbNorm.map(v=>Math.round(v*255)).join(',')+')';
+      wctx.fillRect(0,0,baseW,baseH); wctx.restore();
+    }
+    if(denoise){
+      // Giảm hạt rất nhẹ: vẽ đè bản blur 30%
+      wctx.save();
+      wctx.globalAlpha=0.28;
+      try{wctx.filter='blur(0.6px)';}catch(e){}
+      wctx.drawImage(workCanvas,0,0);
+      try{wctx.filter='none';}catch(e){}
+      wctx.restore();
+    }
+
+    setPhotoProcessProgress(48, DEVICE_TIER==='low' ? 'Đang nâng độ phân giải…' : 'Đang nâng độ phân giải (chất lượng cao)…');
+    await yieldToBrowser();
+
+    // Bước 2: upscale 1.5× (mid/high: multi-pass)
     canvas=document.createElement('canvas'); canvas.width=outW; canvas.height=outH;
     const ctx=canvas.getContext('2d',{alpha:false});
     if(!ctx) throw new Error('Trình duyệt không hỗ trợ xử lý ảnh');
     ctx.imageSmoothingEnabled=true;
     try{ctx.imageSmoothingQuality='high';}catch(e){}
-    // Bộ lọc canvas do trình duyệt tối ưu; nếu không hỗ trợ sẽ vẽ ảnh gốc.
-    const filterValue=`brightness(${brightness.toFixed(3)}) contrast(${contrast.toFixed(3)}) saturate(${saturation})`;
-    try{ if('filter' in ctx) ctx.filter=filterValue; }catch(e){}
-    ctx.drawImage(bitmap,0,0,outW,outH);
-    try{ctx.filter='none';}catch(e){}
-    if(wbActive){
-      ctx.save(); ctx.globalCompositeOperation='multiply';
-      ctx.fillStyle='rgb('+wbNorm.map(v=>Math.round(v*255)).join(',')+')';
-      ctx.fillRect(0,0,outW,outH); ctx.restore();
+
+    if(DEVICE_TIER!=='low' && upscale>1.05){
+      // Multi-pass: lên ~1.22× rồi 1.5× — mượt hơn một bước lớn
+      const midW=Math.max(1,Math.round(baseW*Math.sqrt(upscale)));
+      const midH=Math.max(1,Math.round(baseH*Math.sqrt(upscale)));
+      const mid=document.createElement('canvas'); mid.width=midW; mid.height=midH;
+      const mctx=mid.getContext('2d',{alpha:false});
+      mctx.imageSmoothingEnabled=true;
+      try{mctx.imageSmoothingQuality='high';}catch(e){}
+      mctx.drawImage(workCanvas,0,0,midW,midH);
+      ctx.drawImage(mid,0,0,outW,outH);
+      mid.width=1; mid.height=1;
+      // "AI path" placeholder: máy mid/high dùng unsharp mạnh + pass chi tiết;
+      // neural model thật có thể gắn sau (CDN) — hiện fallback chất lượng cao này.
+      setPhotoProcessProgress(62,'Đang làm nét thông minh…'); await yieldToBrowser();
+    } else {
+      ctx.drawImage(workCanvas,0,0,outW,outH);
+      setPhotoProcessProgress(62,'Đang làm nét…'); await yieldToBrowser();
     }
-    setPhotoProcessProgress(78,'Đang tạo ảnh đã tối ưu'); await yieldToBrowser();
-    const outputBlob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Không tạo được tệp ảnh')),'image/jpeg',.93));
-    const base=(item.name||'photo').replace(/\.[^.]+$/,'');
-    const newItem={type:'photo',name:base+'_optimized.jpg',mime:'image/jpeg',blob:outputBlob,size:outputBlob.size,width:outW,height:outH,createdAt:Date.now(),duration:0,processedFrom:item.id,processMode:mode};
+
+    // Unsharp mask qua canvas composite (nhẹ, không loop pixel full-res trên máy yếu)
+    try{
+      ctx.save();
+      ctx.globalCompositeOperation='overlay';
+      ctx.globalAlpha=clamp(sharpenAmt,0.15,0.65);
+      try{ctx.filter=`contrast(1.25) brightness(1.02)`;}catch(e){}
+      ctx.drawImage(canvas,0,0);
+      try{ctx.filter='none';}catch(e){}
+      ctx.restore();
+      // Pass nét thêm cho mid/high
+      if(DEVICE_TIER!=='low'){
+        ctx.save();
+        ctx.globalCompositeOperation='soft-light';
+        ctx.globalAlpha=0.18;
+        try{ctx.filter='contrast(1.15)';}catch(e){}
+        ctx.drawImage(canvas,0,0);
+        try{ctx.filter='none';}catch(e){}
+        ctx.restore();
+      }
+    }catch(e){}
+
+    setPhotoProcessProgress(80,'Đang tạo tệp ảnh'); await yieldToBrowser();
+    const preferPng = (item.mime||'').includes('png') || (item.name||'').toLowerCase().endsWith('.png');
+    const outMime = preferPng ? 'image/png' : 'image/jpeg';
+    const outQuality = preferPng ? undefined : (DEVICE_TIER==='low' ? 0.90 : 0.93);
+    const outputBlob=await new Promise((resolve,reject)=>{
+      const cb=b=>b?resolve(b):reject(new Error('Không tạo được tệp ảnh'));
+      if(outQuality!=null) canvas.toBlob(cb,outMime,outQuality); else canvas.toBlob(cb,outMime);
+    });
+    const ext=preferPng?'png':'jpg';
+    const newItem={
+      type:'photo',
+      name: photoFileName(ext,{suffix:'_toi-uu'}),
+      mime:outMime,
+      blob:outputBlob,
+      size:outputBlob.size,
+      width:outW,
+      height:outH,
+      createdAt:Date.now(),
+      duration:0,
+      processedFrom:item.id,
+      processMode:mode||'enhance',
+      upscale:Math.round(upscale*100)/100,
+      tier:DEVICE_TIER
+    };
     setPhotoProcessProgress(92,'Đang lưu vào thư viện'); await yieldToBrowser();
     await libAddItem(newItem);
     libItems=await libGetAll();
@@ -5537,7 +6443,7 @@ async function processCurrentPhoto(mode){
     setPhotoProcessProgress(100,'Hoàn tất'); await yieldToBrowser();
     modal.classList.remove('show');
     renderLibDetail();
-    showToast('Đã tối ưu ảnh và lưu vào thư viện');
+    showToast('Đã tối ưu ảnh');
   }catch(err){
     console.error('Photo processing failed',err);
     modal.classList.remove('show');
@@ -5545,10 +6451,12 @@ async function processCurrentPhoto(mode){
   }finally{
     try{ if(bitmap&&typeof bitmap.close==='function') bitmap.close(); }catch(e){}
     if(canvas){canvas.width=1;canvas.height=1;}
+    if(workCanvas){workCanvas.width=1;workCanvas.height=1;}
     if(sampleCanvas){sampleCanvas.width=1;sampleCanvas.height=1;}
     photoProcessBusy=false; buttons.forEach(b=>b.disabled=false);
   }
 }
+
 /* ===== Công cụ ảnh: menu thả xuống (tạo khi mở, xóa hẳn khi đóng) + hộp thông báo thử nghiệm ===== */
 const ICON_SPARKLE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg>';
 const ICON_QR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v1M14 20h1M18 18h3v3h-3z"/></svg>';
@@ -5578,8 +6486,8 @@ async function scanCurrentPhotoQr(){
   if(r.text) showQrResult(r.text); else showToast(r.failMsg, 3500);
 }
 const PHOTO_TOOLS = [
-  { label:'Tối ưu ảnh', icon:ICON_SPARKLE, run:()=>showToolNotice('Tối ưu ảnh đang thử nghiệm', ()=>processCurrentPhoto('enhance')) },
-  { label:'Quét QR trong ảnh', icon:ICON_QR, run:()=>showToolNotice('Quét QR trong ảnh đang thử nghiệm', scanCurrentPhotoQr) }
+  { label:'Tối ưu ảnh', icon:ICON_SPARKLE, run:()=>processCurrentPhoto('enhance') },
+  { label:'Quét QR trong ảnh', icon:ICON_QR, run:()=>scanCurrentPhotoQr() }
 ];
 let photoToolsMenu = null;
 const onToolsOutside = e=>{ if(!e.target.closest('#photo-tools-menu, #ld-tools')) closePhotoToolsMenu(); };
@@ -5899,7 +6807,7 @@ document.addEventListener('keydown',e=>{
     const media = stage.querySelector('img, video');
     if(!media) return;
     e.preventDefault();
-    libViewZoom = Math.min(5, Math.max(1, libViewZoom + (e.deltaY < 0 ? 0.15 : -0.15)));
+    libViewZoom = Math.min(10, Math.max(1, libViewZoom + (e.deltaY < 0 ? 0.2 : -0.2)));
     if(libViewZoom <= 1.01){ panX = 0; panY = 0; }
     applyImgTransform(media);
   }, {passive:false});
@@ -6018,8 +6926,16 @@ function updateCamInputLabel(){
   if(!name){ const sel=document.getElementById('set-video-device'); name = sel?.selectedOptions?.[0]?.textContent || ''; }
   el.textContent = name || 'Mặc định';
 }
+function updateMicInputLabel(){
+  const el=document.getElementById('mic-input-label'); if(!el) return;
+  let name='';
+  try{ name = state.stream?.getAudioTracks?.().find(t=>t.readyState==='live')?.label || state.stream?.getAudioTracks?.()[0]?.label || ''; }catch(e){}
+  if(!name){ const sel=document.getElementById('set-audio-device'); name = sel?.selectedOptions?.[0]?.textContent || ''; }
+  el.textContent = (name && name.trim()) ? name.trim() : 'Mặc định';
+}
 function updateCamInfoPanel(){
   try{ updateCamInputLabel(); }catch(e){}
+  try{ updateMicInputLabel(); }catch(e){}
   if(document.hidden) return;
   const fpsEl = document.getElementById('cam-info-fps');
   const fpsWant = document.getElementById('cam-info-fps-want');
