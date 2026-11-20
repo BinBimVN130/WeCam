@@ -91,6 +91,33 @@
     }
     #countdown.show{display:flex}
 
+    /* Đếm giờ chụp: ẩn hết nút, chỉ khung hình + số đếm */
+    #app.counting-active .left-controls,
+    #app.counting-active .right-controls,
+    #app.counting-active .mode-switcher,
+    #app.counting-active .flip-btn,
+    #app.counting-active #shutter,
+    #app.counting-active #album-btn,
+    #app.counting-active #settings-btn,
+    #app.counting-active #color-palette,
+    #app.counting-active #timer-menu,
+    #app.counting-active #filter-panel,
+    #app.counting-active .adj-popup,
+    #app.counting-active .zoom-control,
+    #app.counting-active #qr-hint,
+    #app.counting-active #mic-meter,
+    #app.counting-active #fps,
+    #app.counting-active #zoom-label,
+    #app.counting-active #toast {
+      visibility:hidden !important;
+      pointer-events:none !important;
+      opacity:0 !important;
+    }
+    #app.counting-active #countdown{
+      display:flex !important;
+      z-index:80;
+    }
+
     #rec-timer{
       position:absolute;top:12px;left:50%;transform:translateX(-50%);
       font-size:16px;font-weight:500;color:#fff;background:rgba(0,0,0,.55);
@@ -1596,8 +1623,8 @@
         </div>
       </div>
       <div class="ld-actions">
-        <button type="button" class="ld-process-btn" id="ld-tools" title="Công cụ ảnh" data-tip="Công cụ ảnh" aria-haspopup="menu">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg><span>Công cụ ảnh</span>
+        <button type="button" class="ld-process-btn" id="ld-tools" title="Công cụ" data-tip="Công cụ" aria-haspopup="menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><path fill="currentColor" stroke="none" d="M10.2 8.2l.95 2.55 2.55.95-2.55.95-.95 2.55-.95-2.55-2.55-.95 2.55-.95.95-2.55z"/><path fill="currentColor" stroke="none" d="M16.2 6.4l.5 1.35 1.35.5-1.35.5-.5 1.35-.5-1.35-1.35-.5 1.35-.5.5-1.35z"/></svg><span>Công cụ</span>
         </button>
         <button type="button" id="ld-info" title="Thông tin" data-tip="Thông tin">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
@@ -1871,7 +1898,7 @@
             </div>
             <label class="switch"><input type="checkbox" id="set-grid"><span class="switch-slider"></span></label>
           </div>
-          <div class="settings-section-label" data-i18n="cam.preview">Xem trước & Thông tin</div>
+          <div class="settings-section-label" data-i18n="cam.preview">Xem trước</div>
           <div class="settings-camera-info-row" style="display:flex;align-items:stretch;gap:16px;min-width:0">
             <div style="flex:1;min-width:0;aspect-ratio:16/9;background:#000;border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center">
               <canvas id="settings-camera-frame" style="width:100%;height:100%;object-fit:contain"></canvas>
@@ -1934,7 +1961,7 @@
         </div>
         <div class="settings-panel" id="panel-advanced">
           <div class="settings-row">
-            <div><div class="lab" data-i18n="adv.info">Hiện thông tin nâng cao</div><div class="hint" data-i18n="adv.infoHint">Hiện FPS, kích thước khung hình, độ phân giải và FPS đã chọn.</div></div>
+            <div><div class="lab" data-i18n="adv.info">Thông số ở khung hình</div><div class="hint" data-i18n="adv.infoHint">Hiện FPS, kích thước khung hình, độ phân giải và FPS đã chọn.</div></div>
             <label class="switch"><input type="checkbox" id="set-advanced-info"><span class="switch-slider"></span></label>
           </div>
           <div class="settings-row">
@@ -2124,14 +2151,14 @@ vi:{
   'nav.general':'Chung','nav.devices':'Thiết bị','nav.advanced':'Nâng cao','nav.storage':'Dung lượng','nav.camera':'Camera','nav.micro':'Mic','nav.about':'Giới thiệu',
   'gen.ui':'Giao diện','gen.lang':'Ngôn ngữ','gen.font':'Font chữ','gen.reload':'Tải lại trang','gen.reloadHint':'Làm mới toàn bộ trang và luồng camera/micro','gen.reloadBtn':'Tải lại',
   'gen.danger':'VÙNG NGUY HIỂM','gen.reset':'Khôi phục cài đặt gốc','gen.resetBtn':'Khôi phục',
-  'adv.info':'Hiện thông tin nâng cao','adv.infoHint':'Hiện FPS, kích thước khung hình, độ phân giải và FPS đã chọn.',
+  'adv.info':'Thông số ở khung hình','adv.infoHint':'Hiện FPS, kích thước khung hình, độ phân giải và FPS đã chọn.',
   'adv.persist':'Lưu lại các thay đổi','adv.persistHint':'Ghi nhớ tùy chọn đã chọn khi mở lại trang',
   'adv.exp':'Thử nghiệm','adv.smartRes':'Chuyển độ phân giải thông minh (BETA)',
   'adv.smartResHint':'Tự động cấu hình thấp nhất khi quay video, cấu hình cao cho chụp ảnh.',
   'adv.noise':'Khử tiếng ồn (BETA)','adv.noiseHint':'Tính năng này đang trong giai đoạn thử nghiệm, có thể xảy ra lỗi hoặc không có tác dụng (Cân nhắc kĩ trước khi bật)',
   'adv.smartHdr':'HDR Thông minh (BETA)','adv.smartHdrHint':'Chỉ áp dụng với Ảnh',
   'cam.flip':'Lật hình','cam.flipH':'Lật ngang','cam.flipV':'Lật đứng','cam.layout':'Bố cục','cam.grid':'Lưới 3x3',
-  'cam.preview':'Xem trước & Thông tin','dev.saveExt':'Lưu vào bộ nhớ ngoài','dev.saveExtHint':'Chụp/Quay sẽ lưu vào bộ nhớ ngoài, không lưu ở thư viện',
+  'cam.preview':'Xem trước','dev.saveExt':'Lưu vào bộ nhớ ngoài','dev.saveExtHint':'Chụp/Quay sẽ lưu vào bộ nhớ ngoài, không lưu ở thư viện',
   'mode.photo':'Chụp ảnh','mode.video':'Quay video','mode.qr':'Quét QR',
   'toast.savedLib':'Đã lưu vào Thư viện','toast.savedDev':'Đã lưu vào bộ nhớ ngoài','toast.hdrOn':'HDR Thông minh: đã xử lý ảnh','toast.hdrSkip':'HDR Thông minh: cảnh đã cân bằng — bỏ qua',
   'toast.lang':'Đã chuyển ngôn ngữ','toast.applied':'Đã áp dụng',
@@ -2143,14 +2170,14 @@ en:{
   'nav.general':'General','nav.devices':'Devices','nav.advanced':'Advanced','nav.storage':'Storage','nav.camera':'Camera','nav.micro':'Mic','nav.about':'About',
   'gen.ui':'Interface','gen.lang':'Language','gen.font':'Font','gen.reload':'Reload page','gen.reloadHint':'Refresh the page and camera/microphone streams','gen.reloadBtn':'Reload',
   'gen.danger':'DANGER ZONE','gen.reset':'Restore defaults','gen.resetBtn':'Reset',
-  'adv.info':'Show advanced info','adv.infoHint':'Show FPS, frame size, resolution and selected FPS.',
+  'adv.info':'On-frame stats','adv.infoHint':'Show FPS, frame size, resolution and selected FPS.',
   'adv.persist':'Remember settings','adv.persistHint':'Keep your options when you reopen the page',
   'adv.exp':'Experimental','adv.smartRes':'Smart resolution switching (BETA)',
   'adv.smartResHint':'Use a low profile while recording and a high profile for photos.',
   'adv.noise':'Noise reduction (BETA)','adv.noiseHint':'Experimental. May fail or have no effect on some devices. Enable with care.',
   'adv.smartHdr':'Smart HDR (BETA)','adv.smartHdrHint':'Photos only',
   'cam.flip':'Flip','cam.flipH':'Flip horizontal','cam.flipV':'Flip vertical','cam.layout':'Layout','cam.grid':'3×3 grid',
-  'cam.preview':'Preview & info','dev.saveExt':'Save to device storage','dev.saveExtHint':'Capture/record saves to your device instead of the in-app library',
+  'cam.preview':'Preview','dev.saveExt':'Save to device storage','dev.saveExtHint':'Capture/record saves to your device instead of the in-app library',
   'mode.photo':'Photo','mode.video':'Video','mode.qr':'Scan QR',
   'toast.savedLib':'Saved to Library','toast.savedDev':'Saved to device storage','toast.hdrOn':'Smart HDR: photo enhanced','toast.hdrSkip':'Smart HDR: scene balanced — skipped',
   'toast.lang':'Language updated','toast.applied':'Applied',
@@ -3398,19 +3425,24 @@ async function capturePhoto(){
   // Hẹn giờ CHỈ khi chụp ảnh — đếm xong mới chụp
   if(state.mode==='photo' && state.timerSec>0){
     state.isCounting=true;
+    try{ document.getElementById('app')?.classList.add('counting-active'); }catch(e){}
+    try{ closeAllMenus(); }catch(e){}
     countdownEl.classList.add('show');
-    for(let i=state.timerSec;i>0;i--){
-      if(state.mode!=='photo'){ // hủy nếu đổi chế độ giữa chừng
-        countdownEl.classList.remove('show');
-        state.isCounting=false;
-        return;
+    try{
+      for(let i=state.timerSec;i>0;i--){
+        if(state.mode!=='photo'){ // hủy nếu đổi chế độ giữa chừng
+          break;
+        }
+        countdownEl.textContent=i;
+        playBeep(950,.08);
+        await new Promise(r=>setTimeout(r,1000));
       }
-      countdownEl.textContent=i;
-      playBeep(950,.08);
-      await new Promise(r=>setTimeout(r,1000));
+    }finally{
+      countdownEl.classList.remove('show');
+      state.isCounting=false;
+      try{ document.getElementById('app')?.classList.remove('counting-active'); }catch(e){}
     }
-    countdownEl.classList.remove('show');
-    state.isCounting=false;
+    if(state.mode!=='photo') return;
   }
   try{ await video.play(); }catch(e){}
   const boosted = await boostCaptureResolution();
@@ -3623,7 +3655,12 @@ function appConfirm(message, opt){
   return new Promise(resolve=>{
     const m=document.createElement('div'); m.className='confirm-modal';
     m.innerHTML='<div class="confirm-box'+(opt.danger?' danger':'')+'" role="alertdialog" aria-modal="true"><div class="confirm-icon" aria-hidden="true"></div><h3 class="confirm-title"></h3><p class="confirm-msg"></p><div class="confirm-actions"><button type="button" class="confirm-cancel"></button><button type="button" class="confirm-ok"></button></div></div>';
-    m.querySelector('.confirm-icon').textContent=opt.icon||'!';
+    const iconEl=m.querySelector('.confirm-icon');
+    if(opt.icon==='trash'){
+      iconEl.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M10 3h4l1 2H9l1-2Z"/><path d="m6 7 1 13h10l1-13"/><path d="M10 10v6M14 10v6"/></svg>';
+    } else {
+      iconEl.textContent=opt.icon||'!';
+    }
     m.querySelector('.confirm-title').textContent=opt.title||'Xác nhận';
     m.querySelector('.confirm-msg').textContent=message||'';
     const ok=m.querySelector('.confirm-ok'), cancel=m.querySelector('.confirm-cancel');
@@ -3713,30 +3750,34 @@ function createMicProcessor(track, gainVal, noiseReduce){
 /* Quay video dài: dữ liệu quay nằm trong bộ nhớ cho tới khi lưu, nên phải dừng sớm trước khi trình duyệt hết bộ nhớ/dung lượng.
    Dừng khi: (1) đoạn quay đạt giới hạn kích thước theo RAM thiết bị, (2) dung lượng còn lại của trang không đủ để lưu đoạn này (bỏ qua khi bật "Lưu vào bộ nhớ ngoài"),
    (3) bộ quay báo lỗi. Đoạn đã quay luôn được lưu trọn vẹn rồi mới hiện cảnh báo. */
-// Giới hạn 1 đoạn trong RAM. Gần đầy → lưu đoạn rồi (nếu còn chỗ) tự quay tiếp.
+// Giới hạn 1 đoạn trong RAM + theo thời gian. Gần đầy → lưu đoạn rồi (nếu còn chỗ) tự quay tiếp.
+// Đoạn ngắn giúp quay 5–8 tiếng không giữ blob khổng lồ trong RAM.
 const REC_CAP_BYTES = IS_MOBILE
-  ? Math.min(100 * 1024 ** 2, Math.max(40 * 1024 ** 2, ((navigator.deviceMemory || 2) * 28) * 1024 ** 2))
-  : Math.min(512 * 1024 ** 2, Math.max(128 * 1024 ** 2, (navigator.deviceMemory || 4) * 96 * 1024 ** 2));
+  ? Math.min(80 * 1024 ** 2, Math.max(32 * 1024 ** 2, ((navigator.deviceMemory || 2) * 22) * 1024 ** 2))
+  : Math.min(256 * 1024 ** 2, Math.max(96 * 1024 ** 2, (navigator.deviceMemory || 4) * 48 * 1024 ** 2));
+// Mỗi đoạn tối đa ~12 phút (mobile) / ~20 phút (PC)
+const REC_MAX_SEG_MS = IS_MOBILE ? 12 * 60 * 1000 : 20 * 60 * 1000;
 let recQuotaBusy = false, recQuotaAt = 0;
 function stopRecordingForLimit(reason){
   if(!state.isRecording || state._recStopReason) return;
   state._recStopReason = reason;
-  // size/storage: cố gắng nối đoạn nếu còn dung lượng
-  if(reason === 'size' || reason === 'storage') state._recContinue = true;
+  if(reason === 'size' || reason === 'storage' || reason === 'time') state._recContinue = true;
   else state._recContinue = false;
   stopRecording();
 }
 function checkRecordingLimits(){
   if(!state.isRecording || state._recStopReason) return;
-  // Dừng sớm ở ~85% cap để còn RAM lưu blob + mở đoạn mới
-  if(state.recBytes >= REC_CAP_BYTES * 0.85){ stopRecordingForLimit('size'); return; }
+  if(state.recBytes >= REC_CAP_BYTES * 0.80){ stopRecordingForLimit('size'); return; }
+  if(state._recStartTs && (performance.now() - state._recStartTs) >= REC_MAX_SEG_MS){
+    stopRecordingForLimit('time'); return;
+  }
   const now = performance.now();
-  if(state.saveToDevice || recQuotaBusy || now - recQuotaAt < 4000 || !navigator.storage?.estimate) return;
+  if(state.saveToDevice || recQuotaBusy || now - recQuotaAt < 5000 || !navigator.storage?.estimate) return;
   recQuotaBusy = true; recQuotaAt = now;
   navigator.storage.estimate().then(est=>{
     if(!est?.quota || !state.isRecording) return;
     const free = est.quota - (est.usage || 0);
-    if(state.recBytes * 1.15 + 48 * 1024 ** 2 > free) stopRecordingForLimit('storage');
+    if(state.recBytes * 1.12 + 64 * 1024 ** 2 > free) stopRecordingForLimit('storage');
   }).catch(()=>{}).finally(()=>{ recQuotaBusy = false; });
 }
 function notifyRecordingStopped(){
@@ -3818,6 +3859,7 @@ async function startRecording(){
   if(state.isCounting){
     state.isCounting=false;
     try{ countdownEl.classList.remove('show'); }catch(e){}
+    try{ document.getElementById('app')?.classList.remove('counting-active'); }catch(e){}
   }
   const vw0=video.videoWidth,vh0=video.videoHeight;
   // Khớp độ phân giải xem trước (tới 4K trên máy tính). Mobile/máy yếu: tối đa 720p để ổn định.
@@ -3873,12 +3915,13 @@ async function startRecording(){
     lastDraw = now;
     frameReady = false;
     try{
-      drawToCanvas(recCtx,w,h, LOW_END ? 'fast' : 'high');
+      const q = (LOW_END || IS_MOBILE || (w*h) >= (1600*900)) ? 'fast' : 'high';
+      drawToCanvas(recCtx,w,h, q);
       if(canvasVideoTrack && typeof canvasVideoTrack.requestFrame === 'function') canvasVideoTrack.requestFrame();
     }catch(e){}
   };
   // Vẽ ngay frame đầu, sau đó dùng interval thay vì callback phụ thuộc render.
-  try{ drawToCanvas(recCtx,w,h, LOW_END ? 'fast' : 'high'); }catch(e){}
+  try{ drawToCanvas(recCtx,w,h, (LOW_END || IS_MOBILE || (w*h) >= (1600*900)) ? 'fast' : 'high'); }catch(e){}
   try{ if(canvasVideoTrack && typeof canvasVideoTrack.requestFrame === 'function') canvasVideoTrack.requestFrame(); }catch(e){}
   state.recDrawTimer = setInterval(drawRecordingFrame, Math.max(4, Math.floor(minGap / 3)));
   const audioTracks=state.stream.getAudioTracks().filter(t=>t.readyState==='live');
@@ -3952,9 +3995,10 @@ async function startRecording(){
   let vBit = Math.round(px * fps * bpp);
   let minBit = px >= 3000*1600 ? 8000000 : (px >= 1920*1000 ? 5000000 : (px >= 1280*700 ? 2500000 : 1200000));
   let maxBit = px >= 3000*1600 ? 24000000 : (px >= 1920*1000 ? 16000000 : (px >= 1280*700 ? 10000000 : 5000000));
-  if(IS_MOBILE){ minBit = Math.min(minBit, 1500000); maxBit = Math.min(maxBit, 4000000); vBit = Math.round(vBit * 0.55); }
-  else if(LOW_END){ minBit = Math.min(minBit, 1200000); maxBit = Math.min(maxBit, 5000000); vBit = Math.round(vBit * 0.65); }
-  else if(px >= 3000*1600){ vBit = Math.round(vBit * 0.85); } // 4K: bitrate vừa phải, giảm OOM
+  if(IS_MOBILE){ minBit = Math.min(minBit, 1500000); maxBit = Math.min(maxBit, 3500000); vBit = Math.round(vBit * 0.50); }
+  else if(LOW_END){ minBit = Math.min(minBit, 1200000); maxBit = Math.min(maxBit, 4000000); vBit = Math.round(vBit * 0.60); }
+  else if(px >= 3000*1600){ maxBit = Math.min(maxBit, 12000000); vBit = Math.round(vBit * 0.75); } // 4K: bitrate vừa, giảm OOM
+  else if(px >= 1800*1000){ maxBit = Math.min(maxBit, 8000000); }
   vBit = Math.max(minBit, Math.min(maxBit, vBit));
   const aBit = 128000; // đủ trong suốt cho giọng nói/âm thanh webcam, nhẹ hơn 192k
   try{
@@ -4001,9 +4045,12 @@ async function startRecording(){
     try{ state._recAudioCtx && state._recAudioCtx.close(); }catch(e){}
     state._recAudioCtx = null;
     state._recGainNode = null;
-    const rawBlob=new Blob(state.recordedChunks,{type:mime||'video/webm'});
+    const chunks = state.recordedChunks;
     state.recordedChunks=[];
     state.recBytes=0;
+    const rawBlob=new Blob(chunks,{type:mime||'video/webm'});
+    // Giải phóng mảng chunk ngay sau khi ghép blob
+    chunks.length = 0;
     const ext = (mime||'').includes('mp4') ? 'mp4' : 'webm';
     if(!rawBlob.size){
       showToast('Video trống — thử quay lại');
@@ -4023,6 +4070,8 @@ async function startRecording(){
       // WebM từ MediaRecorder thiếu thời lượng → không tua được. Ghi thêm Duration trước khi lưu.
       if(ext === 'webm'){ const nb = await fixWebmSeekable(rawBlob, durMs); if(nb && nb !== rawBlob){ blob = nb; fixed = true; } }
       await saveCaptured({ type:'video', name:vname, blob, mime:mime||'video/webm', width:vw1, height:vh1, duration:dur, seekFixed:fixed }, 'video');
+      // Hết tham chiếu blob đoạn cũ trước khi mở đoạn mới
+      try{ blob = null; }catch(e){}
       if(wantContinue){
         // Chỉ nối đoạn nếu còn dung lượng ước tính
         let canGo = true;
@@ -4066,6 +4115,8 @@ async function startRecording(){
 function stopRecording(){
   if(!state.isRecording) return;
   state.isRecording=false;
+  // User bấm dừng (không phải cắt đoạn) → hết phiên đồng hồ
+  if(!state._recStopReason) state._recContinue = false;
   if(!state.mediaRecorder){ resetRecordingAfterError(); return; }
   try{
     if(state.mediaRecorder.state === 'recording' || state.mediaRecorder.state === 'paused'){
@@ -4080,16 +4131,28 @@ function stopRecording(){
 }
 let recInterval=null,recSeconds=0;
 function startRecTimer(){
-  recSeconds=0;recTimerEl.textContent='00:00:00';
+  // Giữ mốc phiên khi nối đoạn (quay dài nhiều file)
+  if(!state._recSessionStart) state._recSessionStart = Date.now();
+  const paint = ()=>{
+    const totalSec = Math.max(0, Math.floor((Date.now() - state._recSessionStart) / 1000));
+    recSeconds = totalSec;
+    const h=String(Math.floor(totalSec/3600)).padStart(2,'0');
+    const m=String(Math.floor((totalSec%3600)/60)).padStart(2,'0');
+    const s=String(totalSec%60).padStart(2,'0');
+    recTimerEl.textContent=h+':'+m+':'+s;
+  };
+  paint();
+  if(recInterval) clearInterval(recInterval);
   recInterval=setInterval(()=>{
-    recSeconds++;
-    const h=String(Math.floor(recSeconds/3600)).padStart(2,'0');
-    const m=String(Math.floor((recSeconds%3600)/60)).padStart(2,'0');
-    const s=String(recSeconds%60).padStart(2,'0');
-    recTimerEl.textContent=`${h}:${m}:${s}`;
+    paint();
+    try{ checkRecordingLimits(); }catch(e){}
   },1000);
 }
-function stopRecTimer(){clearInterval(recInterval);recInterval=null}
+function stopRecTimer(){
+  clearInterval(recInterval); recInterval=null;
+  // Chỉ reset mốc phiên khi user dừng hẳn (không nối đoạn)
+  if(!state._recContinue) state._recSessionStart = 0;
+}
 
 
 
@@ -5170,7 +5233,7 @@ function renderStorageBigFiles(items){
     const del = document.createElement('button'); del.type='button'; del.className='sf-del'; del.textContent='Xóa';
     const view = document.createElement('button'); view.type='button'; view.className='sf-view'; view.textContent='Xem tệp';
     del.addEventListener('click', async ()=>{
-      if(!(await appConfirm('Xóa vĩnh viễn "'+(it.name||'tệp này')+'"?\nHành động này không thể hoàn tác.',{title:'Xóa khỏi thư viện?',okText:'Xóa',danger:true}))) return;
+      if(!(await appConfirm(it.name||'Tệp này',{title:'Xác nhận xóa?',okText:'Xóa',danger:true,icon:'trash'}))) return;
       try{ await libDelete(it.id); libSelected.delete(it.id); }catch(e){ showToast('Không xóa được tệp'); return; }
       showToast('Xóa tệp thành công');
       refreshStorageInfo();
@@ -6412,7 +6475,7 @@ async function processCurrentPhoto(mode){
 }
 
 /* ===== Công cụ ảnh: menu thả xuống (tạo khi mở, xóa hẳn khi đóng) + hộp thông báo thử nghiệm ===== */
-const ICON_SPARKLE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg>';
+const ICON_SPARKLE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><path fill="currentColor" stroke="none" d="M10.2 8.2l.95 2.55 2.55.95-2.55.95-.95 2.55-.95-2.55-2.55-.95 2.55-.95.95-2.55z"/><path fill="currentColor" stroke="none" d="M16.2 6.4l.5 1.35 1.35.5-1.35.5-.5 1.35-.5-1.35-1.35-.5 1.35-.5.5-1.35z"/></svg>';
 const ICON_QR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v1M14 20h1M18 18h3v3h-3z"/></svg>';
 function showToolNotice(title, onContinue){
   const m = document.createElement('div');
