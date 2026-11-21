@@ -35,10 +35,10 @@
 ## Cài đặt
 
 - Cách cài đặt ứng dụng này: Trình duyệt -> 3 gạch ( ≡ ) -> Lưu và chia sẻ -> Cài đặt trang dưới dạng ứng dụng... -> [Cài đặt]
-- Mở ứng dụng: https://binbimvn130.github.io/WeCam/ hoặc [![Live Demo](https://img.shields.io/badge/Open%20app-ffaa00?style=for-the-badge)](https://binbimvn130.github.io/WeCam/)
+- Mở ứng dụng: https://binbimvn130.github.io/WeCam/
 
 ## Ảnh chụp màn hình
-<img width="1366" height="606" alt="image" src="https://github.com/user-attachments/assets/c7064f3a-f24f-42a5-bc96-110901554da9" />
+<img width="1366" height="700" alt="image" src="https://github.com/user-attachments/assets/a13db0e0-d0c9-4a8c-98e8-1bf39d2cb934" />
 
 
 
