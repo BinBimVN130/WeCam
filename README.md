@@ -32,8 +32,10 @@
 - Vui lòng cho phép truy cập camera và micro khi sử dụng.
 
 --
+## Cài đặt
 
- Cách cài đặt ứng dụng này: Trình duyệt -> 3 gạch ( ≡ ) -> Lưu và chia sẻ -> Cài đặt trang dưới dạng ứng dụng... -> [Cài đặt]
+- Cách cài đặt ứng dụng này: Trình duyệt -> 3 gạch ( ≡ ) -> Lưu và chia sẻ -> Cài đặt trang dưới dạng ứng dụng... -> [Cài đặt]
+- Mở ứng dụng qua: [![Live Demo](https://img.shields.io/badge/Ở%20đây-ffaa00?style=for-the-badge)](https://binbimvn130.github.io/WeCam/)
 
 ## Ảnh chụp màn hình
 <img width="1366" height="606" alt="image" src="https://github.com/user-attachments/assets/c7064f3a-f24f-42a5-bc96-110901554da9" />
@@ -45,7 +47,9 @@
 - Gmail: [binken12344@gmail.com](mailto:binken12344@gmail.com)
   
 
-Ủng hộ dự án này: Nếu thấy hữu ích, hãy ủng hộ tôi một ly cafe =))) 
+## Ủng hộ dự án này
+
+Nếu thấy hữu ích, hãy ủng hộ tôi một ly cafe =))) 
 
 
 <img width="340" height="440" alt="zlp-1790936616589" src="https://github.com/user-attachments/assets/05c9f53d-25c6-4aa7-a31b-16b45ef04a6e" />
