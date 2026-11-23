@@ -2143,7 +2143,7 @@ function showCameraError(e){
   if(name === 'NotAllowedError' || name === 'SecurityError') { showPermModal(); return; }
   const hint = name === 'NotReadableError' ? 'Hãy đóng ứng dụng/tab khác đang dùng camera.'
     : name === 'NotFoundError' || name === 'OverconstrainedError' ? 'Không tìm thấy camera phù hợp, hãy kiểm tra kết nối camera.'
-    : name === 'NotSupportedError' ? 'Trình duyệt này không hỗ trợ truy cập camera (cần mở bằng HTTPS hoặc localhost).'
+    : name === 'NotSupportedError' ? 'Trình duyệt này không hỗ trợ truy cập camera.'
     : 'Hãy thử bấm "Tải lại trang" trong Cài đặt.';
   showNotice('perm-modal', `Không mở được camera (${name}). ${hint}`);
 }
@@ -3733,27 +3733,24 @@ function createMicProcessor(track, gainVal, noiseReduce){
 /* Quay video dài: dữ liệu quay nằm trong bộ nhớ cho tới khi lưu, nên phải dừng sớm trước khi trình duyệt hết bộ nhớ/dung lượng.
    Dừng khi: (1) đoạn quay đạt giới hạn kích thước theo RAM thiết bị, (2) dung lượng còn lại của trang không đủ để lưu đoạn này (bỏ qua khi bật "Lưu vào bộ nhớ ngoài"),
    (3) bộ quay báo lỗi. Đoạn đã quay luôn được lưu trọn vẹn rồi mới hiện cảnh báo. */
-// Giới hạn 1 đoạn trong RAM + theo thời gian. Gần đầy → lưu đoạn rồi (nếu còn chỗ) tự quay tiếp.
-// Đoạn ngắn giúp quay 5–8 tiếng không giữ blob khổng lồ trong RAM.
+// Giới hạn 1 đoạn trong RAM (không giới hạn thời gian). Gần đầy → lưu đoạn rồi (nếu còn chỗ) tự quay tiếp.
+// Tránh giữ blob quá lớn trong RAM; storage đầy hoặc MediaRecorder lỗi vẫn dừng an toàn.
 const REC_CAP_BYTES = IS_MOBILE
   ? Math.min(80 * 1024 ** 2, Math.max(32 * 1024 ** 2, ((navigator.deviceMemory || 2) * 22) * 1024 ** 2))
   : Math.min(256 * 1024 ** 2, Math.max(96 * 1024 ** 2, (navigator.deviceMemory || 4) * 48 * 1024 ** 2));
-// Mỗi đoạn tối đa ~12 phút (mobile) / ~20 phút (PC)
-const REC_MAX_SEG_MS = IS_MOBILE ? 12 * 60 * 1000 : 20 * 60 * 1000;
 let recQuotaBusy = false, recQuotaAt = 0;
 function stopRecordingForLimit(reason){
   if(!state.isRecording || state._recStopReason) return;
   state._recStopReason = reason;
-  if(reason === 'size' || reason === 'storage' || reason === 'time') state._recContinue = true;
+  // size/storage: có thể nối đoạn. error: dừng hẳn.
+  if(reason === 'size' || reason === 'storage') state._recContinue = true;
   else state._recContinue = false;
   stopRecording();
 }
 function checkRecordingLimits(){
   if(!state.isRecording || state._recStopReason) return;
-  if(state.recBytes >= REC_CAP_BYTES * 0.80){ stopRecordingForLimit('size'); return; }
-  if(state._recStartTs && (performance.now() - state._recStartTs) >= REC_MAX_SEG_MS){
-    stopRecordingForLimit('time'); return;
-  }
+  // RAM: dừng khi đạt ~95% mức tối đa 1 đoạn
+  if(state.recBytes >= REC_CAP_BYTES * 0.95){ stopRecordingForLimit('size'); return; }
   const now = performance.now();
   if(state.saveToDevice || recQuotaBusy || now - recQuotaAt < 5000 || !navigator.storage?.estimate) return;
   recQuotaBusy = true; recQuotaAt = now;
