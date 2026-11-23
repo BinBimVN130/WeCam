@@ -5,6 +5,13 @@
 [![Live Demo](https://img.shields.io/badge/Open%20app-ffaa00?style=for-the-badge)](https://binbimvn130.github.io/WeCam/)
 ![Version](https://img.shields.io/badge/version-3.0.0-22C55E?style=for-the-badge)
 
+<img src="https://img.shields.io/badge/Open_App-2EA44F?style=for-the
+-badge&logo=rocket&logoColor=white" alt="Open App"/>
+</a>
+<img src="https://img.shields.io/badge/Version-3.0.0-blue?style=for-the
+-badge" alt="Version 3.0.0"/>
+</div>
+
 — Ứng dụng camera chạy trực tiếp trên trình duyệt. Hướng đến trải nghiệm đơn giản, gọn và tận dụng tối đa phần cứng sẵn có. Giao diện được tối ưu hóa để dễ dùng, phù hợp cho nhiều người.
 
 ## Tính năng
@@ -43,14 +50,11 @@
 
 
 ## Liên hệ
-
-- Gmail: [binken12344@gmail.com](mailto:binken12344@gmail.com)
-- TikTok: https://www.tiktok.com/@b2011n
-
   
   <a href="mailto:binken12344@gmail.com">
     <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/>
   </a>
+  
   <a href="https://www.tiktok.com/@b2011n" target="_blank">
     <img src="https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white" alt="TikTok"/>
   </a>
