@@ -46,11 +46,22 @@
 
 - Gmail: [binken12344@gmail.com](mailto:binken12344@gmail.com)
 - TikTok: https://www.tiktok.com/@b2011n
+
   
+<div align="center">
+  <a href="mailto:binken12344@gmail.com">
+    <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/>
+  </a>
+  <a href="https://www.tiktok.com/@b2011n" target="_blank">
+    <img src="https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white" alt="TikTok"/>
+  </a>
+  <a href="YOUR_APP_LINK" target="_blank">
+    <img src="https://img.shields.io/badge/Open_App-2EA44F?style=for-the-badge&logo=rocket&logoColor=white" alt="Open App"/>
+  </a>
+  <img src="https://img.shields.io/badge/Version-3.0.0-blue?style=for-the-badge" alt="Version 3.0.0"/>
+</div>
+
 
 ## Ủng hộ dự án này
 
-Nếu thấy hữu ích, hãy ủng hộ tôi một ly cafe =))) 
-
-
-<img width="240" height="340" alt="zlp-1790936616589" src="https://github.com/user-attachments/assets/05c9f53d-25c6-4aa7-a31b-16b45ef04a6e" />
+Truy cập ứng dụng, vào cài đặt - giới thiệu và ấn vào nút ly cafe.
