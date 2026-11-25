@@ -1818,6 +1818,7 @@
             </div>
             <select id="set-photo-fmt">
               <option value="png">PNG</option>
+              <option value="jpeg">JPEG</option>
               <option value="webp">WebP</option>
               <option value="avif">AVIF</option>
               <option value="raw">BMP</option>
@@ -1829,6 +1830,7 @@
             </div>
             <select id="set-video-fmt">
               <option value="webm">WebM</option>
+              <option value="webm-av1">WebM AV1</option>
               <option value="mp4">MP4</option>
             </select>
           </div>
@@ -2718,24 +2720,30 @@ async function savePhotoFromCanvas(cvs){
     saveCaptured({ type:'photo', name:photoFileName('bmp'), blob:b, mime:'image/bmp', width:cvs.width, height:cvs.height, duration:0 }, 'ảnh');
     return;
   }
-  // Thứ tự thử theo định dạng user chọn; AVIF: không tin toDataURL — thử toBlob thật
   const tryList = fmt === 'png' ? ['image/png']
+    : (fmt === 'jpeg' || fmt === 'jpg') ? ['image/jpeg','image/png']
     : fmt === 'webp' ? ['image/webp','image/png']
     : fmt === 'avif' ? ['image/avif','image/webp','image/png']
     : ['image/png'];
-  const quality = 0.96;
+  const quality = (fmt === 'jpeg' || fmt === 'jpg') ? 0.92 : 0.96;
   let usedFallback = false;
   for(let i=0;i<tryList.length;i++){
     const type = tryList[i];
-    const ext = type === 'image/png' ? 'png' : (type === 'image/webp' ? 'webp' : 'avif');
-    // PNG luôn thử; AVIF/WebP: thử encode thật (toDataURL hay báo sai)
-    if(type !== 'image/png' && type !== 'image/avif' && !canvasSupportsType(type)){
+    const ext = type === 'image/png' ? 'png'
+      : type === 'image/webp' ? 'webp'
+      : type === 'image/jpeg' ? 'jpg'
+      : type === 'image/avif' ? 'avif'
+      : 'png';
+    if(type !== 'image/png' && type !== 'image/avif' && type !== 'image/jpeg' && !canvasSupportsType(type)){
       usedFallback = true;
       continue;
     }
     const b = await canvasToBlobAsync(cvs, type, type === 'image/png' ? null : quality);
     if(b){
-      if(usedFallback || (fmt === 'avif' && type !== 'image/avif')){
+      const missed = (fmt === 'avif' && type !== 'image/avif')
+        || ((fmt === 'jpeg'||fmt === 'jpg') && type !== 'image/jpeg')
+        || (fmt === 'webp' && type !== 'image/webp');
+      if(usedFallback || missed){
         showToast('Trình duyệt không hỗ trợ '+String(fmt).toUpperCase()+', đã lưu '+ext.toUpperCase(), 3200);
       }
       saveCaptured({ type:'photo', name:photoFileName(ext), blob:b, mime:type, width:cvs.width, height:cvs.height, duration:0 }, 'ảnh');
@@ -3405,7 +3413,9 @@ function stopQRScan(){
 }
 
 async function capturePhoto(){
-  if(!state.stream||state.isCounting||!video.videoWidth) return;
+  if(!state.stream||state.isCounting||state._capturing||!video.videoWidth) return;
+  state._capturing = true;
+  try{
   if(!state.saveToDevice){ try{ await warnStorageIfFull(); }catch(e){} }
   // Hẹn giờ CHỈ khi chụp ảnh — đếm xong mới chụp
   if(state.mode==='photo' && state.timerSec>0){
@@ -3507,7 +3517,7 @@ async function capturePhoto(){
     await new Promise(r=>setTimeout(r,2000));
     fullscreenFlash.style.opacity='0';
   }
-  savePhotoFromCanvas(canvas);
+  await savePhotoFromCanvas(canvas);
 
   // Chỉ trả lại cấu hình khi trước đó đã tăng độ phân giải để chụp; tránh đàm phán lại camera sau mỗi lần chụp (gây khựng/tụt FPS xem trước).
   if(boosted) restorePreviewResolution();
@@ -3516,6 +3526,19 @@ async function capturePhoto(){
       if(document.exitFullscreen) await document.exitFullscreen();
       else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
     }catch(e){}
+  }
+  }catch(err){
+    console.warn('capturePhoto', err);
+    try{ fullscreenFlash.style.opacity='0'; }catch(e){}
+    try{ shutterFlash.style.opacity='0'; }catch(e){}
+    try{
+      if(document.fullscreenElement || document.webkitFullscreenElement){
+        if(document.exitFullscreen) await document.exitFullscreen();
+        else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+      }
+    }catch(e){}
+  }finally{
+    state._capturing = false;
   }
 }
 
@@ -3536,6 +3559,7 @@ function cancelRecDraw(){
 
 function resetRecordingAfterError(){
   state.isRecording = false;
+  state._recStarting = false;
   cancelRecDraw();
   stopRecTimer();
   try{ if(state._recNoiseTimer) clearTimeout(state._recNoiseTimer); }catch(e){}
@@ -3836,8 +3860,20 @@ async function fixWebmSeekable(blob, durationMs){
 }
 
 async function startRecording(){
-  if(!state.saveToDevice) warnStorageIfFull();
-  if(!state.stream||state.isRecording||!video.videoWidth) return;
+  if(!state.stream||state.isRecording||state._recStarting||!video.videoWidth) return;
+  // Hỏi thư viện đầy TRƯỚC khi bật cờ / vòng vẽ — tránh hủy mà vẫn “đang quay”
+  if(!state.saveToDevice){
+    try{
+      const snap = await getStorageSnapshot();
+      if(snap.hard){
+        const go = await appConfirm('Thư viện đã đầy. Video sẽ được tải về máy khi dừng quay (không lưu trên web). Tiếp tục?',{title:'Thư viện đầy',okText:'Tiếp tục quay',cancelText:'Hủy',icon:'!'});
+        if(!go) return;
+      } else if(snap.soft){
+        try{ warnStorageIfFull(); }catch(e){}
+      }
+    }catch(e){}
+  }
+  state._recStarting = true;
   try{
   // Bỏ đếm ngược — hẹn giờ chỉ cho chụp ảnh
   if(state.isCounting){
@@ -3935,9 +3971,10 @@ async function startRecording(){
   state._recStopReason='';
   let mimeCandidates;
   const vf = state.videoFmt || 'webm';
+  const wantAv1 = vf === 'webm-av1';
   if(vf === 'mp4'){
     mimeCandidates = [
-      'video/mp4;codecs=avc1.640028,mp4a.40.2', // High@4.0: nén tốt hơn Baseline cùng bitrate
+      'video/mp4;codecs=avc1.640028,mp4a.40.2',
       'video/mp4;codecs=avc1.4D4028,mp4a.40.2',
       'video/mp4;codecs=avc1.42E01E,mp4a.40.2',
       'video/mp4',
@@ -3945,9 +3982,19 @@ async function startRecording(){
       'video/webm;codecs=vp8,opus',
       'video/webm'
     ];
+  } else if(wantAv1){
+    mimeCandidates = [
+      'video/webm;codecs=av01.0.08M.08,opus',
+      'video/webm;codecs=av01.0.05M.08,opus',
+      'video/webm;codecs=av01.0.04M.08,opus',
+      'video/webm;codecs=av01,opus',
+      'video/webm;codecs=av1,opus',
+      'video/webm;codecs=vp9,opus',
+      'video/webm;codecs=vp8,opus',
+      'video/webm'
+    ];
   } else {
     mimeCandidates = [
-      // VP8 is lighter to encode/decode in real time and more reliable on older PCs.
       'video/webm;codecs=vp8,opus',
       'video/webm',
       'video/webm;codecs=vp9,opus',
@@ -3957,27 +4004,20 @@ async function startRecording(){
     ];
   }
   let mime = '';
-  if(!state.saveToDevice){
-    try{
-      const snap = await getStorageSnapshot();
-      if(snap.hard){
-        const go = await appConfirm('Thư viện đã đầy. Video sẽ được tải về máy khi dừng quay (không lưu trên web). Tiếp tục?',{title:'Thư viện đầy',okText:'Tiếp tục quay',cancelText:'Hủy',icon:'!'});
-        if(!go) return;
-      } else if(snap.soft){
-        try{ warnStorageIfFull(); }catch(e){}
-      }
-    }catch(e){}
-  }
   if(typeof MediaRecorder === 'undefined'){ resetRecordingAfterError(); showToast('Trình duyệt không hỗ trợ quay video'); return; }
   for(const t of mimeCandidates){
     try{ if(typeof MediaRecorder.isTypeSupported !== 'function' || MediaRecorder.isTypeSupported(t)){ mime = t; break; } }catch(e){}
   }
   if(!mime){ resetRecordingAfterError(); showToast('Trình duyệt không hỗ trợ quay video'); return; }
+  if(wantAv1 && !/av01|av1/i.test(mime)){
+    showToast('Máy không hỗ trợ AV1 — đã dùng WebM thường', 3200);
+  }
   // Bitrate đủ cao để giảm khối vuông khi chuyển động; dùng FPS quay thực tế.
   const fps = Math.max(1, recFps || 30);
   const px = w * h;
   let bpp = 0.16; // VP8
-  if(mime.includes('vp9')) bpp = 0.12;
+  if(/av01|av1/i.test(mime)) bpp = 0.10;
+  else if(mime.includes('vp9')) bpp = 0.12;
   else if(mime.includes('avc1') || mime.includes('mp4')) bpp = 0.16;
   let vBit = Math.round(px * fps * bpp);
   let minBit = px >= 3000*1600 ? 8000000 : (px >= 1920*1000 ? 5000000 : (px >= 1280*700 ? 2500000 : 1200000));
@@ -4013,6 +4053,8 @@ async function startRecording(){
     const stopReason = state._recStopReason;
     state._recStopReason = '';
     state.isRecording=false;
+    state._recStarting=false;
+    try{ state.mediaRecorder = null; }catch(e){}
     try{
       if(state._recCanvasStream){
         const sharedAudio = new Set(state.stream?.getAudioTracks?.() || []);
@@ -4083,6 +4125,7 @@ async function startRecording(){
   try{
     state.mediaRecorder.start(1000);
     state._recStartTs = performance.now();
+    state._recStarting = false;
   }catch(e){
     console.error('MediaRecorder.start thất bại:', e);
     resetRecordingAfterError();
@@ -4097,6 +4140,9 @@ async function startRecording(){
     console.error('Lỗi khởi tạo quay video:', e);
     resetRecordingAfterError();
     showToast('Không thể khởi tạo quay video');
+  }finally{
+    // Nếu thất bại giữa chừng mà chưa vào onstop
+    if(!state.isRecording) state._recStarting = false;
   }
 }
 function stopRecording(){
@@ -4977,11 +5023,16 @@ if(btnFactory) btnFactory.addEventListener('click', async ()=>{
   try{
     localStorage.clear();
     sessionStorage.clear();
+    try{ await libCloseDb(); }catch(e){}
     await new Promise((resolve)=>{
       const req = indexedDB.deleteDatabase(LIB_DB);
       req.onsuccess = ()=> resolve();
       req.onerror = ()=> resolve();
-      req.onblocked = ()=> resolve();
+      // Không resolve ngay khi blocked — chờ đóng xong; timeout an toàn 2s
+      let done=false;
+      const finish=()=>{ if(done) return; done=true; resolve(); };
+      req.onblocked = ()=>{ try{ libCloseDb(); }catch(e){} setTimeout(finish, 1500); };
+      setTimeout(finish, 2500);
     });
   }catch(e){}
   location.reload();
@@ -5393,19 +5444,36 @@ let libItems = [];
 let libDetailIdx = 0;
 let libCamPaused = false;
 
+let _libDbP = null;
 function libOpenDb(){
-  return new Promise((resolve, reject)=>{
+  if(_libDbP) return _libDbP;
+  _libDbP = new Promise((resolve, reject)=>{
     const req = indexedDB.open(LIB_DB, 2);
     req.onupgradeneeded = ()=>{
       const db = req.result;
       if(!db.objectStoreNames.contains(LIB_STORE)){
         db.createObjectStore(LIB_STORE, { keyPath: 'id', autoIncrement: true });
       }
-      if(!db.objectStoreNames.contains(LIB_THUMBS)) db.createObjectStore(LIB_THUMBS);   // ảnh thu nhỏ, khóa = id tệp
+      if(!db.objectStoreNames.contains(LIB_THUMBS)) db.createObjectStore(LIB_THUMBS);
     };
-    req.onsuccess = ()=> resolve(req.result);
-    req.onerror = ()=> reject(req.error);
+    req.onsuccess = ()=>{
+      const db = req.result;
+      db.onversionchange = ()=>{ try{ db.close(); }catch(e){} _libDbP = null; };
+      try{ db.onclose = ()=>{ _libDbP = null; }; }catch(e){}
+      resolve(db);
+    };
+    req.onerror = ()=>{ _libDbP = null; reject(req.error); };
   });
+  return _libDbP;
+}
+async function libCloseDb(){
+  try{
+    if(_libDbP){
+      const db = await _libDbP;
+      try{ db.close(); }catch(e){}
+    }
+  }catch(e){}
+  _libDbP = null;
 }
 
 /* ===== Ảnh thu nhỏ của thư viện =====
@@ -6542,18 +6610,36 @@ document.getElementById('ld-tools')?.addEventListener('click', e=>{
   if(photoToolsMenu) closePhotoToolsMenu(); else openPhotoToolsMenu();
 });
 
+function formatMimeLabel(mime, type){
+  const m = String(mime||'').toLowerCase();
+  if(type === 'photo' || m.startsWith('image/')){
+    if(m.includes('jpeg') || m.includes('jpg')) return 'JPEG';
+    if(m.includes('png')) return 'PNG';
+    if(m.includes('webp')) return 'WebP';
+    if(m.includes('avif')) return 'AVIF';
+    if(m.includes('bmp')) return 'BMP';
+    const part = m.split('/')[1] || '';
+    return part ? part.toUpperCase() : '—';
+  }
+  if(m.includes('mp4') || m.includes('avc1')) return 'MP4 · H.264';
+  if(m.includes('av01') || /codecs=av1\b/.test(m) || m.includes('av1')) return 'WebM · AV1';
+  if(m.includes('vp9')) return 'WebM · VP9';
+  if(m.includes('vp8')) return 'WebM · VP8';
+  if(m.includes('webm')) return 'WebM';
+  return mime || '—';
+}
 function showLibInfo(){
   const it = libItems[libDetailIdx];
   if(!it) return;
   const body = document.getElementById('lib-info-body');
-  const ext = (it.mime||'').split('/').pop() || '—';
+  const label = formatMimeLabel(it.mime, it.type);
   let html = '';
   html += '<div class="info-row"><span>Tên: </span>'+(it.name||'—')+'</div>';
   html += '<div class="info-row"><span>Thời gian: </span>'+libFmtDate(it.createdAt)+'</div>';
   html += '<div class="info-row"><span>Kích cỡ: </span>'+libFmtSize(it.size)+'</div>';
   if(it.type==='video')
     html += '<div class="info-row"><span>Độ dài video: </span>'+libFmtDur(it.duration)+'</div>';
-  html += '<div class="info-row"><span>Định dạng: </span>'+ext.toUpperCase()+'</div>';
+  html += '<div class="info-row"><span>Định dạng: </span>'+label+'</div>';
   html += '<div class="info-row"><span>Độ phân giải: </span>'+(it.width&&it.height? (it.width+'×'+it.height):'—')+'</div>';
   body.innerHTML = html;
   const im = document.getElementById('lib-info-modal');
