@@ -345,7 +345,6 @@
     }
     .switch input:checked + .switch-slider{background:#ffaa00}
     .switch input:checked + .switch-slider:before{transform:translateX(18px)}
-    .preview-res-note{max-width:520px;line-height:1.45}
     .storage-card{padding:6px 2px 4px}
     .storage-pct{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-bottom:14px;color:#ffaa00}
     .storage-track{height:12px;border-radius:8px;background:rgba(255,255,255,.12);overflow:hidden}
@@ -1732,7 +1731,7 @@
       <div class="settings-nav">
         <div class="settings-nav-title">Tổng quan</div>
         <button type="button" class="settings-nav-item active" data-panel="general">
-          <svg viewBox="0 -960 960 960" fill="currentColor" style="width:18px;height:18px"><path d="M194.27-194.27q-18.88-18.88-18.88-45.73 0-26.85 18.88-45.73 18.88-18.88 45.73-18.88 26.85 0 45.73 18.88 18.88 18.88 18.88 45.73 0 26.85-18.88 45.73-18.88 18.88-45.73 18.88-26.85 0-45.73-18.88Zm240 0q-18.88-18.88-18.88-45.73 0-26.85 18.88-45.73 18.88-18.88 45.73-18.88 26.85 0 45.73 18.88 18.88 18.88 18.88 45.73 0 26.85-18.88 45.73-18.88 18.88-45.73 18.88-26.85 0-45.73-18.88Zm240 0q-18.88-18.88-18.88-45.73 0-26.85 18.88-45.73 18.88-18.88 45.73-18.88 26.85 0 45.73 18.88 18.88 18.88 18.88 45.73 0 26.85-18.88 45.73-18.88 18.88-45.73 18.88-26.85 0-45.73-18.88Zm-480-240q-18.88-18.88-18.88-45.73 0-26.85 18.88-45.73 18.88-18.88 45.73-18.88 26.85 0 45.73 18.88 18.88 18.88 18.88 45.73 0 26.85-18.88 45.73-18.88 18.88-45.73 18.88-26.85 0-45.73-18.88Zm240 0q-18.88-18.88-18.88-45.73 0-26.85 18.88-45.73 18.88-18.88 45.73-18.88 26.85 0 45.73 18.88 18.88 18.88 18.88 45.73 0 26.85-18.88 45.73-18.88 18.88-45.73 18.88-26.85 0-45.73-18.88Zm240 0q-18.88-18.88-18.88-45.73 0-26.85 18.88-45.73 18.88-18.88 45.73-18.88 26.85 0 45.73 18.88 18.88 18.88 18.88 45.73 0 26.85-18.88 45.73-18.88 18.88-45.73 18.88-26.85 0-45.73-18.88Zm-480-240q-18.88-18.88-18.88-45.73 0-26.85 18.88-45.73 18.88-18.88 45.73-18.88 26.85 0 45.73 18.88 18.88 18.88 18.88 45.73 0 26.85-18.88 45.73-18.88 18.88-45.73 18.88-26.85 0-45.73-18.88Zm240 0q-18.88-18.88-18.88-45.73 0-26.85 18.88-45.73 18.88-18.88 45.73-18.88 26.85 0 45.73 18.88 18.88 18.88 18.88 45.73 0 26.85-18.88 45.73-18.88 18.88-45.73 18.88-26.85 0-45.73-18.88Zm240 0q-18.88-18.88-18.88-45.73 0-26.85 18.88-45.73 18.88-18.88 45.73-18.88 26.85 0 45.73 18.88 18.88 18.88 18.88 45.73 0 26.85-18.88 45.73-18.88 18.88-45.73 18.88-26.85 0-45.73-18.88Z"/></svg>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="8" cy="8" r="4"/><circle cx="16" cy="8" r="4"/><circle cx="8" cy="16" r="4"/><circle cx="16" cy="16" r="4"/></svg>
           Chung
         </button>
         <button type="button" class="settings-nav-item" data-panel="devices">
@@ -1866,13 +1865,29 @@
               <button type="button" class="smart-banner-off" id="smart-resolution-off">Tắt</button>
             </div>
           </div>
-          <div class="settings-row settings-row-stack" id="smart-manual-res-row">
-            <div class="settings-row-main">
-              <div>
-                <div class="lab">Độ phân giải</div>
-                <div class="hint preview-res-note">Áp dụng cho khung hình xem trước.<br>*Lưu ý: Chọn độ phân giải thấp trên thiết bị cũ để có FPS cao khi chụp/quay/quét QR.</div>
-              </div>
-              <select id="set-preview-res">
+          <div id="smart-manual-res-row">
+            <div class="settings-section-label">Độ phân giải</div>
+            <div class="settings-row">
+              <div><div class="lab">Chụp ảnh</div></div>
+              <select id="set-res-photo">
+                <option value="640x480">480p</option>
+                <option value="1280x720">720p</option>
+                <option value="1920x1080">1080p</option>
+                <option value="3840x2160">2160p</option>
+              </select>
+            </div>
+            <div class="settings-row">
+              <div><div class="lab">Quay video</div></div>
+              <select id="set-res-video">
+                <option value="640x480">480p</option>
+                <option value="1280x720">720p</option>
+                <option value="1920x1080">1080p</option>
+                <option value="3840x2160">2160p</option>
+              </select>
+            </div>
+            <div class="settings-row">
+              <div><div class="lab">Quét QR</div></div>
+              <select id="set-res-qr">
                 <option value="640x480">480p</option>
                 <option value="1280x720">720p</option>
                 <option value="1920x1080">1080p</option>
@@ -2058,7 +2073,7 @@ const FILTER_AMOUNT_DEFAULT = 0.5;   // nồng độ bộ lọc mặc định: 5
 const state = {
   stream:null, mode:'photo', isRecording:false, mediaRecorder:null, recordedChunks:[],
   flipH:false, flipV:false, flashOn:false, flashColor:'#ffffff',
-  timerSec:0, isCounting:false, facingMode:'user', videoDeviceId:null, audioDeviceId:null, forceAspect:'16:9', previewRes:'1280x720', captureRes:'1280x720', previewFps:30, smartResolution:false, advancedInfo:false, micGain:1, noiseReduce:false, photoFmt:'png', videoFmt:'webm', persistSettings:true, font:'inter',
+  timerSec:0, isCounting:false, facingMode:'user', videoDeviceId:null, audioDeviceId:null, forceAspect:'16:9', previewRes:'1280x720', captureRes:'1280x720', photoRes:'1280x720', videoRes:'1280x720', qrRes:'1280x720', previewFps:30, smartResolution:false, advancedInfo:false, micGain:1, noiseReduce:false, photoFmt:'png', videoFmt:'webm', persistSettings:true, font:'inter',
   recAnimId:null, recDrawTimer:null, qrScanning:false, qrAnimId:null,
   zoom:1, panX:0, panY:0, isPanning:false,
   panStartX:0, panStartY:0, panOriginX:0, panOriginY:0,
@@ -2768,7 +2783,16 @@ function loadPersistedSettings(){
     if(d.audioDeviceId !== undefined) state.audioDeviceId = d.audioDeviceId || null;
     if(d.photoFmt) state.photoFmt = d.photoFmt;
     if(d.videoFmt) state.videoFmt = d.videoFmt;
-    if(d.previewRes) state.previewRes = d.previewRes;
+    if(d.photoRes) state.photoRes = d.photoRes;
+    if(d.videoRes) state.videoRes = d.videoRes;
+    if(d.qrRes) state.qrRes = d.qrRes;
+    if(d.previewRes){
+      if(!d.photoRes) state.photoRes = d.previewRes;
+      if(!d.videoRes) state.videoRes = d.previewRes;
+      if(!d.qrRes) state.qrRes = d.previewRes;
+    }
+    state.previewRes = state.photoRes || d.previewRes || state.previewRes;
+    state.captureRes = state.previewRes;
     if(d.previewFps != null) state.previewFps = (d.previewFps === 120 ? 60 : d.previewFps);
     if(d.smartResolution != null) state.smartResolution = !!d.smartResolution;
     if(d.advancedInfo != null) state.advancedInfo = !!d.advancedInfo;
@@ -2793,6 +2817,9 @@ function savePersistedSettings(){
       audioDeviceId: state.audioDeviceId,
       photoFmt: state.photoFmt,
       videoFmt: state.videoFmt,
+      photoRes: state.photoRes,
+      videoRes: state.videoRes,
+      qrRes: state.qrRes,
       previewRes: state.previewRes,
       previewFps: state.previewFps,
       smartResolution: state.smartResolution,
@@ -4279,13 +4306,22 @@ async function setMode(mode){
   cameraFrame.classList.add('mode-switching');
   await new Promise(r => setTimeout(r, 120));
   state.mode=mode;
-  if(state.smartResolution && (mode==='photo' || mode==='video' || mode==='qr')){
-    const targetRes = mode==='video' ? '640x480' : '3840x2160';
-    const changed = state.previewRes !== targetRes || state.previewFps !== 0;
-    state.previewRes = targetRes; state.captureRes = targetRes; state.previewFps = 0;
-    if(setPreviewRes) setPreviewRes.value = targetRes;
-    if(setPreviewFps) setPreviewFps.value = '0';
-    if(changed) await startCamera(mode==='video', true);
+  {
+    const targetRes = state.smartResolution
+      ? (mode==='video' ? '640x480' : '3840x2160')
+      : resForMode(mode);
+    if(state.smartResolution){
+      state.previewFps = 0;
+      if(setPreviewFps) setPreviewFps.value = '0';
+    }
+    if(state.previewRes !== targetRes){
+      state.previewRes = targetRes;
+      state.captureRes = targetRes;
+      await startCamera(mode==='video', true);
+    } else {
+      state.previewRes = targetRes;
+      state.captureRes = targetRes;
+    }
     savePersistedSettings();
   }
   document.body.classList.toggle('mode-video', mode==='video');
@@ -4684,7 +4720,38 @@ window.addEventListener('resize',()=>adjustAspectRatio());
 const settingsOverlay = document.getElementById('settings-overlay');
 const settingsBtn = document.getElementById('settings-btn');
 const settingsClose = document.getElementById('settings-close');
-const setPreviewRes = document.getElementById('set-preview-res');
+const setResPhoto = document.getElementById('set-res-photo');
+const setResVideo = document.getElementById('set-res-video');
+const setResQr = document.getElementById('set-res-qr');
+function resForMode(mode){
+  if(mode === 'video') return state.videoRes || '1280x720';
+  if(mode === 'qr') return state.qrRes || '1280x720';
+  return state.photoRes || '1280x720';
+}
+function syncResSelects(){
+  if(setResPhoto) setResPhoto.value = state.photoRes || '1280x720';
+  if(setResVideo) setResVideo.value = state.videoRes || '1280x720';
+  if(setResQr) setResQr.value = state.qrRes || '1280x720';
+}
+async function applyModeResolution(forceRestart){
+  const next = state.smartResolution
+    ? (state.mode === 'video' ? '640x480' : '3840x2160')
+    : resForMode(state.mode);
+  const changed = forceRestart || state.previewRes !== next;
+  state.previewRes = next;
+  state.captureRes = next;
+  if(!changed) return false;
+  const hadAudio = state.stream?.getAudioTracks?.().some(t=>t.readyState==='live');
+  await startCamera(!!hadAudio && state.mode==='video', true);
+  try{ await video.play(); }catch(e){}
+  await waitForVideoFrame(600);
+  try{
+    const track = state.stream?.getVideoTracks?.()?.[0];
+    if(track){ await applyVideoQuality(track); await waitForVideoFrame(300); }
+  }catch(e){}
+  updateCamInfoPanel();
+  return true;
+}
 const setPreviewFps = document.getElementById('set-preview-fps');
 
 function applyFont(id){
@@ -4814,7 +4881,9 @@ function syncSettingsUI(){
   put('set-lang','value', state.lang === 'en' ? 'en' : 'vi');
   put('set-flip-v','checked',!!state.flipV);
   put('set-advanced-info','checked',!!state.advancedInfo);
-  put('set-preview-res','value',state.previewRes || '1280x720');
+  put('set-res-photo','value',state.photoRes || '1280x720');
+  put('set-res-video','value',state.videoRes || '1280x720');
+  put('set-res-qr','value',state.qrRes || '1280x720');
   put('set-preview-fps','value',String(state.previewFps === 0 ? 0 : (state.previewFps || 30)));
   syncMicGainUI();
   syncSmartResolutionUI();
@@ -4898,7 +4967,7 @@ function updateFpsOverlay(actualFps){
 function syncSmartResolutionUI(){
   const smart = document.getElementById('set-smart-resolution');
   if(smart) smart.checked = !!state.smartResolution;
-  [setPreviewRes,setPreviewFps].forEach(el=>{ if(el) el.disabled = !!state.smartResolution; });
+  [setResPhoto,setResVideo,setResQr,setPreviewFps].forEach(el=>{ if(el) el.disabled = !!state.smartResolution; });
   const resRow=document.getElementById('smart-manual-res-row');
   const fpsRow=document.getElementById('smart-manual-fps-row');
   const banner=document.getElementById('smart-resolution-banner');
@@ -4909,54 +4978,57 @@ function syncSmartResolutionUI(){
   if(state.smartResolution){
     const res = state.mode==='video' ? '640x480' : '3840x2160';
     state.previewRes=res; state.captureRes=res; state.previewFps=0;
-    if(setPreviewRes) setPreviewRes.value=res;
     if(setPreviewFps) setPreviewFps.value='0';
     if(warn) warn.style.display='none';
+  } else {
+    syncResSelects();
+    state.previewRes = resForMode(state.mode);
+    state.captureRes = state.previewRes;
   }
 }
 async function applyPreviewSettings(){
   if(state.smartResolution){ syncSmartResolutionUI(); return; }
-  const nextRes = setPreviewRes.value;
-  if(nextRes === '3840x2160'){
+  state.previewFps = parseInt(setPreviewFps?.value, 10); if(isNaN(state.previewFps)) state.previewFps = 30;
+  await applyModeResolution(true);
+  savePersistedSettings();
+  notifyApplied(true);
+}
+async function onModeResChange(which){
+  if(state.smartResolution){ syncSmartResolutionUI(); return; }
+  const el = which==='video' ? setResVideo : (which==='qr' ? setResQr : setResPhoto);
+  const val = el?.value || '1280x720';
+  if(val === '3840x2160' && which === 'video'){
     try{
       await appConfirm('Quay video 4K có thể làm cho trang bị sập bất cứ lúc nào.',{
         title:'Cảnh báo', okText:'Đã hiểu', hideCancel:true, icon:'!'
       });
     }catch(e){}
   }
-  state.previewRes = nextRes;
-  state.previewFps = parseInt(setPreviewFps.value, 10); if(isNaN(state.previewFps)) state.previewFps = 30;
-  state.captureRes = state.previewRes;
-  const hadAudio = state.stream?.getAudioTracks().some(t=>t.readyState==='live');
-  try{
-    if(video.videoWidth){
-      const c = document.createElement('canvas');
-      c.width = 16; c.height = 16;
-      c.getContext('2d').drawImage(video, 0, 0, 16, 16);
-      await new Promise(r=> c.toBlob(()=>r(), 'image/jpeg', 0.1));
-    }
-  }catch(e){}
-  await startCamera(!!hadAudio && state.mode==='video', true);
-  try{ await video.play(); }catch(e){}
-  await waitForVideoFrame(800);
-  try{
-    const track = state.stream?.getVideoTracks()?.[0];
-    if(track){
-      await applyVideoQuality(track);
-      await waitForVideoFrame(400);
-    }
-  }catch(e){}
-  updateCamInfoPanel();
+  if(which==='video') state.videoRes = val;
+  else if(which==='qr') state.qrRes = val;
+  else state.photoRes = val;
+  if(state.mode === (which==='video'?'video':which==='qr'?'qr':'photo')){
+    await applyModeResolution(true);
+  }
   savePersistedSettings();
   notifyApplied(true);
 }
-if(setPreviewRes) setPreviewRes.addEventListener('change', ()=> applyPreviewSettings().catch(()=>notifyApplied(false)));
+if(setResPhoto) setResPhoto.addEventListener('change', ()=> onModeResChange('photo').catch(()=>notifyApplied(false)));
+if(setResVideo) setResVideo.addEventListener('change', ()=> onModeResChange('video').catch(()=>notifyApplied(false)));
+if(setResQr) setResQr.addEventListener('change', ()=> onModeResChange('qr').catch(()=>notifyApplied(false)));
 if(setPreviewFps) setPreviewFps.addEventListener('change', ()=> applyPreviewSettings().catch(()=>notifyApplied(false)));
 const smartResolutionToggle = document.getElementById('set-smart-resolution');
 async function setSmartResolution(on){
   state.smartResolution = !!on;
   syncSmartResolutionUI();
-  if(state.smartResolution){ state.previewRes = state.mode==='video' ? '640x480' : '3840x2160'; state.previewFps=0; }
+  if(state.smartResolution){
+    state.previewRes = state.mode==='video' ? '640x480' : '3840x2160';
+    state.captureRes = state.previewRes;
+    state.previewFps=0;
+  } else {
+    state.previewRes = resForMode(state.mode);
+    state.captureRes = state.previewRes;
+  }
   savePersistedSettings();
   try{ await startCamera(state.mode==='video', true); }catch(e){}
   updateCamInfoPanel();
@@ -6837,16 +6909,22 @@ document.getElementById('ld-delete')?.addEventListener('click', async ()=>{
   await libDelete(it.id);
   showToast('Xóa tệp thành công');
   libItems = await libGetAll();
+  const det = document.getElementById('library-detail');
   if(!libItems.length){
-    closeLibDetail();
-    renderLibrary();
+    try{ det && det.classList.remove('show'); }catch(e){}
+    await renderLibGrid();
+    try{ if(typeof updateAlbumThumb==='function') updateAlbumThumb(); }catch(e){}
     return;
   }
-  // Giữ xem tệp kế tiếp hoặc đóng
   if(libDetailIdx >= libItems.length) libDetailIdx = libItems.length - 1;
-  if(libDetailIdx < 0){ closeLibDetail(); renderLibrary(); return; }
+  if(libDetailIdx < 0){
+    try{ det && det.classList.remove('show'); }catch(e){}
+    await renderLibGrid();
+    return;
+  }
   openLibDetail(libDetailIdx);
-  renderLibrary();
+  await renderLibGrid();
+  try{ if(typeof updateAlbumThumb==='function') updateAlbumThumb(); }catch(e){}
 });
 function closeDeleteModal(){
   const m=document.getElementById('lib-del-modal'); if(!m) return;
