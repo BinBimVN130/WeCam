@@ -3,7 +3,7 @@
 # WeCam
 
 [![Live Demo](https://img.shields.io/badge/Open%20app-ffaa00?style=for-the-badge)](https://binbimvn130.github.io/WeCam/)
-![Version](https://img.shields.io/badge/version-4.0.261126-22C55E?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-1.0.112926-22C55E?style=for-the-badge)
 
 — Ứng dụng camera chạy trực tiếp trên trình duyệt. Hướng đến trải nghiệm đơn giản, gọn và tận dụng tối đa phần cứng sẵn có. Giao diện được tối ưu hóa để dễ dùng, phù hợp cho nhiều người.
 
@@ -11,9 +11,9 @@
 
 | Nhóm | Chi tiết |
 |------|----------|
-| **Chụp & quay & quét** | Ảnh (PNG / WebP / AVIF), video (WebM / MP4)|
-| **Điều chỉnh** | Zoom 10×, bộ lọc, hẹn giờ, Đèn flash, khung hình|
-| **Thư viện** | Lưu ảnh/video trong trình duyệt (IndexedDB)|
+| **Chụp & quay & quét** | Ảnh, video, quét mã|
+| **Điều chỉnh** | Zoom 10×, bộ lọc, hẹn giờ, Đèn flash, khung hình,...|
+| **Thư viện** | Lưu ảnh/video trong trình duyệt (IndexedDB) hoặc tải về|
 | **Âm thanh** | Khuếch đại micro, khử tiếng ồn|
 | **Cài đặt** | Độ phân giải, FPS, đâu vào, Âm thanh và nhiều hơn nữa|
 
