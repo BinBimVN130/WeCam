@@ -215,12 +215,15 @@
     .ctrl-btn:active{transform:scale(.9)}
     .ctrl-btn.active{background:#ffaa00;color:#000}
     .ctrl-btn svg{width:18px;height:18px}
+    #timer-btn svg{width:20px;height:20px}
+    .timer-val{font-size:14px;font-weight:700;letter-spacing:-.02em;line-height:1}
     .filter-btn-lg{width:46px;height:46px}
     .filter-btn-lg svg{width:26px;height:26px;transform:rotate(180deg)}
     .ctrl-btn.is-modified{background:#ffaa00;color:#000}
 
     .flash-group .ctrl-btn{background:transparent}
     .flash-group .ctrl-btn.active{background:#ffaa00;color:#000}
+    #flash-btn.active svg{fill:currentColor}
 
     #color-btn .dot{
       width:18px;height:18px;border-radius:50%;background:#fff;
@@ -252,12 +255,12 @@
       display:flex;flex-direction:column;overflow:hidden;transform:none;
     }
     #settings-overlay.show #settings-modal{transform:none}
-    .settings-shell-head{height:62px;flex-shrink:0;display:flex;align-items:center;gap:14px;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.1);background:#101012}
-    .settings-shell-head strong{font-size:17px;font-weight:600}
-    .settings-back{width:36px;height:36px;flex-shrink:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
-    .settings-back svg{width:18px;height:18px}
+    .settings-shell-head,.help-shell-head{height:62px;flex-shrink:0;display:flex;align-items:center;gap:14px;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.1);background:#101012}
+    .settings-shell-head strong,.help-shell-head strong{font-size:17px;font-weight:600}
+    .settings-back,.help-back{width:36px;height:36px;flex-shrink:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .settings-back svg,.help-back svg{width:18px;height:18px}
     .settings-content{display:flex;flex:1;min-height:0;overflow:hidden}
-    body.settings-open #app > :not(#settings-overlay):not(#toast):not(#support-modal):not(.notice-modal){pointer-events:none!important}
+    body.settings-open #app > :not(#settings-overlay):not(#toast):not(#support-modal):not(#help-modal):not(.notice-modal){pointer-events:none!important}
     body.settings-open #settings-overlay{pointer-events:auto!important}
     .settings-nav{overflow-y:auto}
     .settings-body{overflow-y:auto}
@@ -316,21 +319,41 @@
       font-size:12px;font-weight:500;color:rgba(255,255,255,.45);
       padding:16px 0 6px;letter-spacing:.02em;
     }
-    .about-layout{display:flex;flex-direction:column;gap:28px;padding:28px 18px 24px;max-width:560px;margin:0 auto}
-    .about-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
-    .about-logo{width:92px;height:92px;margin-bottom:2px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;filter:drop-shadow(0 10px 24px rgba(0,0,0,.5)) drop-shadow(0 0 0 transparent);transition:filter .6s ease,transform .15s ease}
+    .about-layout{display:flex;align-items:stretch;padding:24px 28px 32px}
+    .about-left{flex:0 0 44%;min-width:0;padding-right:32px;display:flex;flex-direction:column;gap:24px}
+    .about-hero{display:flex;align-items:center;gap:20px}
+    .about-logo{width:72px;height:72px;flex-shrink:0;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;filter:drop-shadow(0 10px 24px rgba(0,0,0,.5)) drop-shadow(0 0 0 transparent);transition:filter .6s ease,transform .15s ease}
     .about-logo:active{transform:scale(.96)}
-    .about-actions{display:flex;justify-content:center;gap:16px;margin-top:4px;padding-top:4px}
-    .about-sq{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;cursor:pointer;text-decoration:none;transition:background .16s,border-color .16s,transform .12s}
-    .about-sq:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.24)}
-    .about-sq:active{transform:scale(.94)}
-    .about-sq svg{width:26px;height:26px}
-    .about-sq.primary{background:linear-gradient(135deg,rgba(255,170,0,.28),rgba(255,120,0,.14));border-color:rgba(255,170,0,.5);color:#ffb62e}
-    .about-sq.primary:hover{background:linear-gradient(135deg,rgba(255,170,0,.4),rgba(255,120,0,.22));border-color:rgba(255,190,50,.75)}
     .about-logo img{display:block;width:100%;height:100%}
-    .about-brand-name{font-size:26px;font-weight:700;letter-spacing:-.03em;overflow-wrap:anywhere}
-    .about-version{display:inline-block;font-size:12px;color:rgba(255,255,255,.62);padding:4px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);margin-top:2px}
-    @media(max-width:520px){.about-layout{padding:20px 12px 18px;gap:22px}.about-hero{gap:10px}.about-logo{width:76px;height:76px}.about-brand-name{font-size:22px}.about-sq{width:58px;height:58px;border-radius:16px}}
+    .about-brand-name{font-size:24px;font-weight:700;letter-spacing:-.02em;overflow-wrap:anywhere}
+    .about-tagline{font-size:15px;color:rgba(255,255,255,.5);margin-top:6px}
+    .about-actions{display:flex;flex-wrap:wrap;gap:12px}
+    .about-pill{display:inline-flex;align-items:center;gap:12px;height:56px;padding:0 24px 0 20px;border-radius:28px;background:#1f1f21;border:1px solid rgba(255,255,255,.1);color:#fff;font:inherit;font-size:15px;font-weight:500;cursor:pointer;text-decoration:none;transition:background .16s,border-color .16s,transform .12s}
+    .about-pill:hover{background:#2a2a2d;border-color:rgba(255,255,255,.2)}
+    .about-pill:active{transform:scale(.97)}
+    .about-pill svg{width:26px;height:26px;flex-shrink:0}
+    .about-right{flex:1;min-width:0;padding-left:32px;border-left:1px solid rgba(255,255,255,.14)}
+    .about-cover{display:block;width:100%;height:auto;border-radius:18px;margin-bottom:24px;-webkit-user-drag:none;user-select:none}
+    .about-right h2{font-size:26px;font-weight:700;margin:0 0 16px}
+    .about-right h3{font-size:19px;font-weight:500;margin:28px 0 10px}
+    .about-right p{font-size:15px;line-height:1.6;color:rgba(255,255,255,.62);margin:0 0 14px}
+    @media(max-width:820px){.about-layout{flex-direction:column;gap:28px;padding:18px 14px 24px}.about-left{flex:none;padding-right:0}.about-right{padding-left:0;border-left:0;border-top:1px solid rgba(255,255,255,.14);padding-top:24px}}
+    .help-modal{position:fixed;inset:0;z-index:99998;display:flex;flex-direction:column;background:#0a0a0a;opacity:0;transition:opacity .18s ease}
+    .help-modal.show{opacity:1}
+    .help-body{display:flex;flex:1;min-height:0;overflow:hidden}
+    .help-nav{width:230px;flex-shrink:0;padding:16px 12px;border-right:1px solid rgba(255,255,255,.1);background:#111113;overflow-y:auto}
+    .help-nav-item{display:flex;align-items:center;width:100%;padding:10px 12px;border:none;border-radius:10px;background:transparent;color:rgba(255,255,255,.75);font:inherit;font-size:14px;font-weight:500;cursor:pointer;text-align:left;margin-bottom:4px}
+    .help-nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+    .help-nav-item.active{background:rgba(255,255,255,.12);color:#fff}
+    .help-article{flex:1;min-width:0;overflow-y:auto;padding:22px 28px 32px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.28) transparent}
+    .help-article-inner{max-width:760px}
+    .help-article h2{font-size:20px;font-weight:700;margin:0 0 14px}
+    .help-article h3{font-size:15px;font-weight:600;margin:20px 0 6px;color:#fff}
+    .help-article p,.help-article li{font-size:14.5px;line-height:1.6;color:rgba(255,255,255,.78)}
+    .help-article p{margin:0 0 8px}
+    .help-article ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+    .help-share{margin-top:28px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);font-size:13px;color:#ffb62e}
+    @media(max-width:700px){.help-body{flex-direction:column}.help-nav{width:auto;display:flex;gap:6px;overflow-x:auto;border-right:0;border-bottom:1px solid rgba(255,255,255,.1);padding:10px 12px}.help-nav-item{width:auto;white-space:nowrap;margin:0}.help-article{padding:16px 16px 28px}}
     .switch{position:relative;display:inline-block;width:44px;height:26px;flex-shrink:0}
     .switch input{opacity:0;width:0;height:0}
     .switch-slider{
@@ -957,6 +980,7 @@
       background:rgba(255,255,255,.12);color:#fff;
     }
     .ld-actions button.ld-process-btn svg{width:16px;height:16px;flex-shrink:0}
+    .ld-actions button.ld-process-btn.active{background:#ffaa00;border-color:#ffaa00;color:#000}
     .ld-actions button.ld-process-btn:disabled{opacity:.45;cursor:wait}
     #photo-process-modal{
       display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;
@@ -1253,7 +1277,7 @@
     }
     #mic-meter .bar-fill{
       height:100%;width:0%;border-radius:3px;
-      background:#34c759;transition:width .06s linear,background-color .12s linear;
+      background:#34c759;transition:background-color .12s linear;
     }
     
 
@@ -1571,13 +1595,13 @@
     <div class="mode-switcher">
       <div class="mode-pill" id="mode-pill"></div>
       <button class="mode-btn active" data-mode="photo" title="Chụp ảnh">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h2.6l1.3-2h8.2l1.3 2H20a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.3" r="3.3"/></svg>
       </button>
       <button class="mode-btn" data-mode="video" title="Quay video">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="12.5" height="11" rx="2.5"/><path d="M15.5 10.6l5-2.9v8.6l-5-2.9"/></svg>
       </button>
       <button class="mode-btn" data-mode="qr" title="Quét QR">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zM3 21h8v-8H3v8zm2-6h4v4H5v-4zM13 3v8h8V3h-8zm6 6h-4V5h4v4zM13 13h2v2h-2zM15 15h2v2h-2zM13 17h2v2h-2zM15 19h2v2h-2zM17 13h2v2h-2zM19 15h2v2h-2zM17 17h2v2h-2zM19 19h2v2h-2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 9h1.5v1.5H9zM13.5 9H15v1.5h-1.5zM9 13.5h1.5V15H9zM13.5 13.5H15V15h-1.5z" stroke-width="1.6"/></svg>
       </button>
     </div>
     <div class="shutter-wrap"><button id="shutter"></button></div>
@@ -1804,7 +1828,7 @@
           <div class="settings-row" style="align-items:center;gap:12px;padding-bottom:8px">
             <span aria-hidden="true" style="flex-shrink:0;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(52,199,89,.14);color:#34c759;box-shadow:inset 0 0 0 1px rgba(52,199,89,.28)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor" fill-opacity=".28"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0"/><path d="M12 18v3M9 21h6"/></svg></span>
             <div style="flex:1;height:14px;border-radius:7px;background:rgba(255,255,255,.1);overflow:hidden">
-              <div id="settings-mic-bar" style="height:100%;width:0%;border-radius:7px;background:#34c759;transition:width .08s linear"></div>
+              <div id="settings-mic-bar" style="height:100%;width:0%;border-radius:7px;background:#34c759;transition:background-color .12s linear"></div>
             </div>
           </div>
           <div class="settings-row">
@@ -1958,15 +1982,28 @@
 
         <div class="settings-panel" id="panel-about">
           <div class="about-layout">
-            <div class="about-hero">
-              <div class="about-logo"><img id="about-logo-img" alt="WeCam" width="92" height="92"></div>
-              <div class="about-brand-name">WeCam</div>
-              <div class="about-version">Phiên bản w4.0.261126</div>
+            <div class="about-left">
+              <div class="about-hero">
+                <div class="about-logo"><img id="about-logo-img" alt="WeCam" width="72" height="72"></div>
+                <div>
+                  <div class="about-brand-name">WeCam</div>
+                  <div class="about-tagline">Camera App, On the web</div>
+                </div>
+              </div>
+              <div class="about-actions">
+                <button type="button" class="about-pill" id="support-btn" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd22e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v7a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M16 11h2a2.5 2.5 0 0 1 0 5h-2M3 22h15M7 5c-1-1 1-2 0-3M12 5c-1-1 1-2 0-3"/></svg>Ủng hộ</button>
+                <a class="about-pill" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=binken12344@gmail.com" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#4caf50" d="M45 16.2l-5 2.75-5 4.75L35 40h7c1.657 0 3-1.343 3-3V16.2z"/><path fill="#1e88e5" d="M3 16.2l3.614 1.71L13 23.7V40H6c-1.657 0-3-1.343-3-3V16.2z"/><polygon fill="#e53935" points="35,11.2 24,19.45 13,11.2 12,17 13,23.7 24,31.95 35,23.7 36,17"/><path fill="#c62828" d="M3 12.298V16.2l10 7.5V11.2L9.876 8.859C9.132 8.301 8.228 8 7.298 8h0C4.924 8 3 9.924 3 12.298z"/><path fill="#fbc02d" d="M45 12.298V16.2l-10 7.5V11.2l3.124-2.341C38.868 8.301 39.772 8 40.702 8h0C43.076 8 45 9.924 45 12.298z"/></svg>Gmail</a>
+                <a class="about-pill" href="https://www.youtube.com/@yt.binn.official" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="4.5" width="22" height="15" rx="4.2" fill="#ff0000"/><path fill="#fff" d="M10 9.2v5.6l5-2.8z"/></svg>YouTube</a>
+                <button type="button" class="about-pill" id="help-btn" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#1fb6c8" d="M2 5.5c3-1.2 6-1.2 10 .8v13c-4-2-7-2-10-.8z"/><path fill="#0a7ea4" d="M22 5.5c-3-1.2-6-1.2-10 .8v13c4-2 7-2 10-.8z"/><path fill="none" stroke="#fff" stroke-width="1.3" stroke-linecap="round" d="M15 9.5h4M15 12.5h4M15 15.5h3"/></svg>Trợ giúp &amp; Hỗ trợ</button>
+              </div>
             </div>
-            <div class="about-actions">
-              <button type="button" class="about-sq primary" id="support-btn" aria-haspopup="dialog" data-tip="Ủng hộ" aria-label="Ủng hộ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v7a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"/><path d="M16 11h2a2.5 2.5 0 0 1 0 5h-2M3 22h15M7 5c-1-1 1-2 0-3M12 5c-1-1 1-2 0-3"/></svg></button>
-              <a class="about-sq" href="https://github.com/BinBimVN130/WeCam" target="_blank" rel="noopener noreferrer" data-tip="GitHub" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12 24 5.37 18.63 0 12 0z"/></svg></a>
-              <a class="about-sq" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=binken12344@gmail.com" target="_blank" rel="noopener noreferrer" data-tip="Gmail" aria-label="Gmail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg></a>
+            <div class="about-right">
+              <img class="about-cover" alt="WeCam 4.0" draggable="false" src="data:image/webp;base64,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">
+              <h2>Có gì mới?</h2>
+              <p>· Sửa lỗi và tối ưu</p>
+              <p>※ Việc cập nhật sẽ không báo trước, vui lòng cập nhật tin tức tại các kênh chính thức<br>※ Hãy sao lưu ảnh/video trước khi cập nhật để tránh mất dữ liệu<br>※ Sau khi cập nhật, bạn không thể hạ xuống phiên bản cũ</p>
+              <h3>Thông tin cập nhật</h3>
+              <p>· Phiên bản ứng dụng: w.1.0.112926 (Web App)<br>· Kích cỡ gốc: ~667KB</p>
             </div>
           </div>
         </div>
@@ -2139,6 +2176,13 @@ const colorBtn=document.getElementById('color-btn');
 const colorDot=document.getElementById('color-dot');
 const colorPalette=document.getElementById('color-palette');
 const timerBtn=document.getElementById('timer-btn');
+const TIMER_ICON=timerBtn.innerHTML;
+/* Đặt thời gian hẹn giờ: đang bật thì nút hiện số giây đã chọn (3s, 5s, 10s), tắt thì hiện lại icon đồng hồ. */
+function setTimerSec(sec){
+  state.timerSec=sec;
+  timerBtn.classList.toggle('active',sec>0);
+  timerBtn.innerHTML=sec>0?'<span class="timer-val">'+sec+'s</span>':TIMER_ICON;
+}
 const timerMenu=document.getElementById('timer-menu');
 const aspectBtn=document.getElementById('aspect-btn');
 const evBtn=document.getElementById('ev-btn');
@@ -2609,9 +2653,9 @@ function toneNeeds(hist, N){
 }
 /**
  * Tone-map cục bộ tại chỗ trên dữ liệu RGBA: nâng vùng tối theo độ sáng nền đã làm mờ mạnh (giữ chi tiết và độ tương phản cục bộ),
- * nén vùng sáng cháy theo từng điểm ảnh (không sinh quầng sáng), bù nhẹ độ bão hòa, giảm nhiễu ở vùng bị nâng mạnh.
+ * nén vùng sáng cháy theo từng điểm ảnh (không sinh quầng sáng), giảm bớt độ đậm màu và giảm nhiễu ở vùng bị nâng mạnh.
  */
-function localToneMap(px, W, H, Y, shadow, highlight){
+function localToneMap(px, W, H, Y, shadow, highlight, maxK){
   const N = W * H, clamp01 = v => Math.max(0, Math.min(1, v));
   // Độ sáng nền: trung bình theo ô rồi làm mờ mạnh.
   const sw = Math.max(8, Math.min(256, Math.round(W / 8))), sh = Math.max(8, Math.round(sw * H / W));
@@ -2633,7 +2677,7 @@ function localToneMap(px, W, H, Y, shadow, highlight){
   for(let i = 0; i < G.length; i++){
     const b = Math.max(0.02, sum[i] / 255);
     // Nâng mạnh ở vùng rất tối, nhẹ dần ở vùng trung bình.
-    const k = Math.max(1, Math.min(2.6, Math.pow(b, 1 / (1 + 1.2 * shadow * Math.pow(1 - b, 1.5))) / b));
+    const k = Math.max(1, Math.min(maxK || 2.6, Math.pow(b, 1 / (1 + 1.2 * shadow * Math.pow(1 - b, 1.5))) / b));
     G[i] = k;
     if(k > maxGain) maxGain = k;
   }
@@ -2668,13 +2712,14 @@ function localToneMap(px, W, H, Y, shadow, highlight){
       }
       r *= k; g *= k; b *= k;
       if(k > 1){
-        const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b, sat = 1 + Math.min(0.3, (k - 1) * 0.2);
-        r = lum + (r - lum) * sat; g = lum + (g - lum) * sat; b = lum + (b - lum) * sat;
+        // Nâng sáng cũng phóng đại nhiễu màu, nên vùng bị nâng được giảm bớt độ đậm của màu (giống cách máy ảnh xử lý vùng tối).
+        const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b, cs = Math.pow(k, -0.7);
+        r = lum + (r - lum) * cs; g = lum + (g - lum) * cs; b = lum + (b - lum) * cs;
       }
       if(highlight > 0.1){
         // Vùng sáng cháy: nén theo chính độ sáng của điểm ảnh (không dựa vào nền mờ nên không sinh quầng sáng).
         const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-        if(lum > 190){ const f = (190 + (lum - 190) * (1 - 0.55 * highlight)) / lum; r *= f; g *= f; b *= f; }
+        if(lum > 200){ const f = (200 + (lum - 200) * (1 - 0.4 * highlight)) / lum; r *= f; g *= f; b *= f; }
       }
       const m = Math.max(r, g, b);
       if(m > 255){ const f = 255 / m; r *= f; g *= f; b *= f; }
@@ -3946,10 +3991,9 @@ function createMicProcessor(track, gainVal, noiseReduce){
    (3) bộ quay báo lỗi. Đoạn đã quay luôn được lưu trọn vẹn rồi mới hiện cảnh báo. */
 // Giới hạn 1 đoạn trong RAM (không giới hạn thời gian). Gần đầy → lưu đoạn rồi (nếu còn chỗ) tự quay tiếp.
 // Tránh giữ blob quá lớn trong RAM; storage đầy hoặc MediaRecorder lỗi vẫn dừng an toàn.
-// Nới giới hạn đoạn (vẫn có trần để tránh sập tab khi RAM đầy). Desktop dễ quay dài hơn trước khi tách file.
 const REC_CAP_BYTES = IS_MOBILE
-  ? Math.min(120 * 1024 ** 2, Math.max(48 * 1024 ** 2, ((navigator.deviceMemory || 2) * 28) * 1024 ** 2))
-  : Math.min(512 * 1024 ** 2, Math.max(192 * 1024 ** 2, (navigator.deviceMemory || 4) * 72 * 1024 ** 2));
+  ? Math.min(80 * 1024 ** 2, Math.max(32 * 1024 ** 2, ((navigator.deviceMemory || 2) * 22) * 1024 ** 2))
+  : Math.min(256 * 1024 ** 2, Math.max(96 * 1024 ** 2, (navigator.deviceMemory || 4) * 48 * 1024 ** 2));
 let recQuotaBusy = false, recQuotaAt = 0;
 function stopRecordingForLimit(reason){
   if(!state.isRecording || state._recStopReason) return;
@@ -4388,14 +4432,15 @@ let micRaf = null;
 const micMeter = document.getElementById('mic-meter');
 const micBar = document.getElementById('mic-bar');
 
-const MIC_METER_MS = 80;
+const MIC_METER_MS = 33;
 /* Dùng chung cho thanh đo trong khung hình và trong Cài đặt để hai thanh luôn cho cùng một mức. */
 function stepMicMeter(analyser, data, bar, prev){
   analyser.getByteTimeDomainData(data);
   let sum = 0;
   for(let i = 0; i < data.length; i++){ const v = (data[i] - 128) / 128; sum += v * v; }
   const level = Math.min(1, Math.sqrt(sum / data.length) * 4 * (state.micGain || 1));
-  const smooth = prev * 0.7 + level * 0.3;
+  // Lên gần như tức thì, xuống nhanh: thanh đo bám sát giọng nói.
+  const smooth = level > prev ? prev * 0.15 + level * 0.85 : prev * 0.55 + level * 0.45;
   bar.style.width = (smooth * 100) + '%';
   bar.style.background = smooth < 0.4 ? '#34c759' : (smooth < 0.72 ? '#ff9500' : '#ff3b30');
   return smooth;
@@ -4409,8 +4454,7 @@ function startMicMeter(){
     micAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
     micSource = micAudioCtx.createMediaStreamSource(new MediaStream([track]));
     micAnalyser = micAudioCtx.createAnalyser();
-    micAnalyser.fftSize = 128;
-    micAnalyser.smoothingTimeConstant = 0.6;
+    micAnalyser.fftSize = 512;
     micSource.connect(micAnalyser);
     // không connect destination → không phát loa, không feedback
     micMeter.classList.add('show');
@@ -4438,12 +4482,10 @@ function stopMicMeter(){
 
 
 function resetAdjustmentsForQR(){
-  state.timerSec = 0;
-  try{ timerBtn?.classList.remove('active'); }catch(e){}
+  setTimerSec(0);
   state.ev = 0; state.sat = 1; state.temp = 0; state.filter = 'none'; state.filterAmount = FILTER_AMOUNT_DEFAULT;
   syncFilterAmountUI();
   document.querySelectorAll('.timer-opt').forEach(o=>o.classList.toggle('active', o.dataset.sec==='0'));
-  if(timerBtn) timerBtn.classList.remove('active');
   document.querySelectorAll('.filter-item').forEach(x=>x.classList.remove('selected'));
   const noneF = document.querySelector('.filter-item[data-filter="none"]');
   if(noneF) noneF.classList.add('selected');
@@ -4485,9 +4527,8 @@ async function setMode(mode){
   document.body.classList.toggle('mode-video', mode==='video');
   document.body.classList.toggle('mode-qr', mode==='qr');
   if(mode==='video'){
-    state.timerSec=0;
+    setTimerSec(0);
     try{
-      timerBtn.classList.remove('active');
       document.querySelectorAll('.timer-opt').forEach(o=>o.classList.remove('active'));
       timerMenu?.classList.remove('show');
     }catch(e){}
@@ -4706,8 +4747,7 @@ document.querySelectorAll('.timer-opt').forEach(opt=>{
   opt.addEventListener('click',()=>{
     document.querySelectorAll('.timer-opt').forEach(o=>o.classList.remove('active'));
     opt.classList.add('active');
-    state.timerSec=parseInt(opt.dataset.sec,10);
-    timerBtn.classList.toggle('active',state.timerSec>0);
+    setTimerSec(parseInt(opt.dataset.sec,10));
     applyFilters();
   });
 });
@@ -5091,7 +5131,7 @@ function runSettingsMic(stream, bar){
   try{
     const actx = new (window.AudioContext||window.webkitAudioContext)();
     const src = actx.createMediaStreamSource(stream);
-    const an = actx.createAnalyser(); an.fftSize = 128;
+    const an = actx.createAnalyser(); an.fftSize = 512;
     src.connect(an);
     state._settingsMicCtx = actx;
     const data = new Uint8Array(an.fftSize);
@@ -5559,11 +5599,9 @@ async function restorePreviewResolution(){
     const tr=tip.getBoundingClientRect();
     const leftToolbar=el.closest('.left-controls');
     const rightToolbar=el.closest('.right-controls');
-    const aboutBtn=el.closest('.about-actions') || el.classList.contains('about-sq');
     let x,y=r.top+r.height/2-tr.height/2;
     if(leftToolbar){x=r.right+9;if(x+tr.width>innerWidth-4)x=r.left-tr.width-9;}
     else if(rightToolbar){x=r.left-tr.width-9;if(x<4)x=r.right+9;}
-    else if(aboutBtn){x=r.left+r.width/2-tr.width/2;y=r.bottom+8;if(y+tr.height>innerHeight-4)y=r.top-tr.height-8;}
     else {x=r.left+r.width/2-tr.width/2;y=r.top-tr.height-8;if(y<4)y=r.bottom+8;}
     x=Math.max(4,Math.min(innerWidth-tr.width-4,x));
     y=Math.max(4,Math.min(innerHeight-tr.height-4,y));
@@ -5630,6 +5668,95 @@ aboutLogo.addEventListener('click', ()=>{
     requestAnimationFrame(()=>{ modal.classList.add('show'); try{ closeBtn.focus({preventScroll:true}); }catch(e){} });
   }
   openBtn.addEventListener('click',openSupport);
+})();
+
+/* Trợ giúp & Hỗ trợ: tạo khi mở, xóa hẳn khỏi DOM khi đóng */
+(function(){
+  const openBtn = document.getElementById('help-btn');
+  if(!openBtn) return;
+  const SHARE = 'Nếu thấy WeCam hữu ích, hãy chia sẻ ứng dụng với bạn bè nhéeeee!';
+  const SECTIONS = [
+    { title:'1. Cập nhật ứng dụng', blocks:[
+      ['ul', [
+        'Bản cập nhật được áp dụng khi tải lại trang hoặc đóng và mở lại ứng dụng.',
+        'Ứng dụng sẽ không cập nhật trong khi đang sử dụng.',
+        'Các bản cập nhật lớn sẽ được thông báo trước 1 ngày trên các kênh chính thức.',
+        'Các bản cập nhật nhỏ như sửa lỗi, tối ưu và cải tiến có thể được phát hành âm thầm mà không thông báo trước.'
+      ]]
+    ]},
+    { title:'2. Câu hỏi thường gặp (FAQ)', blocks:[
+      ['q', 'Tôi muốn báo lỗi, góp ý hoặc đặt câu hỏi thì làm thế nào?'],
+      ['p', 'Gửi email cho tôi thông qua nút Gmail tại mục Giới thiệu → Cài đặt. Tôi sẽ phản hồi trong vài ngày.'],
+      ['q', 'Tại sao ứng dụng không có nhiều hiệu ứng đẹp mắt như kính lỏng (Liquid Glass), làm mờ (Blur)...?'],
+      ['p', 'Ứng dụng hướng đến khả năng hoạt động tốt trên nhiều loại máy tính, từ cấu hình yếu đến mạnh. Vì vậy, tôi ưu tiên hiệu suất, sự ổn định và độ mượt thay vì các hiệu ứng không cần thiết.'],
+      ['p', 'Việc bổ sung tùy chọn bật/tắt hiệu ứng cũng có thể làm tăng độ phức tạp và nguy cơ phát sinh lỗi. Nói ngắn gọn: tôi hơi lười! :))'],
+      ['q', 'Tại sao ứng dụng này được tạo ra?'],
+      ['p', 'Ban đầu, tôi chỉ muốn tìm một công cụ chụp ảnh và quay video trên máy tính nhưng không tìm được ứng dụng phù hợp. Vì vậy, tôi quyết định tự phát triển WeCam, với mong muốn mang trải nghiệm sử dụng ứng dụng Máy ảnh trên điện thoại lên máy tính.'],
+      ['q', 'Tại sao không dùng điện thoại để chụp ảnh, quay video?'],
+      ['p', 'Đúng là điện thoại có thể làm được điều đó. Tuy nhiên, không phải ai cũng muốn hoặc có thể sử dụng điện thoại. WeCam được tạo ra như một lựa chọn thay thế ngay trên máy tính.']
+    ]},
+    { title:'3. Lưu ý', blocks:[
+      ['ul', [
+        'Độ phân giải ảnh hoặc video có thể bị giảm trong một số trường hợp, tùy thuộc vào thiết bị và trình duyệt.',
+        'WeCam hoạt động trên nền tảng web, vì vậy cần có kết nối Internet để truy cập ứng dụng.',
+        'Cấu hình đề xuất: Máy tính có thể xem YouTube ổn định, mở đồng thời khoảng 2–4 tab trình duyệt và sử dụng Facebook bình thường.'
+      ]]
+    ]}
+  ];
+  const el = (tag, text, cls) => { const e = document.createElement(tag); if(text != null) e.textContent = text; if(cls) e.className = cls; return e; };
+  let modal = null;
+  const onKey = e => { if(e.key === 'Escape'){ e.preventDefault(); e.stopPropagation(); closeHelp(); } };
+  function showSection(i){
+    modal.querySelectorAll('.help-nav-item').forEach((b, k)=>b.classList.toggle('active', k === i));
+    const sec = SECTIONS[i], inner = el('div', null, 'help-article-inner');
+    inner.appendChild(el('h2', sec.title));
+    let list = null;
+    sec.blocks.forEach(([kind, v])=>{
+      if(kind === 'ul'){
+        list = el('ul');
+        v.forEach(t=>list.appendChild(el('li', t)));
+        inner.appendChild(list);
+      } else inner.appendChild(el(kind === 'q' ? 'h3' : 'p', v));
+    });
+    inner.appendChild(el('div', SHARE, 'help-share'));
+    const art = modal.querySelector('.help-article');
+    art.replaceChildren(inner);
+    art.scrollTop = 0;
+  }
+  function closeHelp(){
+    if(!modal) return;
+    const m = modal; modal = null;
+    document.removeEventListener('keydown', onKey, true);
+    m.classList.remove('show');
+    setTimeout(()=>m.remove(), 200);
+    try{ openBtn.focus({preventScroll:true}); }catch(e){}
+  }
+  function openHelp(){
+    if(modal) return;
+    modal = el('div', null, 'help-modal');
+    modal.id = 'help-modal'; modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true'); modal.setAttribute('aria-label', 'Trợ giúp & Hỗ trợ');
+    const head = el('div', null, 'help-shell-head');
+    const back = el('button', null, 'help-back');
+    back.type = 'button'; back.setAttribute('aria-label', 'Quay lại');
+    back.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+    back.addEventListener('click', closeHelp);
+    head.append(back, el('strong', 'Trợ giúp & Hỗ trợ'));
+    const nav = el('div', null, 'help-nav');
+    SECTIONS.forEach((sec, i)=>{
+      const b = el('button', sec.title, 'help-nav-item');
+      b.type = 'button';
+      b.addEventListener('click', ()=>showSection(i));
+      nav.appendChild(b);
+    });
+    const body = el('div', null, 'help-body');
+    body.append(nav, el('div', null, 'help-article'));
+    modal.append(head, body);
+    document.getElementById('app').appendChild(modal);
+    document.addEventListener('keydown', onKey, true);
+    showSection(0);
+    requestAnimationFrame(()=>{ modal.classList.add('show'); try{ back.focus({preventScroll:true}); }catch(e){} });
+  }
+  openBtn.addEventListener('click', openHelp);
 })();
 
 /* Mode pill trượt */
@@ -6726,8 +6853,9 @@ const ENHANCE_PROFILES = {
   portrait:  { label:'Chân dung',   shadow:0.45, highlight:0.45, sharpen:0.4, clarity:0,    vibrance:0.05, denoise:0.25, levels:0.4, wb:0.2, skin:true },
   landscape: { label:'Phong cảnh',  shadow:0.6,  highlight:0.7, sharpen:0.85, clarity:0.3,  vibrance:0.3,  denoise:0,    levels:0.6, wb:0 },
   night:     { label:'Thiếu sáng',  shadow:0.8,  highlight:0.3, sharpen:0.3,  clarity:0,    vibrance:0.1,  denoise:0.55, levels:0.4, wb:0 },
-  document:  { label:'Tài liệu',    shadow:0,    highlight:0,   sharpen:1.1,  clarity:0,    vibrance:0,    denoise:0,    levels:1,   wb:0.8, doc:true }
+  document:  { label:'Tài liệu / mã QR', shadow:0,    highlight:0,   sharpen:1.1,  clarity:0,    vibrance:0,    denoise:0,    levels:1,   wb:0.8, doc:true }
 };
+function p20(hist, n){ let acc = 0; for(let v = 0; v < 256; v++){ acc += hist[v]; if(acc >= n * 0.2) return v; } return 255; }
 /** Đo đặc trưng trên ảnh nhỏ (RGBA): histogram, bão hòa, tỉ lệ da/trời/cây xanh, rồi chọn loại cảnh. */
 function analyzePhotoScene(d, sw, sh, faces){
   const n = sw * sh, hist = new Uint32Array(256);
@@ -6762,9 +6890,13 @@ function analyzePhotoScene(d, sw, sh, faces){
     skin: skin / n, skinC: cN ? skinC / cN : 0, sky: sky / Math.max(1, yTop * sw), green: green / n,
     mean: [rs / n, gs / n, bs / n]
   };
-  const ink = frac(0, 100), paper = frac(170, 255);
+  const ink = frac(0, 100), paper = frac(170, 255), low = frac(0, 90);
+  // Tài liệu / mã QR: ít màu và gần như chỉ có hai mức sáng (tối và sáng), kể cả khi nền tối.
+  const binary = m.sat < 0.2 && low > 0.08 && paper > 0.08 && low + paper > 0.85;
+  // Phòng tối nhưng chủ thể sáng, hoặc ngược sáng: có cả vùng rất tối lẫn vùng rất sáng.
+  m.wide = (m.p98 - p20(hist, n)) > 150 && frac(0, 50) > 0.25 && frac(200, 255) > 0.08;
   let scene = 'general';
-  if(m.sat < 0.15 && paper > 0.5 && ink > 0.02 && ink < 0.4 && m.p50 > 150) scene = 'document';
+  if(binary || (m.sat < 0.15 && paper > 0.5 && ink > 0.02 && ink < 0.4 && m.p50 > 150)) scene = 'document';
   else if(m.p50 < 55 && m.p98 < 190) scene = 'night';
   else if(faces > 0 || (m.skin > 0.06 && m.skin < 0.65 && m.skinC > 0.09)) scene = 'portrait';
   else if(m.sky > 0.18 || m.green > 0.28 || m.sky + m.green > 0.35) scene = 'landscape';
@@ -6788,9 +6920,11 @@ function measureSharpNoise(d, w, h){
 /** Hiệu chỉnh mức đen/trắng và cân bằng trắng bằng bảng tra 256 mức cho từng kênh. */
 function applyLevelsWb(px, N, m, prof){
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  const lv = prof.levels;
-  const bp = Math.min(m.p01, prof.doc ? 70 : 24) * lv;
-  const wp = 255 - (255 - Math.max(m.p995, prof.doc ? 185 : 215)) * lv;
+  // Ảnh bị mờ sương / thiếu tương phản (khoảng sáng hẹp): cho phép kéo giãn mạnh hơn.
+  const hazy = !prof.doc && m.p995 - m.p01 < 140;
+  const lv = hazy ? Math.min(1, prof.levels + 0.3) : prof.levels;
+  const bp = Math.min(m.p01, prof.doc ? 70 : (hazy ? 80 : 24)) * lv;
+  const wp = 255 - (255 - Math.max(m.p995, prof.doc ? 185 : (hazy ? 170 : 215))) * lv;
   const gains = [1, 1, 1];
   if(prof.wb > 0 && m.sat < 0.5){
     const lim = prof.doc ? 0.1 : 0.06, gray = (m.mean[0] + m.mean[1] + m.mean[2]) / 3;
@@ -6803,7 +6937,48 @@ function applyLevelsWb(px, N, m, prof){
   for(let c = 0; c < 3; c++) for(let v = 0; v < 256; v++) lut[c][v] = ((v * gains[c] - bp) / range) * 255;
   for(let p = 0; p < N * 4; p += 4){ px[p] = lut[0][px[p]]; px[p + 1] = lut[1][px[p + 1]]; px[p + 2] = lut[2][px[p + 2]]; }
 }
-/** Giảm nhiễu ở vùng phẳng: trộn với trung bình 4 điểm lân cận, vùng có cạnh thì giữ nguyên. */
+/**
+ * Giảm nhiễu màu (các đốm đỏ/tím/xanh ở vùng tối): màu được lấy mẫu ở độ phân giải thấp rồi làm mờ, giữ nguyên độ sáng nên chi tiết không mất.
+ * Vùng có cạnh sáng/tối rõ thì ít làm mờ để màu không loang qua cạnh; điểm ảnh càng tối càng giảm bớt độ đậm của màu (màu ở vùng tối vốn không đáng tin).
+ */
+function denoiseChroma(px, W, H, strength){
+  const f = Math.max(2, Math.round(Math.max(W, H) / 640)), w = Math.ceil(W / f), h = Math.ceil(H / f), n = w * h;
+  const dr = new Float32Array(n), db = new Float32Array(n), yl = new Float32Array(n), cnt = new Float32Array(n);
+  for(let y = 0; y < H; y++){
+    const row = ((y / f) | 0) * w;
+    for(let x = 0; x < W; x++){
+      const p = (y * W + x) * 4, r = px[p], g = px[p + 1], b = px[p + 2], Y = 0.2126 * r + 0.7152 * g + 0.0722 * b, c = row + ((x / f) | 0);
+      yl[c] += Y; dr[c] += r - Y; db[c] += b - Y; cnt[c]++;
+    }
+  }
+  for(let i = 0; i < n; i++){ const k = cnt[i] || 1; yl[i] /= k; dr[i] /= k; db[i] /= k; }
+  const sr = new Float32Array(dr), sb = new Float32Array(db), yb = new Float32Array(yl), rr = 3;
+  boxBlur(sr, w, h, rr); boxBlur(sr, w, h, rr);
+  boxBlur(sb, w, h, rr); boxBlur(sb, w, h, rr);
+  boxBlur(yb, w, h, rr);
+  for(let i = 0; i < n; i++){
+    const e = (yl[i] - yb[i]) / 32, t = strength * Math.max(0, 1 - e * e);
+    dr[i] += (sr[i] - dr[i]) * t; db[i] += (sb[i] - db[i]) * t;
+  }
+  const X0 = new Int32Array(W), X1 = new Int32Array(W), FX = new Float32Array(W);
+  for(let x = 0; x < W; x++){
+    const u = Math.max(0, Math.min(w - 1, (x + 0.5) / f - 0.5));
+    X0[x] = u | 0; X1[x] = Math.min(w - 1, X0[x] + 1); FX[x] = u - X0[x];
+  }
+  for(let y = 0; y < H; y++){
+    const v = Math.max(0, Math.min(h - 1, (y + 0.5) / f - 0.5)), y0 = v | 0, fy = v - y0, r0 = y0 * w, r1 = Math.min(h - 1, y0 + 1) * w;
+    for(let x = 0; x < W; x++){
+      const fx = FX[x], x0 = X0[x], x1 = X1[x], p = (y * W + x) * 4;
+      let er = (dr[r0 + x0] + (dr[r0 + x1] - dr[r0 + x0]) * fx) * (1 - fy) + (dr[r1 + x0] + (dr[r1 + x1] - dr[r1 + x0]) * fx) * fy;
+      let eb = (db[r0 + x0] + (db[r0 + x1] - db[r0 + x0]) * fx) * (1 - fy) + (db[r1 + x0] + (db[r1 + x1] - db[r1 + x0]) * fx) * fy;
+      const Y = 0.2126 * px[p] + 0.7152 * px[p + 1] + 0.0722 * px[p + 2], sc = 0.5 + 0.5 * Math.min(1, Y / 90);
+      er *= sc; eb *= sc;
+      const nr = Y + er, nb = Y + eb;
+      px[p] = nr; px[p + 2] = nb; px[p + 1] = (Y - 0.2126 * nr - 0.0722 * nb) / 0.7152;
+    }
+  }
+}
+/** Giảm nhiễu ở vùng phẳng: trộn với trung bình 4 điểm lân cận, vùng có cạnh thì giữ nguyên; vùng tối được giảm mạnh hơn. */
 function denoiseFlat(px, W, H, amount){
   const src = new Uint8ClampedArray(px);
   for(let y = 0; y < H; y++){
@@ -6812,7 +6987,8 @@ function denoiseFlat(px, W, H, amount){
       const pl = p - (x > 0 ? 4 : 0), pr = p + (x < W - 1 ? 4 : 0), pu = p - (y > 0 ? W * 4 : 0), pd = p + (y < H - 1 ? W * 4 : 0);
       const ar = (src[pl] + src[pr] + src[pu] + src[pd]) / 4, ag = (src[pl + 1] + src[pr + 1] + src[pu + 1] + src[pd + 1]) / 4, ab = (src[pl + 2] + src[pr + 2] + src[pu + 2] + src[pd + 2]) / 4;
       const diff = Math.abs((src[p] - ar) * 0.2126 + (src[p + 1] - ag) * 0.7152 + (src[p + 2] - ab) * 0.0722);
-      const w = amount * Math.max(0, 1 - diff / 14);
+      const lum = 0.2126 * src[p] + 0.7152 * src[p + 1] + 0.0722 * src[p + 2];
+      const w = Math.min(0.75, amount * (1 + 1.2 * Math.max(0, 1 - lum / 90))) * Math.max(0, 1 - diff / 14);
       px[p] = src[p] + (ar - src[p]) * w; px[p + 1] = src[p + 1] + (ag - src[p + 1]) * w; px[p + 2] = src[p + 2] + (ab - src[p + 2]) * w;
     }
   }
@@ -6825,10 +7001,12 @@ function sharpenClarity(px, W, H, amount, clarity, longSide, noise){
   boxBlur(B1, W, H, r1); boxBlur(B1, W, H, r1);
   let B2 = null;
   if(clarity > 0){ B2 = new Float32Array(L); const r2 = Math.max(8, Math.round(longSide / 50)); boxBlur(B2, W, H, r2); boxBlur(B2, W, H, r2); }
-  const thr = 2.5 + noise;
+  const thr0 = 2.5 + noise;
   for(let i = 0, p = 0; i < N; i++, p += 4){
     let d = L[i] - B1[i];
     const ad = Math.abs(d);
+    // Vùng tối nhiễu nhiều hơn nên ngưỡng lọc nhiễu cao hơn (tối đa gấp 3).
+    const thr = thr0 * (1 + 2 * Math.max(0, 1 - L[i] / 80));
     const core = ad <= thr ? 0 : (ad >= thr * 2 ? 1 : (ad - thr) / thr);
     let delta = Math.max(-30, Math.min(30, amount * d * core));
     if(B2){
@@ -6838,13 +7016,41 @@ function sharpenClarity(px, W, H, amount, clarity, longSide, noise){
     px[p] += delta; px[p + 1] += delta; px[p + 2] += delta;
   }
 }
+/**
+ * Chốt an toàn: so ảnh sau xử lý với ảnh gốc, nếu độ sáng trung bình đổi quá nhiều hoặc vùng cháy sáng tăng quá mức
+ * thì trộn lại với ảnh gốc cho đến khi kết quả nằm trong giới hạn. Trả về hệ số trộn (1 = giữ nguyên kết quả).
+ */
+function limitEnhanceChange(orig, px, N){
+  let mi = 0, mo = 0, ci = 0, co = 0;
+  for(let p = 0; p < N * 4; p += 4){
+    const yi = (orig[p] * 54 + orig[p + 1] * 183 + orig[p + 2] * 19) >> 8, yo = (px[p] * 54 + px[p + 1] * 183 + px[p + 2] * 19) >> 8;
+    mi += yi; mo += yo;
+    if(yi >= 250) ci++;
+    if(yo >= 250) co++;
+  }
+  mi /= N; mo /= N; ci /= N; co /= N;
+  const maxUp = mi < 60 ? 2.6 : 1.45, ratio = mo / Math.max(1, mi);
+  let a = 1;
+  if(ratio > maxUp) a = Math.min(a, (maxUp - 1) / (ratio - 1));
+  else if(ratio < 0.8) a = Math.min(a, 0.2 / (1 - ratio));
+  if(co - ci > 0.03) a = Math.min(a, 0.03 / (co - ci));
+  if(a >= 0.98) return 1;
+  for(let p = 0; p < N * 4; p += 4){
+    px[p] = orig[p] + (px[p] - orig[p]) * a;
+    px[p + 1] = orig[p + 1] + (px[p + 1] - orig[p + 1]) * a;
+    px[p + 2] = orig[p + 2] + (px[p + 2] - orig[p + 2]) * a;
+  }
+  return a;
+}
 /** Tăng độ sống động: ưu tiên màu đang nhạt, bảo vệ vùng da khi là ảnh chân dung. */
 function applyVibrance(px, N, amount, protectSkin){
   for(let p = 0; p < N * 4; p += 4){
     const r = px[p], g = px[p + 1], b = px[p + 2], mx = Math.max(r, g, b), mn = Math.min(r, g, b);
     let a = amount * (1 - (mx ? (mx - mn) / mx : 0));
     if(protectSkin && r > g && g > b && r - b > 25 && r - b < 130) a *= 0.25;
-    const f = 1 + a, avg = (r + g + b) / 3;
+    const avg = (r + g + b) / 3;
+    a *= Math.min(1, avg / 80);
+    const f = 1 + a;
     px[p] = avg + (r - avg) * f; px[p + 1] = avg + (g - avg) * f; px[p + 2] = avg + (b - avg) * f;
   }
 }
@@ -6904,24 +7110,31 @@ async function processCurrentPhoto(mode){
     try{ctx.imageSmoothingQuality='high';}catch(e){}
     ctx.drawImage(bitmap,0,0,outW,outH);
     const img=ctx.getImageData(0,0,outW,outH), px=img.data, N=outW*outH;
+    const orig=prof.doc?null:new Uint8ClampedArray(px);
 
     setPhotoProcessProgress(38,'Đang cân bằng sáng và màu'); await yieldToBrowser();
     applyLevelsWb(px,N,m,prof);
-    const noiseAmt=Math.max(prof.denoise, Math.min(0.6, Math.max(0,(q.noise-2)/4)*0.6));
-    if(noiseAmt>0.05){ setPhotoProcessProgress(48,'Đang giảm nhiễu'); await yieldToBrowser(); denoiseFlat(px,outW,outH,noiseAmt); }
 
+    // Nâng vùng tối trước, giảm nhiễu sau: nếu giảm nhiễu trước thì phần nhiễu còn sót sẽ bị nâng lên theo.
     const need=toneNeeds(m.hist,m.n);
-    const shadow=Math.min(need.shadow,prof.shadow), highlight=Math.min(need.highlight,prof.highlight);
+    const shadow=Math.min(need.shadow,m.wide?Math.max(prof.shadow,0.7):prof.shadow), highlight=Math.min(need.highlight,m.wide?Math.max(prof.highlight,0.7):prof.highlight);
     if(shadow>=0.1||highlight>=0.1){
-      setPhotoProcessProgress(58,'Đang cân bằng vùng sáng tối'); await yieldToBrowser();
-      localToneMap(px,outW,outH,lumaOf(px,N).Y,shadow,highlight);
+      setPhotoProcessProgress(48,'Đang cân bằng vùng sáng tối'); await yieldToBrowser();
+      localToneMap(px,outW,outH,lumaOf(px,N).Y,shadow,highlight,2);
     }
+
+    setPhotoProcessProgress(60,'Đang giảm nhiễu'); await yieldToBrowser();
+    if(!prof.doc) denoiseChroma(px,outW,outH,0.95);
+    let darkPx=0; for(let v=0;v<=60;v++) darkPx+=m.hist[v];
+    const noiseAmt=Math.max(prof.denoise, darkPx/m.n>0.15?0.3:0, Math.min(0.6, Math.max(0,(q.noise-2)/4)*0.6));
+    if(noiseAmt>0.05) denoiseFlat(px,outW,outH,noiseAmt);
 
     setPhotoProcessProgress(72,'Đang làm nét'); await yieldToBrowser();
     // Ảnh càng mờ càng làm nét mạnh hơn (tối đa +35%).
     const blurBoost=Math.max(1,Math.min(1.35,1+(8-q.sharp)/20));
     sharpenClarity(px,outW,outH,prof.sharpen*blurBoost,prof.clarity,Math.max(outW,outH),q.noise);
     if(prof.vibrance>0) applyVibrance(px,N,prof.vibrance,!!prof.skin);
+    if(orig) limitEnhanceChange(orig,px,N);
     ctx.putImageData(img,0,0);
 
     setPhotoProcessProgress(84,'Đang tạo tệp ảnh'); await yieldToBrowser();
@@ -6957,7 +7170,7 @@ async function processCurrentPhoto(mode){
     setPhotoProcessProgress(100,'Hoàn tất'); await yieldToBrowser();
     modal.classList.remove('show');
     renderLibDetail();
-    showToast('Đã tối ưu ảnh · '+prof.label);
+    showToast('Đã tối ưu ảnh');
   }catch(err){
     console.error('Photo processing failed',err);
     modal.classList.remove('show');
@@ -7011,6 +7224,7 @@ function closePhotoToolsMenu(){
   document.removeEventListener('pointerdown', onToolsOutside, true);
   document.removeEventListener('keydown', onToolsKey, true);
   m.classList.remove('show');
+  document.getElementById('ld-tools')?.classList.remove('active');
   setTimeout(()=>m.remove(), 160);
 }
 function openPhotoToolsMenu(){
@@ -7031,6 +7245,7 @@ function openPhotoToolsMenu(){
   document.addEventListener('pointerdown', onToolsOutside, true);
   document.addEventListener('keydown', onToolsKey, true);
   photoToolsMenu = m;
+  document.getElementById('ld-tools').classList.add('active');
   requestAnimationFrame(()=>m.classList.add('show'));
 }
 document.getElementById('ld-tools')?.addEventListener('click', e=>{
