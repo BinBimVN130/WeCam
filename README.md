@@ -3,7 +3,7 @@
 # WeCam
 
 [![Live Demo](https://img.shields.io/badge/Open%20app-ffaa00?style=for-the-badge)](https://binbimvn130.github.io/WeCam/)
-![Version](https://img.shields.io/badge/version-3.0.0-22C55E?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-4.0.261126-22C55E?style=for-the-badge)
 
 — Ứng dụng camera chạy trực tiếp trên trình duyệt. Hướng đến trải nghiệm đơn giản, gọn và tận dụng tối đa phần cứng sẵn có. Giao diện được tối ưu hóa để dễ dùng, phù hợp cho nhiều người.
 
